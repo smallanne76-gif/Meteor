@@ -207,8 +207,16 @@ export function buildBoathouse(game, parent, { x, z, y }) {
   // door (locked with the boathouse key)
   const doorPos = L(0, d / 2 + 0.02);
   out.door = { pos: new THREE.Vector3(doorPos[0], y + 1.1, doorPos[1]), yaw };
-  const doorMesh = new THREE.Mesh(boxGeo(1.05, 2.2, 0.08, 0.8), pbr('wood_dark', { key: 'bhdoor', tint: 0x6a5a48 })); doorMesh.position.set(0, 0.4 + 1.1, d / 2); doorMesh.castShadow = true; g.add(doorMesh); out.doorMesh = doorMesh;
-  game.collision.addBox(...L(0, d / 2), 1.1, 0.12, y, y + 2.4, yaw, { tag: 'bhdoor' });
+  const doorMesh = new THREE.Mesh(boxGeo(1.05, 2.2, 0.08, 0.8), pbr('wood_dark', { key: 'bhdoor', tint: 0x6a5a48 })); doorMesh.castShadow = true; doorMesh.position.set(0.525, 1.1, 0);
+  const dp = new THREE.Group(); dp.position.set(-0.525, 0.4, d / 2); g.add(dp); dp.add(doorMesh); out.doorMesh = doorMesh; out.doorPivot = dp;
+  const knob = new THREE.Mesh(new THREE.SphereGeometry(0.035, 8, 6), solid(0x8b6b3a, { rough: 0.35, metal: 1 })); knob.position.set(0.9, 1.05, 0.07); dp.add(knob); const knob2 = knob.clone(); knob2.position.z = -0.07; dp.add(knob2);
+  out.doorCol = game.collision.addBox(...L(0, d / 2), 1.1, 0.12, y, y + 2.4, yaw, { tag: 'bhdoor' });
+  out.doorOpen = 0; out.doorTarget = 0; out.doorLocked = true;
+  out.setDoor = (open) => { out.doorTarget = open ? 1 : 0; if (open) out.doorCol.enabled = false; else out.doorCol.enabled = true; };
+  out.update = (dt) => { out.doorOpen += (out.doorTarget - out.doorOpen) * (1 - Math.exp(-4 * dt)); dp.rotation.y = out.doorOpen * 1.6; };
+  // Jo's note, pinned to the outside of the door
+  { const nt = new THREE.Mesh(new THREE.PlaneGeometry(0.2, 0.26), new THREE.MeshStandardMaterial({ map: canvasTex(128, 170, (c, w, h) => { c.fillStyle = '#e8e0c6'; c.fillRect(0, 0, w, h); c.fillStyle = '#2b3a7a'; c.font = '17px Caveat, cursive'; ['Mar — if you find', 'this you did the', 'whole trail.', 'Respect.', '', 'Key\'s under the', 'second oar.'].forEach((t, i) => c.fillText(t, 12, 28 + i * 20)); }), roughness: 0.9 })); nt.position.set(0.7, 1.45, 0.05); nt.rotation.z = 0.05; dp.add(nt); out.note = nt; }
+  furnishBoathouse(game, out, g, L, { x, y, z, yaw, w, d });
   out.group = g; out.floorY = y + 0.4; out.yaw = yaw; out.L = L;
   // lamp above the door (unlit)
   return out;
@@ -239,4 +247,59 @@ export function buildTruck(game, parent, { x, z, y, yaw }) {
   g.updateMatrixWorld(true);
   game.collision.addBox(x, z, 2.0, 5.4, y, y + 1.8, yaw, { tag: 'truck' });
   return g;
+}
+
+/** interior of the boathouse: Dad's boat, bench with an oil lantern, shelves of tape reels, and the hatch down to the ice house */
+function furnishBoathouse(game, out, g, L, { x, y, z, yaw, w, d }) {
+  const floor = 0.4; const M = PM();
+  const add = (geo, mat, px, py, pz, o = {}) => { const m = new THREE.Mesh(geo, mat); m.position.set(px, py, pz); if (o.ry) m.rotation.y = o.ry; if (o.rz) m.rotation.z = o.rz; if (o.rx) m.rotation.x = o.rx; m.castShadow = o.cast ?? true; m.receiveShadow = true; g.add(m); return m; };
+  const solidBox = (bw, bh, bd, mat, px, py, pz, o = {}) => add(boxGeo(bw, bh, bd, 0.6), mat, px, py, pz, o);
+  const colBox = (lx, lz, bw, bd, h) => game.collision.addBox(...L(lx, lz), bw, bd, y + floor, y + floor + h, yaw);
+  // --- Dad's canoe on two cradles
+  { const len = 4.4, beam = 0.86, dep = 0.4; const sg = new THREE.SphereGeometry(1, 28, 12, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2); const p = sg.attributes.position;
+    for (let i = 0; i < p.count; i++) { const px = p.getX(i), py = p.getY(i), pz = p.getZ(i); const taper = Math.pow(Math.max(0, 1 - Math.abs(pz)), 0.55); p.setXYZ(i, px * beam / 2 * taper, py * dep + Math.pow(Math.abs(pz), 3) * 0.16, pz * len / 2); }
+    sg.computeVertexNormals(); worldUV(sg, 1.2);
+    const hull = pbr('wood_paint', { key: 'canoe', tint: 0x3f5d49 }).clone(); hull.side = THREE.DoubleSide; hull.userData.shared = true;
+    const cn = add(sg, hull, -2.0, floor + 0.58, -0.6); cn.rotation.y = 0.0;
+    for (const zz of [-1.6, 1.4]) { solidBox(0.12, 0.5, 0.5, M.woodDark, -2.0, floor + 0.25, zz - 0.6); }
+    solidBox(0.7, 0.04, 0.12, M.woodPale, -2.0, floor + 0.88, -0.6); solidBox(0.7, 0.04, 0.12, M.woodPale, -2.0, floor + 0.88, 0.4);              // thwarts
+    colBox(-2.0, -0.6, 0.95, 4.3, 0.9); }
+  // --- paddles leaning on the wall
+  for (let i = 0; i < 2; i++) { solidBox(0.05, 1.5, 0.02, M.woodPale, -3.3 + i * 0.12, floor + 0.85, 2.0, { rz: 0.1 }); solidBox(0.15, 0.4, 0.02, M.woodPale, -3.3 + i * 0.12 - 0.07, floor + 0.2, 2.0, { rz: 0.1 }); }
+  // --- workbench along the back wall, with a lantern
+  solidBox(2.6, 0.06, 0.75, M.woodDark, 0.3, floor + 0.92, -3.95); for (const sx of [-1.2, 1.2]) for (const sz of [-0.3, 0.3]) solidBox(0.08, 0.9, 0.08, M.woodDark, 0.3 + sx, floor + 0.45, -3.95 + sz);
+  solidBox(2.5, 0.05, 0.6, M.woodDark, 0.3, floor + 0.3, -3.95, { cast: false });
+  colBox(0.3, -3.95, 2.6, 0.75, 0.95);
+  // tools: a saw, a coil of rope, tins, a thermos
+  solidBox(0.5, 0.01, 0.1, M.metal, -0.5, floor + 0.96, -3.8, { ry: 0.3 }); add(new THREE.TorusGeometry(0.14, 0.03, 8, 16), M.canvas, 1.2, floor + 0.99, -3.8, { rx: Math.PI / 2 });
+  for (let i = 0; i < 3; i++) add(new THREE.CylinderGeometry(0.05, 0.05, 0.1, 12), solid([0x9a4a3a, 0x4a6a8a, 0xb8903a][i], { rough: 0.4, metal: 0.5 }), 0.6 + i * 0.14, floor + 1.0, -4.1);
+  // the oil lantern (lit by the player)
+  const lanternG = new THREE.Group(); lanternG.position.set(0.1, floor + 0.95, -3.8); g.add(lanternG);
+  const frameM = solid(0x2a2118, { rough: 0.5, metal: 0.8 }); const lmat = new THREE.MeshStandardMaterial({ color: 0xffe0a0, emissive: 0xff9a30, emissiveIntensity: 0, transparent: true, opacity: 0.55, roughness: 0.2 });
+  lanternG.add(new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.065, 0.22, 10, 1, true), lmat)); const lb = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.075, 0.03, 10), frameM); lb.position.y = -0.12; lanternG.add(lb);
+  const lt2 = new THREE.Mesh(new THREE.ConeGeometry(0.095, 0.07, 10), frameM); lt2.position.y = 0.145; lanternG.add(lt2);
+  const lflame = new THREE.Mesh(new THREE.SphereGeometry(0.03, 8, 6), new THREE.MeshBasicMaterial({ color: 0xffd27a })); lflame.scale.set(0.7, 1.4, 0.7); lflame.visible = false; lanternG.add(lflame);
+  const wp = new THREE.Vector3(); lanternG.getWorldPosition(wp); g.updateMatrixWorld(true); lanternG.getWorldPosition(wp);
+  const light = game.lights.add({ pos: [wp.x, wp.y + 0.15, wp.z], color: 0xffa850, intensity: 42, distance: 15, decay: 1.6, shadow: true, flicker: { amp: 0.12, speed: 8 }, on: false, tag: 'boat', fadeRate: 1.5 });
+  out.lantern = { lit: false, light, group: lanternG,
+    set(on) { out.lantern.lit = on; light.on = on; lmat.emissiveIntensity = on ? 1.7 : 0; lflame.visible = on; } };
+  out.lantern.interact = game.interact.add({ object: lanternG, radius: 0.35, maxDist: 2.4, label: () => (out.lantern.lit ? '' : 'Light the lantern'), icon: 'hand', enabled: () => !out.lantern.lit,
+    onUse: () => { out.lantern.set(true); game.audio && game.audio.at(wp.clone(), 'match', { vol: 0.8 }); game.emit('boatLantern'); } });
+  // --- shelves of tape reels (all labelled wrong on purpose)
+  for (let r = 0; r < 3; r++) { solidBox(0.3, 0.04, 3.0, M.woodDark, 3.2, floor + 0.7 + r * 0.55, 0.6); for (let i = 0; i < 7; i++) { const reel = add(new THREE.CylinderGeometry(0.1, 0.1, 0.03, 18), solid(0x1c1c1e, { rough: 0.4, metal: 0.6 }), 3.18, floor + 0.78 + r * 0.55, -0.6 + i * 0.4, { rx: Math.PI / 2, ry: 0, cast: false }); reel.rotation.set(0, 0, Math.PI / 2); } }
+  for (const zz of [-0.9, 2.1]) solidBox(0.05, 1.7, 0.05, M.woodDark, 3.3, floor + 0.85, zz);
+  // --- coiled rope, life jackets, a crate
+  add(new THREE.TorusGeometry(0.22, 0.06, 8, 18), M.canvas, 2.6, floor + 0.08, 3.2, { rx: Math.PI / 2 }); add(new THREE.TorusGeometry(0.22, 0.06, 8, 18), M.canvas, 2.6, floor + 0.2, 3.2, { rx: Math.PI / 2 });
+  solidBox(0.06, 0.08, 1.4, M.woodDark, 3.4, floor + 1.62, 2.55);
+  for (let i = 0; i < 2; i++) solidBox(0.18, 0.65, 0.5, solid(i ? 0xc9532a : 0xe8b81c, { rough: 0.85 }), 3.28, floor + 1.25, 2.85 - i * 0.55, { ry: 0 });
+  solidBox(0.7, 0.55, 0.7, M.woodPale, 2.6, floor + 0.28, -2.9); colBox(2.6, -2.9, 0.7, 0.7, 0.55);
+  // --- the hatch to the ice house
+  const hatchLocal = new THREE.Vector3(1.4, floor + 0.035, -1.3);
+  solidBox(1.1, 0.04, 1.1, solid(0x1a120d, { rough: 0.7 }), hatchLocal.x, floor + 0.02, hatchLocal.z, { cast: false });
+  const hatch = solidBox(0.95, 0.07, 0.95, M.woodDark, hatchLocal.x, floor + 0.06, hatchLocal.z, { cast: false }); out.hatch = hatch;
+  add(new THREE.TorusGeometry(0.07, 0.012, 6, 14), solid(0x1c1c1e, { rough: 0.5, metal: 0.8 }), hatchLocal.x, floor + 0.1, hatchLocal.z + 0.3, { rx: Math.PI / 2, cast: false });
+  g.updateMatrixWorld(true); const hw = new THREE.Vector3(); hatch.getWorldPosition(hw);
+  out.hatchPos = hw.clone();
+  // --- a window slit either side, so the lantern light and the dark outside both read
+  out.inside = (px, pz) => { const dx = px - x, dz = pz - z; const lx = dx * Math.cos(yaw) - dz * Math.sin(yaw), lz = dx * Math.sin(yaw) + dz * Math.cos(yaw); return Math.abs(lx) < w / 2 - 0.1 && Math.abs(lz) < d / 2 - 0.1; };
 }

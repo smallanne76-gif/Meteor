@@ -14,7 +14,7 @@ export class PianoSession {
   start() {
     const g = this.g, P = this.p; this.active = true; g.suppressAutoPause = true; g.input.unlock();
     g.hands.setVisible(false);
-    const fwd0 = new THREE.Vector3(Math.sin(P.yaw), 0, Math.cos(P.yaw)); this.lamp = g.lights.add({ name: 'pianoLamp', pos: P.center.clone().addScaledVector(fwd0, 0.45).add(new THREE.Vector3(0, 0.6, 0)).toArray(), color: 0xffd9a8, intensity: 3, distance: 3.2, decay: 2, shadow: false, fadeRate: 2 });
+    const fwd0 = new THREE.Vector3(Math.sin(P.yaw), 0, Math.cos(P.yaw)); this.lamp = g.lights.add({ name: 'pianoLamp', pos: P.center.clone().addScaledVector(fwd0, 0.45).add(new THREE.Vector3(0, 0.6, 0)).toArray(), color: 0xffd9a8, intensity: 1.3, distance: 3.2, decay: 2, shadow: false, fadeRate: 2 });
     const fwd = new THREE.Vector3(Math.sin(P.yaw), 0, Math.cos(P.yaw));    // local +z in world
     const cam = P.center.clone().addScaledVector(fwd, 0.62).add(new THREE.Vector3(0, 0.5, 0));
     g.director.take({ pos: cam, look: P.center.clone().addScaledVector(fwd, 0.02).add(new THREE.Vector3(0, -0.04, 0)), fov: 52, handheld: 0.12, bars: false, hideHands: true });

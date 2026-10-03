@@ -9,9 +9,10 @@ export const LAYOUT = {
   // trail leaves the lodge's back door, curves east through the woods to the boathouse
   trail: [[8, -9], [24, -12], [44, -20], [62, -14], [80, -22], [100, -36], [120, -48], [138, -62], [150, -74]],
   boathouse: { x: 152, z: -80 },
-  dock: { x: 4, z: -52 },          // family dock in front of the lodge
+  dock: { x: 4, z: -56 },          // family dock in front of the lodge
   lake: { cx: 0, cz: -300, rx: 260, rz: 240 },
   iceY: -0.35,
+  bay: { x: -28, z: -262 },         // the island in the north bay, where the ice went quiet
 };
 
 const seg = (a, b) => ({ ax: a[0], az: a[1], bx: b[0], bz: b[1], dx: b[0] - a[0], dz: b[1] - a[1], len2: (b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2 });
@@ -98,12 +99,13 @@ export class HaldenTerrain {
     // boathouse flat
     const db = Math.hypot(x - LAYOUT.boathouse.x, z - LAYOUT.boathouse.z);
     h = lerp(h, 0.2, 1 - smooth(10, 26, db));
-    // dock bank
+    // the meadow comes down to the water at a gentle, walkable height; the family dock starts where it meets the shore
+    { const wx = 1 - smooth(8, 18, Math.abs(x - LAYOUT.dock.x)); const wz = smooth(-78, -70, z) * smooth(-2, -14, z); h = lerp(h, 0.12, wx * wz); }
     // lake basin
     const ld = this.lakeDist(x, z);
     if (ld < 1.12) {
       // shore ramps from land height down below the ice
-      const k = smooth(1.0, 0.86, ld);
+      const k = smooth(0.985, 0.955, ld);
       h = lerp(h, LAYOUT.iceY - 2.8, k);
       // keep a gentle beach lip
     }

@@ -1,5 +1,5 @@
 // Every readable document in the game. Never explain everything: let the player connect the dots.
-import { comicStrip, childDrawing, photoDock, owlKeys } from './draw.js';
+import { comicStrip, childDrawing, photoDock, owlKeys, flyer } from './draw.js';
 
 const tbl = (rows, head) => `<table>${head ? `<tr>${head.map((h) => `<th>${h}</th>`).join('')}</tr>` : ''}${rows.map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join('')}</tr>`).join('')}</table>`;
 
@@ -70,6 +70,48 @@ export const NOTES = {
   tally: {
     kind: 'note', style: 'hand', rot: 0, list: 'Marks on the doorframe',
     html: `<p>Six pencil marks on the inside of the doorframe, at shoulder height. Each one has a date. Every one of them is <b>Feb 11</b>.</p><p style="opacity:.7">The first is a long time ago. The last is dated <i>this year</i> — and the pencil is still bright.</p>`,
+  },
+
+  // ---------------------------------------------------------------- THE SEARCH
+  signin: {
+    kind: 'note', style: 'type', rot: -0.7, list: 'Search & rescue sign-in sheet',
+    html: `<h3>HALDEN COUNTY S&amp;R — VOLUNTEER SIGN-IN</h3>
+      ${tbl([
+        ['Feb 12', '112 names (see attached pages 1–6)', ''],
+        ['Feb 13', '74', ''],
+        ['Feb 14', '41', 'cold snap, −31°'],
+        ['Feb 15', '17', 'ice survey called off'],
+        ['Feb 17', '6', 'sheriff suspends active search Feb 20'],
+        ['Feb 21', 'M. LINDEN', '07:10 — (no out time)'],
+        ['Feb 22', 'M. LINDEN', '07:05 — (no out time)'],
+        ['Feb 23', 'M. LINDEN', '07:10 — (no out time)'],
+        ['…', '…', '(thirty-seven lines, the same hand)'],
+        ['Mar 31', 'M. LINDEN', '06:55 — “last day” crossed out'],
+      ], ['Date', 'Name', 'In / notes'])}
+      <p style="margin-top:1em;opacity:.8"><i>The pen changes. The handwriting does not. Every line is the same name.</i></p>`,
+  },
+  flyer: { kind: 'drawing', title: 'MISSING', list: 'Missing flyer — Jo', w: 800, h: 1100, rot: 0.6, render: (c, w, h) => flyer(c, w, h) },
+  tape_search: {
+    kind: 'recording', title: 'Tape — M.L. night 3', list: 'Cassette · “M.L. — calling — night 3”', audio: 'search_tape',
+    html: `<p>Side A. Eleven minutes of a woman calling one word across open water. The tape hisses and wows. The voice is hoarse, then hoarser. It is yours.</p>`,
+  },
+  clipping: {
+    kind: 'note', style: 'print', rot: 1.3, list: 'Clipping — Halden Weekly',
+    html: `<h3 style="font-family:'IM Fell English',serif">SEARCH ON HALDEN LAKE SUSPENDED</h3>
+      <p>After nine days and some 1,400 volunteer hours, the sheriff’s office announced Thursday that active efforts to locate Jonah Linden, 22, have ended. Linden was last seen February 11 near the north bay, where the lake’s ice is known to shift.</p>
+      <p>Linden is the son of the late Walter Linden, a sound engineer who built the lakeside lodge. His sister, Mara Linden, 28, said she would “keep looking.” <i>Neighbours say the porch light at the Linden lodge has been left on every night since.</i></p>`,
+  },
+  boat_log: {
+    kind: 'note', style: 'hand', rot: -0.9, list: 'Jo\'s notes on the boathouse door',
+    html: `<p>Mar — if you find this you did the whole trail. Respect.</p><p>Key's under the second oar like always. Dad's ice house is down the hatch. Don't read the tapes in order, they're all labelled wrong on purpose.</p><p>I'll bring the recorder. You bring the thermos.</p><p class="sig">— J. (Captain Owl, retired)</p>`,
+  },
+  jo_recorder: {
+    kind: 'note', style: 'type', rot: 0.4, list: 'Jo\'s recorder',
+    html: `<p>PROPERTY OF CAPTAIN OWL.</p><p>A strip of masking tape across the lid, in his handwriting: <i>DON'T ERASE. (Mar, I mean you.)</i></p><p style="opacity:.7">Eleven minutes of tape used. The rest is unspooled, clean, waiting.</p>`,
+  },
+  gift_card: {
+    kind: 'note', style: 'hand', rot: -1.2, list: 'The card on the gift',
+    html: `<p>Mar —</p><p>Happy birthday!! (It's tomorrow now. You waited. I'm so proud.)</p><p>It's a music box. It plays the song. It stops one note short because I couldn't find it and the guy at the shop said he could only build what I could hum.</p><p>Maybe you'll find it.</p><p>No rush.</p><p class="sig">— J</p><p style="font-size:.75em">p.s. the one shaped like Ohio is mine.</p>`,
   },
 
   // ---------------------------------------------------------------- GENERIC

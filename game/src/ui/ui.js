@@ -2,6 +2,7 @@
 import { settings, PRESETS } from '../core/settings.js';
 import { clamp } from '../core/util.js';
 import { NOTES } from '../story/notes.js';
+import { installEndUI } from './endUI.js';
 
 const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html !== undefined) e.innerHTML = html; return e; };
 const KEYNAME = { interact: 'E', flashlight: 'F', still: 'SPACE', run: 'SHIFT', crouch: 'C', journal: 'TAB', recorder: 'Q' };
@@ -343,3 +344,5 @@ export class UI {
     this.setReticle(g.mode === 'free' && !this.readerOpen && !this.reticleOff);
   }
 }
+
+installEndUI(UI);

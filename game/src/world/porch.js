@@ -15,8 +15,8 @@ export function buildPorchLight(game, parent, x = 1.35, y = 2.35, z = 5.62) {
   const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.035, 10, 8), new THREE.MeshBasicMaterial({ color: 0xfff2cc })); bulb.position.set(0, 0, 0.1); g.add(bulb);
   const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: card('soft_dot'), color: 0xffc27a, transparent: true, opacity: 0.55, depthWrite: false, blending: THREE.AdditiveBlending })); halo.scale.set(1.6, 1.6, 1); halo.position.set(0, 0, 0.14); g.add(halo);
   const lt = game.lights.add({ pos: [x, y, z + 0.4], color: 0xffbe70, intensity: 55, distance: 16, decay: 1.7, shadow: true, flicker: { amp: 0.04, speed: 2.3 }, tag: 'porch', on: true });
-  const api = { group: g, light: lt, halo, glass, on: true, set(v) { api.on = v; lt.on = v; glass.emissiveIntensity = v ? 2.2 : 0; bulb.material.color.set(v ? 0xfff2cc : 0x222222); halo.visible = v; game.emit('porch', v); } };
+  const api = { group: g, light: lt, halo, glass, on: true, set(v) { api.on = v; lt.on = v; glass.emissiveIntensity = v ? 2.2 : 0; bulb.material.color.set(v ? 0xfff2cc : 0x222222); halo.visible = v; if (!v && api.hum) { api.hum.stop(); api.hum = null; } game.emit('porch', v); } };
   // faint electrical hum so the player can hear it long before the lodge is visible
-  game.audio && game.audio.amb.addHum(new THREE.Vector3(x, y, z + 0.4), { f: 60, gain: 0.012, name: 'porchhum' });
+  if (game.audio) api.hum = game.audio.amb.addHum(new THREE.Vector3(x, y, z + 0.4), { f: 60, gain: 0.012, name: 'porchhum' });
   return api;
 }

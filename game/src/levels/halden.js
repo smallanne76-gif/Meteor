@@ -10,6 +10,7 @@ import { dressGround, dressUpper } from '../world/lodgeRooms.js';
 import { buildCar, buildMailbox, buildRoadSign, buildLampPost, buildRibbon, buildSearchCamp, buildBoathouse, buildDock, buildTruck } from '../world/exterior.js';
 import { buildPorchLight } from '../world/porch.js';
 import { Lake } from '../world/lake.js';
+import { buildIsland } from '../world/island.js';
 import { Searcher } from '../chars/searcher.js';
 import { PM, woodpile } from '../world/props.js';
 import { Builder } from '../world/builder.js';
@@ -88,11 +89,14 @@ export class Halden extends Chapter {
     const rr = new RNG(8); for (let t = 6; t < terrain.trail.length; t += 6 + rr.next() * 5) { const p = terrain.trail.at(t); const side = rr.next() < 0.5 ? -1 : 1; const x = p.x - p.dirz * side * (2.2 + rr.next() * 1.8), z = p.z + p.dirx * side * (2.2 + rr.next() * 1.8); buildRibbon(game.root, x, terrain.height(x, z) + 1.5 + rr.next() * 0.8, z, rr.next() < 0.7 ? 0xff6a1a : 0xffd21a); }
     // search camp
     this.camp = buildSearchCamp(game, game.root, { x: camp.x, z: camp.z, y: terrain.height(camp.x, camp.z), yaw: 0.35 });
+    { const cp = { x: camp.x + 4.4, z: camp.z + 2.2 }; const cl = buildLampPost(game, game.root, { x: cp.x, z: cp.z, y: terrain.height(cp.x, cp.z), id: 'camp', lit: true }); cl.radius = 11; this.lampPosts.push(cl); this.campLamp = cl; }
     // boathouse & docks
     const bh = LAYOUT.boathouse; this.boathouse = buildBoathouse(game, game.root, { x: bh.x, z: bh.z, y: terrain.height(bh.x, bh.z) });
     this.dock = buildDock(game, game.root, { x: LAYOUT.dock.x, z: LAYOUT.dock.z, y: LAYOUT.iceY + 0.55, yaw: 0, len: 15, w: 2 });
     // the lake
     this.lake = new Lake(game, game.root, terrain);
+    this.island = buildIsland(game, game.root, { x: LAYOUT.bay.x, z: LAYOUT.bay.z });
+    col.terrain = (x, z) => { const hi = this.island.height(x, z); if (hi !== null) return hi; return terrain.lakeDist(x, z) < 0.965 ? LAYOUT.iceY : terrain.height(x, z); };
 
     // ---- particles & atmosphere
     this.snow = new ParticleField(game, { count: 9500, box: [44, 24, 44], size: 0.05, fall: 1.05, wind: [0.7, 0, 0.25], turb: 0.6 });
@@ -182,6 +186,7 @@ export class Halden extends Chapter {
     // ember flicker
     const fire = this.ground.objs.fire; if (fire) { fire.emberMat.emissiveIntensity = 1.2 + Math.sin(game.time * 3.1) * 0.35 + Math.sin(game.time * 7.7) * 0.15; fire.flameMat.uniforms.uTime.value = game.time; }
     // searcher
+    if (this.boathouse && this.boathouse.update) this.boathouse.update(dt);
     this.searcher.update(dt);
     this.phaseObj && this.phaseObj.update && this.phaseObj.update(dt);
     // lit-zone fear: closer to the searcher in the dark raises fear

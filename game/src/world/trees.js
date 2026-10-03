@@ -123,7 +123,7 @@ export function buildBirch(seed, winter = false) {
 }
 
 const matCache = {};
-function pineMats(winter) {
+export function pineMats(winter) {
   const k = 'pine' + winter;
   if (matCache[k]) return matCache[k];
   const bark = pbr('bark', { key: 'trunk' });
@@ -133,7 +133,7 @@ function pineMats(winter) {
   matCache[k] = winter ? [bark, needles, snow] : [bark, needles];
   return matCache[k];
 }
-function birchMats() {
+export function birchMats() {
   if (matCache.birch) return matCache.birch;
   const trunk = new THREE.MeshStandardMaterial({ color: 0xd8d4c8, roughness: 0.85 });
   const leaf = new THREE.MeshStandardMaterial({ map: card('leaf_card'), alphaTest: 0.5, side: THREE.DoubleSide, roughness: 0.8, color: 0xdfffd0 });

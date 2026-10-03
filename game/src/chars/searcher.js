@@ -71,7 +71,7 @@ export class Searcher {
     const lit = this.opts.world && this.opts.world.lit ? this.opts.world.lit(p.pos.x, p.pos.y, p.pos.z) : false;
     const hidden = g.mode === 'hide';
     if (!lit && !hidden && d < (this.opts.sightRange ?? 16)) {
-      const dir = tgt.clone().sub(eye).normalize(); const fwd = _v.set(-Math.sin(this.yaw), 0, -Math.cos(this.yaw)); // forward = +Z in model => world (sin yaw, cos yaw)? model faces +Z rotated by yaw
+      const dir = tgt.clone().sub(eye).normalize(); // the model faces +Z rotated by yaw => world (sin yaw, cos yaw)
       const f = new THREE.Vector3(Math.sin(this.yaw), 0, Math.cos(this.yaw));
       const ang = Math.acos(clamp(dir.setY(0).normalize().dot(f), -1, 1));
       if (ang < 1.15 || d < 3.2) {

@@ -208,3 +208,37 @@ export function owlKeys(ctx, w, h) {
   ctx.fillStyle = '#8b7a58'; ctx.font = '600 44px Caveat, cursive'; ctx.textAlign = 'center'; ctx.fillText('?', kx + 7 * kw + kw / 2, ky - 52);
   ctx.textAlign = 'left'; ctx.fillStyle = '#6b5a40'; ctx.font = '26px Caveat, cursive'; ctx.fillText('one owl per key, in order. the last one hasn\'t landed yet.', 30, h - 18);
 }
+
+/** a photocopied MISSING flyer, weathered: halftone portrait, tear-off tabs all gone but one */
+export function flyer(ctx, w, h) {
+  paperFill(ctx, w, h, '#efe9d8');
+  ctx.fillStyle = '#161616'; ctx.textAlign = 'center';
+  ctx.font = "900 150px 'Special Elite', Impact, monospace"; ctx.fillText('MISSING', w / 2, 170);
+  // halftone portrait
+  const px = w / 2 - 210, py = 205, pw = 420, ph = 470; const step = 7;
+  const rr = (() => { let a = 99; return () => (a = (a * 16807) % 2147483647) / 2147483647; })();
+  for (let y = 0; y < ph; y += step) for (let x = 0; x < pw; x += step) {
+    const nx = (x / pw - 0.5) * 2, ny = (y / ph - 0.5) * 2;
+    let lum = 0.88;                                                              // paper
+    const head = (nx / 0.46) ** 2 + ((ny + 0.28) / 0.5) ** 2;                    // head
+    const hair = (nx / 0.52) ** 2 + ((ny + 0.42) / 0.36) ** 2;                   // curls
+    const shoulders = ny > 0.35 && Math.abs(nx) < 0.95 - (ny - 0.35) * 0.1;      // coat
+    const neck = Math.abs(nx) < 0.17 && ny > 0.12 && ny < 0.45;
+    if (shoulders) lum = 0.28; else if (hair < 1 && ny < -0.3) lum = 0.18; else if (head < 1) lum = 0.62 + (nx > 0.1 ? -0.12 : 0.04); else if (neck) lum = 0.55;
+    if (head < 1 && ny > -0.2 && ny < -0.1 && Math.abs(Math.abs(nx) - 0.18) < 0.07) lum = 0.4;   // eyes: a smudge, never a face
+    lum += (rr() - 0.5) * 0.18; const r = (1 - Math.min(1, Math.max(0, lum))) * step * 0.62;
+    if (r > 0.4) { ctx.beginPath(); ctx.arc(px + x, py + y, r, 0, 7); ctx.fill(); }
+  }
+  ctx.strokeStyle = '#161616'; ctx.lineWidth = 5; ctx.strokeRect(px - 4, py - 4, pw + 8, ph + 8);
+  ctx.font = "700 44px 'Special Elite', monospace"; ctx.fillText('JONAH “JO” LINDEN, 22', w / 2, 735);
+  ctx.font = "26px 'Special Elite', monospace";
+  ['Last seen Mon. Feb 11, about 3 AM,', 'north bay, Halden Lake. 5′11″, brown curly hair.', 'Yellow rain jacket. Hums when he walks.', 'He is not in any trouble. He is just late.'].forEach((t, i) => ctx.fillText(t, w / 2, 785 + i * 36));
+  ctx.font = "600 34px 'Special Elite', monospace"; ctx.fillText('Call Mara — 555 0143', w / 2, 960);
+  // hand-written, later, in a different pen
+  ctx.fillStyle = '#26358a'; ctx.font = "34px Caveat, cursive"; ctx.save(); ctx.translate(w / 2, 1005); ctx.rotate(-0.02); ctx.fillText('(porch light is on)', 0, 0); ctx.restore();
+  // tear-off tabs, all gone but one
+  ctx.fillStyle = '#161616'; const tw = (w - 60) / 8; ctx.font = "16px 'Special Elite', monospace";
+  for (let i = 0; i < 8; i++) { const x0 = 30 + i * tw; ctx.strokeStyle = '#555'; ctx.setLineDash([5, 5]); ctx.beginPath(); ctx.moveTo(x0, 1030); ctx.lineTo(x0, h); ctx.stroke(); ctx.setLineDash([]);
+    if (i === 5) { ctx.save(); ctx.translate(x0 + tw / 2, 1085); ctx.rotate(-Math.PI / 2); ctx.fillText('MARA 555 0143', 0, 0); ctx.restore(); } else { ctx.fillStyle = '#d9d2bd'; ctx.fillRect(x0 + 2, 1032, tw - 4, h - 1032); ctx.fillStyle = '#161616'; } }
+  ctx.textAlign = 'left';
+}

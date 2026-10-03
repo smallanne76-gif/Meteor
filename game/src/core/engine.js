@@ -150,7 +150,7 @@ export class Game extends Emitter {
 
   // ---- fx helpers -------------------------------------------------------------------------------------------------
   fadeTo(v, dur = 1, color) {
-    const fx = this.gfx.fx; if (color) fx.fadeColor.set(color);
+    const fx = this.gfx.fx; if (color !== undefined) fx.fadeColor.set(color);
     const a = fx.fade, b = v;
     return new Promise((res) => {
       if (dur <= 0) { fx.fade = b; res(); return; }

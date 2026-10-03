@@ -260,6 +260,13 @@ export class AudioEngine {
       v.murmur(ph, { t: t + 9.2, text: 'no, listen. Just listen to', gender: 'm', gain: 0.08, rate: 0.9 });
       k.staticNoise(ph, { t: t + 11.6, dur: 1.8, gain: 0.5, bright: 1.6 });
       src.dispose(16);
+    } else if (name === 'search_tape') {
+      const tp = k.filt('highpass', 230, 0.7), lp = k.filt('lowpass', 4300, 0.7); tp.connect(lp); lp.connect(d);
+      k.hiss(tp, { t, dur: 24, gain: 0.045 });
+      v.maraCall(tp, { t: t + 1.0, gain: 0.2, n: 4 });
+      v.murmur(tp, { t: t + 14.5, text: 'Jo. Please. It\'s me. I\'m still here.', gender: 'f', gain: 0.12, rate: 0.82 });
+      k.staticNoise(tp, { t: t + 21.5, dur: 0.6, gain: 0.25 });
+      src.dispose(26);
     } else src.dispose(1);
   }
 

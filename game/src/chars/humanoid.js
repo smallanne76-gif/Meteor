@@ -196,6 +196,7 @@ export class Humanoid {
   makeShirt() {
     const o = this.opts; const type = o.outfit || 'flannel';
     if (type === 'flannel') { const m = pbr('fabric_wool', { key: 'flan' + (o.shirt || ''), tint: o.shirt ?? 0xc27a62, normal: 1.0 }).clone(); m.roughness = 0.92; return m; }
+    if (type === 'raincoat') { const m = solid(o.shirt ?? 0xe8b81c, { rough: 0.38 }).clone(); return m; }
     if (type === 'tee') { const m = solid(o.shirt ?? 0xe8e2d0, { rough: 0.9 }).clone(); return m; }
     if (type === 'parka') { const m = pbr('parka', { key: 'parkaN', tint: 0x55604f, normal: 1.4, wet: 0.7 }).clone(); m.roughness = 0.5; m.color.setRGB(0.9, 0.95, 0.88); return m; }
     return solid(0x666666);
