@@ -1,0 +1,18 @@
+<!doctype html><html><body style="margin:0;background:#000">
+<canvas id=c width=960 height=540></canvas>
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+const r = new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true});
+r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+r.toneMapping = THREE.ACESFilmicToneMapping;
+const s = new THREE.Scene(); s.background = new THREE.Color(0x101820); s.fog = new THREE.FogExp2(0x101820,0.05);
+const cam = new THREE.PerspectiveCamera(70,16/9,0.1,100); cam.position.set(0,1.6,4);
+const m = new THREE.Mesh(new THREE.SphereGeometry(1,64,64), new THREE.MeshStandardMaterial({color:0xaa5533,roughness:0.4}));
+m.castShadow = true; m.position.y = 1; s.add(m);
+const g = new THREE.Mesh(new THREE.PlaneGeometry(20,20), new THREE.MeshStandardMaterial({color:0xcccccc,roughness:0.9})); g.rotation.x=-Math.PI/2; g.receiveShadow=true; s.add(g);
+const l = new THREE.SpotLight(0xffddaa, 200, 30, 0.6, 0.5, 2); l.position.set(3,5,3); l.castShadow=true; l.shadow.mapSize.set(1024,1024); s.add(l);
+const t0=performance.now(); for(let i=0;i<5;i++) r.render(s,cam);
+r.getContext().finish();
+window.__done = {ms:(performance.now()-t0)/5, gl:r.getContext().getParameter(r.getContext().VERSION), renderer: (()=>{const e=r.getContext().getExtension('WEBGL_debug_renderer_info'); return e? r.getContext().getParameter(e.UNMASKED_RENDERER_WEBGL):'?'})()};
+</script></body></html>

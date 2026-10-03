@@ -1,0 +1,10 @@
+import { chromium } from 'playwright-core';
+const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args:['--no-sandbox','--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist','--enable-webgl'] });
+const p = await b.newPage({ viewport:{width:960,height:540} });
+p.on('console', m=>console.log('[console]', m.text()));
+p.on('pageerror', e=>console.log('[pageerror]', e.message));
+await p.goto('http://localhost:8080/gltest.html');
+await p.waitForFunction(()=>window.__done, null, {timeout:60000});
+console.log(JSON.stringify(await p.evaluate(()=>window.__done)));
+await p.screenshot({path:process.argv[2]||'/tmp/gltest.png'});
+await b.close();
