@@ -83,6 +83,14 @@ TEST=halden EXTRA='&phase=lodge&skipintro' node tools/qa/multi.mjs shots '[{"nam
 The full chain title → prologue → lodge → search → ice house → loop → summer → lake → final → credits → title has been run end-to-end this way (puzzles skipped by direct calls).
 **What has *not* been verified:** frame rate on real GPUs (the sandbox only has a software rasteriser) and how the synthesised audio *sounds* to a human ear — both are best checked by playing it.
 
+## Known limitations
+
+* **Not photoreal.** The look aims for atmosphere — dense fog, real shadows, HDR grading, PBR materials — but everything is procedural, so characters (especially faces and the Searcher's silhouette) and organic surfaces read as stylised, not photographic.
+* **No recorded voices or music.** Speech is captioned and carried by a synthesised murmur; the score is generated. It is coherent, but it is not a substitute for actors and a composer.
+* **Never played by a person.** Every chapter has been driven by scripts (including real interaction presses, the Search lamp/dash/boathouse/hatch chain, the preset switch from the pause menu, the accessibility toggles and a clean-clone boot), but pacing, puzzle difficulty and the emotional beats need a human playthrough. Timings quoted above are estimates.
+* **Performance is unmeasured on real hardware.** Triangle/draw-call counts were profiled (shadow maps refresh every other frame below ULTRA; the lodge is ~0.4 M triangles in view), but frame rates need a real GPU.
+* **Desktop only:** keyboard + mouse with pointer lock; no gamepad or touch.
+
 ## Credits & licences
 
 See [`ASSETS.md`](ASSETS.md). Everything is original or procedurally generated; the only third-party code is three.js (MIT) and the fonts (SIL OFL 1.1).
