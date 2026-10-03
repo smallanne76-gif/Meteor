@@ -55,6 +55,12 @@ export class LightRig {
     this.flash.castShadow = p.shadows; this.flash.shadow.mapSize.set(Math.min(sm, 1024), Math.min(sm, 1024));
     for (const l of this.logical) l.slot = null;
   }
+  /** after a live rebuild (e.g. preset change while paused, when update() is not running): assign the new pool at full level straight away */
+  settle(camera, time) {
+    this.update(0, camera, time);
+    for (const arr of Object.values(this.pool)) for (const l of arr) if (l.userData.slot) l.userData.level = 1;
+    this.update(0, camera, time);
+  }
   _mk(kind, l) {
     l.userData = { slot: null, level: 0 }; this.pool[kind].push(l); this.root.add(l);
     if (l.isSpotLight) this.root.add(l.target);

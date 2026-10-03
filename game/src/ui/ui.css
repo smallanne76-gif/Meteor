@@ -87,7 +87,9 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden;color:var(--ink);
 .tabs{display:flex;gap:26px;margin-bottom:18px;border-bottom:1px solid var(--line);padding-bottom:10px}
 .tabs button{background:none;border:none;color:var(--ink-dim);font-family:inherit;font-size:18px;letter-spacing:.28em;text-transform:uppercase;cursor:pointer;padding:4px 0}
 .tabs button.on{color:var(--amber)}
-.rows{overflow:auto;padding-right:10px;flex:1}
+.rows{overflow:auto;padding-right:10px;flex:1;scrollbar-width:thin;scrollbar-color:var(--amber) transparent}
+.rows::-webkit-scrollbar{width:6px}.rows::-webkit-scrollbar-thumb{background:var(--amber);border-radius:3px}.rows::-webkit-scrollbar-track{background:rgba(255,255,255,.06)}
+.sw:focus-visible,.tabs button:focus-visible,select:focus-visible,input[type=range]:focus-visible{outline:1px solid var(--amber);outline-offset:3px}
 .row{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:21px}
 .row label{color:#d9d3c6;letter-spacing:.04em}
 .row .hintx{display:block;font-size:14px;color:var(--ink-dim);font-style:italic}
@@ -190,3 +192,4 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden;color:var(--ink);
 #postcredit .call{margin-top:26px;padding:14px 46px;font:inherit;font-size:18px;letter-spacing:.2em;text-transform:uppercase;border-radius:40px;border:1px solid #3d6b50;background:#102418;color:#9fe0b4;cursor:pointer;opacity:0;transition:opacity 1.6s}
 #postcredit .call.show{opacity:1;animation:cb 2.4s ease-in-out infinite}
 @keyframes cb{50%{box-shadow:0 0 22px rgba(120,220,160,.35)}}
+@media (max-height:640px){#settings .panel{max-height:94vh;padding:20px 32px}#settings h2{margin-bottom:10px}.tabs{margin-bottom:10px}}

@@ -69,7 +69,7 @@ export class Game extends Emitter {
   }
   onSettings(k) {
     if (k === 'preset' || k === 'resolutionScale' || k === '*') {
-      this.gfx.applySettings(); this.lights.rebuild(); refreshTextureQuality(); this.emit('quality');
+      this.gfx.applySettings(); this.lights.rebuild(); if (this.chapter) this.lights.settle(this.camera, this.time); refreshTextureQuality(); this.emit('quality');
       // force shadow/material refresh
       this.scene.traverse((o) => { if (o.material) { const ms = Array.isArray(o.material) ? o.material : [o.material]; ms.forEach((m) => { m.needsUpdate = true; }); } });
     }

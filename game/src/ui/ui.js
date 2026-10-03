@@ -139,7 +139,9 @@ export class UI {
     };
     const toggle = (label, key, hint) => {
       const r = el('div', 'row', `<label>${label}${hint ? `<span class="hintx">${hint}</span>` : ''}</label>`);
-      const sw = el('div', 'sw' + (settings.get(key) ? ' on' : '')); sw.onclick = () => { settings.set(key, !settings.get(key)); sw.classList.toggle('on'); };
+      const sw = el('div', 'sw' + (settings.get(key) ? ' on' : '')); sw.tabIndex = 0; sw.setAttribute('role', 'switch'); sw.setAttribute('aria-checked', String(!!settings.get(key))); sw.setAttribute('aria-label', label);
+      const flip = () => { settings.set(key, !settings.get(key)); sw.classList.toggle('on', !!settings.get(key)); sw.setAttribute('aria-checked', String(!!settings.get(key))); };
+      sw.onclick = flip; sw.onkeydown = (e) => { if (e.code === 'Enter' || e.code === 'Space') { e.preventDefault(); e.stopPropagation(); flip(); } };
       r.appendChild(sw); rows.appendChild(r);
     };
     const select = (label, key, opts, hint) => {
@@ -173,7 +175,7 @@ export class UI {
       slider('Subtitle size', 'subtitleSize', 0.8, 1.7, 0.05, (v) => `${Math.round(v * 100)}%`);
       toggle('Subtitle background', 'subtitleBackground'); toggle('Speaker names', 'speakerNames');
       toggle('Camera shake', 'cameraShake'); toggle('Head bob', 'headBob');
-      toggle('Reduce flashing & sudden effects', 'reduceFlash', 'Softens strobing lights, white flashes and screen jolts.');
+      toggle('Reduce flashing & sudden effects', 'reduceFlash', 'Replaces strobing lights and white flashes with slow, gentle dips. Camera shake has its own switch.');
     }
   }
 
