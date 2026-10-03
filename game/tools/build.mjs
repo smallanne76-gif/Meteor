@@ -3,8 +3,9 @@
 import { build } from 'esbuild';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
 await fs.promises.rm(dist, { recursive: true, force: true });
 await fs.promises.mkdir(dist, { recursive: true });
