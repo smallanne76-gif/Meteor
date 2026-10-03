@@ -114,6 +114,8 @@ export class LightRig {
 
   update(dt, camera, time) {
     const cp = camera.position;
+    this._fr = (this._fr || 0) + 1; this.p_every = Math.max(1, settings.preset.shadowEvery || 1);
+    this.sun.shadow.autoUpdate = false; if (this._fr % this.p_every === 0) this.sun.shadow.needsUpdate = true;
     // ---- sun/moon -------------------------------------------------------------------------------------------
     if (this.sky && this.skyDef) {
       const L = this.sky.lightDir(new THREE.Vector3());
@@ -184,7 +186,10 @@ export class LightRig {
       }
       if (l.shadow) {
         const mv = this.game && this.game.dynamicShadows;
-        l.shadow.autoUpdate = true; // lights are few; keep correct for moving doors / characters
+        // moving doors / characters keep the maps honest, but a full redraw every frame is the biggest cost in a dense room:
+        // refresh every `shadowEvery` frames (staggered per light); a newly assigned light is always refreshed at once.
+        l.shadow.autoUpdate = false;
+        if ((this._fr + l.id) % this.p_every === 0) l.shadow.needsUpdate = true;
         if (l.isPointLight) l.shadow.camera.far = Math.max(8, h.distance);
       }
     }

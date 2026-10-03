@@ -243,7 +243,7 @@ export function buildHair(p) {
     for (let i = 0; i < tp.count; i++) { const ring = Math.floor(i / 5); const taper = 1 - (ring / (steps + 1)) * 0.8; const c = curve.getPoint(Math.min(1, ring / steps)); tp.setXYZ(i, c.x + (tp.getX(i) - c.x) * taper, c.y + (tp.getY(i) - c.y) * taper, c.z + (tp.getZ(i) - c.z) * taper); }
     tube.deleteAttribute('uv'); geos.push(tube);
   }
-  const merged = mergeGeometries(geos); const m = new THREE.Mesh(merged, matStrand); m.castShadow = true; group.add(m);
+  const merged = mergeGeometries(geos); const m = new THREE.Mesh(merged, matStrand); m.castShadow = false; group.add(m);   // ~40k strand triangles: the cap shell already casts the silhouette
   return group;
 }
 
