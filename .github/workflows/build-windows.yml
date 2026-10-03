@@ -1,0 +1,26 @@
+name: Build Windows exe
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/sweet-planck-b4njwb]
+    paths: ['game/**']
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults: { run: { working-directory: game } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci
+      - run: npm run build
+      - run: |
+          cd desktop
+          npm i --no-save --no-audit --no-fund @electron/packager
+          cp -r ../dist game
+          npx @electron/packager . LeaveTheLightOn --platform=win32 --arch=x64 --electron-version=33.2.0 --out=out --overwrite --no-prune --ignore='^/node_modules|^/out'
+        shell: bash
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LeaveTheLightOn-win32-x64
+          path: game/desktop/out/LeaveTheLightOn-win32-x64
