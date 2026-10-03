@@ -175,6 +175,7 @@ export class UI {
       slider('Subtitle size', 'subtitleSize', 0.8, 1.7, 0.05, (v) => `${Math.round(v * 100)}%`);
       toggle('Subtitle background', 'subtitleBackground'); toggle('Speaker names', 'speakerNames');
       toggle('Camera shake', 'cameraShake'); toggle('Head bob', 'headBob');
+      toggle('Be still (Space) is a toggle', 'holdBreathToggle', 'Press Space once to hold your breath / close your eyes, again to stop — no need to hold the key.');
       toggle('Reduce flashing & sudden effects', 'reduceFlash', 'Replaces strobing lights and white flashes with slow, gentle dips. Camera shake has its own switch.');
     }
   }

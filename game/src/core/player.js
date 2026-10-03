@@ -141,7 +141,11 @@ export class Player {
     } else this.stepDist = Math.min(this.stepDist, 0.4);
 
     // ---- breath ------------------------------------------------------------------------------------------------
-    const still = (g.mode === 'free' || g.mode === 'hide') && input.isDown('still');
+    const stillOk = g.mode === 'free' || g.mode === 'hide';
+    // accessibility: with "hold breath is a toggle" one press of Space latches stillness until pressed again
+    let stillKey = input.isDown('still');
+    if (settings.get('holdBreathToggle')) { if (stillOk && input.wasPressed('still')) this.stillLatch = !this.stillLatch; if (!stillOk) this.stillLatch = false; stillKey = this.stillLatch; } else this.stillLatch = false;
+    const still = stillOk && stillKey;
     this.eyesClosed = still && g.allowEyesClosed;
     const wantHold = still && !this.eyesClosed && this.breathHeld < this.breathLimit && !this.gaspLock;
     if (wantHold && !this.holdingBreath) { this.holdingBreath = true; g.emit('breathHold', true); }

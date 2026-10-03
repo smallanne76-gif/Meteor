@@ -1,6 +1,7 @@
 // THE LOOP: hide and seek with the brother you lost. Close your eyes and follow the hum; "warmer" is the only map.
 import * as THREE from 'three';
 import { clamp, damp, RNG } from '../core/util.js';
+import { settings } from '../core/settings.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 const NAMES = ['w0', 'w1', 'w2', 'e0', 'e1', 'e2'];
@@ -30,7 +31,7 @@ export class LoopPhase {
     await this.think('The hall. The party. Everything’s exactly as it was.'); await g.wait(0.8);
     await this.think('Except there are too many doors.');
     await g.wait(1.5);
-    g.ui.hint('still', 'Hold Space — close your eyes, and listen', 9);
+    g.ui.hint('still', settings.get('holdBreathToggle') ? 'Press Space — close your eyes, and listen' : 'Hold Space — close your eyes, and listen', 9);
     g.saveCheckpoint('loop:start', { x: 0, z: 11 });
   }
 

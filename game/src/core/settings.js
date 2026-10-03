@@ -48,6 +48,7 @@ const DEFAULTS = {
   showFps: false,
   contentWarningSeen: false,
   crouchToggle: true,
+  holdBreathToggle: false, // accessibility: Space latches 'be still' instead of being held
   reduceFlash: false,     // photosensitivity: no strobing lights / white flashes
 };
 

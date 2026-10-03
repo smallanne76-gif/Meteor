@@ -34,8 +34,10 @@ Pick a quality preset under *Settings → Graphics*: `LOW · MEDIUM · HIGH · U
 | Journal (notes, photographs, tapes) | `Tab` |
 | Pause · settings | `Esc` |
 
-Accessibility (Settings): subtitle on/off, size, background and speaker names; brightness/gamma; mouse sensitivity, invert-Y, crouch toggle,
-hold-breath toggle; FOV; motion blur, camera shake and head-bob toggles; *reduce flashing & sudden effects*; separate volume sliders (master, music, effects, ambience, voices).
+Accessibility (Settings): subtitle on/off, size, background and speaker names; brightness/gamma; mouse sensitivity, invert-Y, crouch toggle, *be still* (hold-breath / eyes-closed) as a toggle instead of a held key;
+FOV; motion blur, camera shake and head-bob toggles; *reduce flashing* (replaces strobing lights and white flashes with slow dips — the Ice House blackout
+is the main one); a switch for the synthesised voice murmur (captions only); separate volume sliders (master, music, effects, ambience, voices).
+Settings switches are keyboard-operable (Tab to focus, Space/Enter to flip). Quality presets can be changed live, including from the pause menu.
 
 ## The game
 
