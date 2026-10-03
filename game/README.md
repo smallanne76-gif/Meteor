@@ -39,7 +39,7 @@ hold-breath toggle; FOV; motion blur, camera shake and head-bob toggles; *reduce
 
 ## The game
 
-Seven chapters, about 2–3 hours at a slow, curious pace (less if you know the puzzles):
+Seven chapters. Designed for roughly one and a half to two and a half hours at a slow, curious pace (an estimate — it has not been timed with a human player):
 
 | | Chapter | Place | What you do |
 |---|---|---|---|

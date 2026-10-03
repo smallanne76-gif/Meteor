@@ -56,7 +56,7 @@ export function buildLodge(game, parent, opts = {}) {
     floorPale: pbr('wood_pale', { key: 'fp', tint: 0xcfb08a }),
     floorStudy: pbr('wood_dark', { key: 'fs' }),
     tile: pbr('tile', { key: 'ft', tint: 0xdcdcd2 }),
-    ceilWood: pbr('wood_pale', { key: 'cw', tint: 0x9c7a52 }),
+    ceilWood: pbr('wood_pale', { key: 'cw', tint: 0xb08a5c, normal: 0.3 }),
     beam: pbr('wood_dark', { key: 'beam', tint: 0xb89a80 }),
     roofIn: pbr('wood_pale', { key: 'ri', tint: 0x8a6a46 }),
     stone: pbr('rock', { key: 'chim', tint: 0xb4aca0 }),

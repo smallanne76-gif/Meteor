@@ -32,7 +32,12 @@ const res = await p.evaluate(async () => {
   for (const s of ['snow', 'wood', 'concrete', 'ice']) out.push(await run('step-' + s, 1.2, (e) => e.kit.step(e.buses.sfx, s, { t: 0.05, loud: 0.6 })));
   const sf = (name, secs, o = {}) => run('sfx-' + name, secs, (e) => e.sfx(name, o));
   for (const [n, s] of [['door_open', 3], ['door_close', 2], ['door_slam', 2], ['drawer', 2], ['keys', 1.5], ['unlock', 1.5], ['knock', 2], ['glass', 2], ['paper', 1.5], ['ice_pew', 3], ['ice_crack', 3], ['ice_boom', 5], ['owl', 8], ['loon', 4], ['cricket', 1], ['frog', 1.5], ['bird', 2], ['phone_ring', 8], ['dialtone', 4], ['static', 2], ['gasp', 2], ['heartbeat', 1], ['splash', 3], ['wet_step', 1], ['snow_whump', 2], ['wood_crack', 2], ['creak', 2], ['lantern', 1.5], ['tape', 1]]) out.push(await sf(n, s, { vol: 1 }));
-  out.push(await sf('door_open@pos', 3, { vol: 1, pos: [3, 1.5, -2] }));
+  for (const [n, sec] of [['paddle', 2], ['match', 2], ['lantern', 2], ['reel', 3], ['tape', 2], ['handset', 2], ['phone_ring', 4], ['static', 2], ['switch', 1], ['ceramic', 2], ['pickup', 1.5], ['thud', 1.5], ['hiss', 2], ['splash', 3], ['loon', 5], ['frog', 2], ['bird', 2], ['wood_crack', 2], ['ice_boom', 5]]) out.push(await sf(n, sec, { vol: 1 }));
+  out.push(await run('note-search-tape', 30, (e) => e.playNoteAudio('search_tape')));
+  out.push(await run('note-voicemail', 16, (e) => e.playNoteAudio('voicemail_corrupt')));
+  out.push(await run('amb-loop', 8, (e) => e.amb.set('loop', { fade: 0.1 })));
+  out.push(await run('amb-dawn', 8, (e) => e.amb.set('dawn', { fade: 0.1 })));
+  out.push(await run('sfx-door_open@pos', 3, (e) => e.sfx('door_open', { vol: 1, pos: [3, 1.5, -2] })));
   out.push(await run('breath', 4, (e) => e.kit.breath(e.buses.sfx, { t: 0.1, fear: 0.6, exert: 0.4, gain: 1.1 })));
   out.push(await run('voice-hum', 8, (e) => e.voice.hum(e.buses.voice, { t: 0.1, notes: [[0, 1], [3, 1], [7, 2], [5, 1], [3, 1], [2, 1], [0, 3]], root: 50, tempo: 70, gain: 0.12 })));
   out.push(await run('voice-search-call', 5, (e) => e.voice.searcherCall(e.buses.voice, { t: 0.1, gain: 0.25 })));

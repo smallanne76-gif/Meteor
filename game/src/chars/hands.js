@@ -3,7 +3,7 @@
 import * as THREE from 'three';
 import { pbr, solid } from '../gfx/materials.js';
 import { clamp, damp, lerp } from '../core/util.js';
-import { worldUV } from '../gfx/geo.js';
+import { worldUV, rbox } from '../gfx/geo.js';
 import { settings } from '../core/settings.js';
 
 const UP = new THREE.Vector3(0, 1, 0);
@@ -149,12 +149,19 @@ function makeFlashlight() {
   return g;
 }
 function makeRecorder() {
+  // Jo's portable cassette recorder: scuffed olive body, speaker grille, a tape window with two tiny reels, a row of chunky buttons, a red LED
   const g = new THREE.Group();
-  const body = new THREE.Mesh(new THREE.BoxGeometry(0.075, 0.13, 0.034), solid(0x2a2c2f, { rough: 0.5, metal: 0.3 })); body.position.y = 0.0;
-  const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.05, 0.034), new THREE.MeshStandardMaterial({ color: 0x0a1410, emissive: 0x38ff88, emissiveIntensity: 0.6, roughness: 0.2 })); screen.position.set(0, 0.026, 0.0175);
-  const mic = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.05, 12), solid(0x111213, { rough: 0.9 })); mic.position.set(0, 0.09, 0);
-  const knob = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.011, 0.01, 12), solid(0xb9892c, { rough: 0.4, metal: 0.8 })); knob.position.set(0.0, -0.025, 0.021); knob.rotation.x = Math.PI / 2;
-  g.add(body, screen, mic, knob); g.userData.screen = screen;
+  const body = new THREE.Mesh(rbox(0.07, 0.118, 0.03, 0.006, 0.2), solid(0x4a5240, { rough: 0.55, metal: 0.1 })); g.add(body);
+  const face = new THREE.Mesh(new THREE.BoxGeometry(0.062, 0.108, 0.002), solid(0x1c1e1d, { rough: 0.6 })); face.position.z = 0.0155; g.add(face);
+  for (let i = 0; i < 6; i++) { const gr = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.0025, 0.002), solid(0x0a0b0b, { rough: 0.9 })); gr.position.set(0, 0.04 - i * 0.0055, 0.0168); g.add(gr); }
+  const win = new THREE.Mesh(new THREE.BoxGeometry(0.046, 0.026, 0.002), new THREE.MeshStandardMaterial({ color: 0x1a2220, roughness: 0.15, transparent: true, opacity: 0.8 })); win.position.set(0, 0.002, 0.0168); g.add(win);
+  for (const sx of [-0.011, 0.011]) { const r = new THREE.Mesh(new THREE.CylinderGeometry(0.0065, 0.0065, 0.002, 12), solid(0x8a8a86, { rough: 0.4, metal: 0.8 })); r.rotation.x = Math.PI / 2; r.position.set(sx, 0.002, 0.0176); g.add(r); }
+  const cols = [0xb23a2a, 0x7a7a74, 0x7a7a74, 0x7a7a74, 0xc8b070];
+  for (let i = 0; i < 5; i++) { const bt = new THREE.Mesh(new THREE.BoxGeometry(0.009, 0.012, 0.006), solid(cols[i], { rough: 0.5 })); bt.position.set(-0.024 + i * 0.012, -0.028, 0.0185); g.add(bt); }
+  const led = new THREE.Mesh(new THREE.SphereGeometry(0.0032, 8, 6), new THREE.MeshStandardMaterial({ color: 0x300000, emissive: 0xff2a1a, emissiveIntensity: 0.9 })); led.position.set(0.024, 0.044, 0.0172); g.add(led);
+  const mic = new THREE.Mesh(new THREE.CylinderGeometry(0.0085, 0.0085, 0.03, 12), solid(0x111213, { rough: 0.9 })); mic.position.set(0, 0.073, 0); g.add(mic);
+  const label = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.014, 0.001), solid(0xe0d6b6, { rough: 0.9 })); label.position.set(0, 0.052, 0.0166); g.add(label);
+  g.userData.screen = led;
   g.traverse((m) => { if (m.isMesh) m.castShadow = false; });
   return g;
 }
