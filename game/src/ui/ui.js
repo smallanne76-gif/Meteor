@@ -34,12 +34,13 @@ export class UI {
     this.promptEl.innerHTML = '<span class="key">E</span><span class="lbl"></span><span class="ring"></span>';
     this.subsEl = el('div'); this.subsEl.id = 'subs';
     this.hintEl = el('div'); this.hintEl.id = 'hint';
+    this.clickLook = el('div'); this.clickLook.id = 'clicklook'; this.clickLook.textContent = 'Click to look around';
     this.toastEl = el('div'); this.toastEl.id = 'toast';
     this.objEl = el('div'); this.objEl.id = 'objective';
     this.cardEl = el('div'); this.cardEl.id = 'chapterCard';
     this.fpsEl = el('div'); this.fpsEl.id = 'fps';
     this.bars = el('div'); this.bars.id = 'bars'; this.bars.innerHTML = '<div class="bar top"></div><div class="bar bot"></div>';
-    this.hud.append(this.reticle, this.promptEl, this.subsEl, this.hintEl, this.toastEl, this.objEl, this.cardEl, this.bars, this.fpsEl);
+    this.hud.append(this.reticle, this.promptEl, this.subsEl, this.hintEl, this.clickLook, this.toastEl, this.objEl, this.cardEl, this.bars, this.fpsEl);
     r.appendChild(this.hud);
 
     this.loading = el('div', 'layer'); this.loading.id = 'loading';
@@ -154,6 +155,7 @@ export class UI {
       slider('Resolution scale', 'resolutionScale', 0.5, 1.5, 0.05, (v) => `${Math.round(v * 100)}%`);
       slider('Field of view', 'fov', 55, 100, 1, (v) => `${v}°`);
       slider('Brightness', 'brightness', 0.6, 1.6, 0.02, (v) => v.toFixed(2), 'Raise it if the dark is too dark. The game is meant to be dim, not black.');
+      toggle('Compatibility renderer', 'compatRenderer', 'If the picture flashes, flickers or looks wrong, turn this on (or press F9 at any time). Simpler look, works on more GPUs.');
       toggle('Fullscreen', 'fullscreen', 'Also switches right now. F11 works too.');
       toggle('Motion blur', 'motionBlur', 'Only applied on ULTRA / CINEMATIC.');
       toggle('Show FPS', 'showFps');
@@ -345,6 +347,9 @@ export class UI {
     else if (this.journalOpen && g.time - this._jOpen > 0.35 && (g.input.wasPressed('journal') || g.input.wasPressed('pause'))) { this.showJournal(false); }
     if (settings.get('showFps')) this.fpsEl.textContent = `${g.fps.toFixed(0)} fps · ${g.gfx.info.render.calls} calls · ${(g.gfx.info.render.triangles / 1000).toFixed(0)}k tris`;
     this.setReticle(g.mode === 'free' && !this.readerOpen && !this.reticleOff);
+    // the mouse isn't captured (the browser refused, or the window lost focus): say how to get it back
+    const needClick = !g.debug && !g.input.locked && (g.mode === 'free' || g.mode === 'hide') && !this.readerOpen && !this.journalOpen;
+    if (needClick !== this._needClick) { this._needClick = needClick; this.clickLook.classList.toggle('show', needClick); }
   }
 }
 

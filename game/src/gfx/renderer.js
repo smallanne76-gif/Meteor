@@ -78,7 +78,7 @@ void main(){
 const BLOOM_PRE_FRAG = /* glsl */`
 precision highp float;
 varying vec2 vUv; uniform sampler2D tSrc; uniform vec2 uTexel; uniform float uThreshold, uKnee;
-vec3 sampleSrc(vec2 uv){ return min(texture2D(tSrc, uv).rgb, vec3(24.0)); }
+vec3 sampleSrc(vec2 uv){ vec3 c = texture2D(tSrc, uv).rgb; return clamp(c, vec3(0.0), vec3(24.0)); }
 void main(){
   vec3 a = sampleSrc(vUv + uTexel*vec2(-1.,-1.)), b = sampleSrc(vUv + uTexel*vec2(1.,-1.)), c = sampleSrc(vUv + uTexel*vec2(-1.,1.)), d = sampleSrc(vUv + uTexel*vec2(1.,1.));
   vec3 col = (a+b+c+d)*0.25;
@@ -129,7 +129,7 @@ uniform float uUseAO, uUseBloom;
 float hash12(vec2 p){ vec3 p3 = fract(vec3(p.xyx) * .1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }
 float lin(float d){ float z = d * 2.0 - 1.0; return (2.0 * uNear * uFar) / (uFar + uNear - z * (uFar - uNear)); }
 vec3 aces(vec3 x){ const float a = 2.51, b = 0.03, c = 2.43, d = 0.59, e = 0.14; return clamp((x*(a*x+b))/(x*(c*x+d)+e), 0.0, 1.0); }
-vec3 sceneAt(vec2 uv){ return texture2D(tScene, uv).rgb; }
+vec3 sceneAt(vec2 uv){ return clamp(texture2D(tScene, uv).rgb, vec3(0.0), vec3(6.0e4)); }
 
 void main(){
   vec2 uv = vUv;
@@ -140,13 +140,12 @@ void main(){
   uv += cuv * (uMemory * 0.012 * sin(uTime * 0.7) + uDread * 0.01 * sin(uTime * 3.1)) ;
 
   vec3 col;
-  float depth = texture2D(tDepth, uv).x;
-  float zlin = lin(depth);
 
   // ---- depth of field (gather) -------------------------------------------------------------------------------
   float coc = 0.0;
   if (uDof > 0.001) {
     float f = max(uFocus, 0.2);
+    float zlin = lin(texture2D(tDepth, uv).x);
     coc = clamp(abs(1.0 / f - 1.0 / max(zlin, 0.05)) * uAperture, 0.0, 1.0) * uDof;
   }
   float mb = length(uMotion);
@@ -275,6 +274,8 @@ export class Gfx {
     r.shadowMap.autoUpdate = true;
     r.setClearColor(0x05070a, 1);
     this.info = r.info; r.info.autoReset = false;   // accumulate over every pass of a frame; reset at the start of render()
+    this.compat = !!settings.get('compatRenderer');
+    this._applyCompatOutput();
     this.maxAniso = r.capabilities.getMaxAnisotropy();
 
     this.quad = new THREE.Mesh(new THREE.BufferGeometry(), null);
@@ -316,6 +317,46 @@ export class Gfx {
     this.applySettings();
   }
 
+  // ---- compatibility renderer -----------------------------------------------------------------------------------
+  // Draws the scene straight to the screen with three.js's own tone mapping, and does fades / closed eyes / memory tint
+  // with CSS layers instead of the custom HDR post chain. Less beautiful, but it uses only the most common GPU paths.
+  setCompat(on) {
+    on = !!on; if (on === this.compat) return;
+    this.compat = on; this._applyCompatOutput(); this._buildTargets();
+    if (!on && this.ov) { this.ov.fade.style.opacity = 0; this.ov.lids.style.opacity = 0; this.canvas.style.filter = ''; }
+  }
+  _applyCompatOutput() {
+    const r = this.renderer;
+    r.toneMapping = this.compat ? THREE.ACESFilmicToneMapping : THREE.NoToneMapping;
+    r.outputColorSpace = this.compat ? THREE.SRGBColorSpace : THREE.LinearSRGBColorSpace;
+  }
+  _compatOverlay(g, fx) {
+    if (!this.ov) {
+      const mk = (prev) => { const d = document.createElement('div'); d.style.cssText = 'position:fixed;inset:0;pointer-events:none;opacity:0'; prev.after(d); return d; };
+      const lids = mk(this.canvas), fade = mk(lids);   // canvas < lids < fade < #ui
+      this.ov = { lids, fade, last: {} };
+    }
+    const o = this.ov, L = o.last;
+    const set = (k, v, fn) => { if (L[k] !== v) { L[k] = v; fn(v); } };
+    const fc = fx.fadeColor; const fcol = `rgb(${Math.round(fc.r * 255)},${Math.round(fc.g * 255)},${Math.round(fc.b * 255)})`;
+    set('fc', fcol, (v) => { o.fade.style.background = v; });
+    set('fade', Math.round(fx.fade * 200) / 200, (v) => { o.fade.style.opacity = v; });
+    const lid = Math.max(fx.eyes, fx.blink); const lidR = Math.round(lid * 100) / 100;
+    set('lid', lidR, (v) => {
+      const a = Math.min(50, v * 58), b = Math.min(50, a + 14);
+      o.lids.style.background = `linear-gradient(to bottom,#000 0%,#000 ${a}%,transparent ${b}%,transparent ${100 - b}%,#000 ${100 - a}%,#000 100%)`;
+      o.lids.style.opacity = v > 0.005 ? 1 : 0;
+    });
+    const m = Math.round(fx.memory * 50) / 50, d = Math.round(fx.dread * 50) / 50, br = settings.get('brightness');
+    set('flt', `${m}|${d}|${br}`, () => {
+      const f = [];
+      if (m > 0) f.push(`sepia(${(0.45 * m).toFixed(2)})`, `saturate(${(1 + 0.15 * m).toFixed(2)})`);
+      if (d > 0) f.push(`saturate(${(1 - 0.35 * d).toFixed(2)})`);
+      if (Math.abs(br - 1) > 0.01) f.push(`brightness(${br.toFixed(2)})`);
+      this.canvas.style.filter = f.join(' ');
+    });
+  }
+
   // ---- settings -------------------------------------------------------------------------------------------------
   applySettings() {
     const p = settings.preset;
@@ -331,8 +372,11 @@ export class Gfx {
   }
 
   resize(force = false) {
-    const w = Math.max(2, Math.floor((this.canvas.clientWidth || window.innerWidth) * this.pixelRatio));
-    const h = Math.max(2, Math.floor((this.canvas.clientHeight || window.innerHeight) * this.pixelRatio));
+    let w = Math.max(2, Math.floor((this.canvas.clientWidth || window.innerWidth) * this.pixelRatio));
+    let h = Math.max(2, Math.floor((this.canvas.clientHeight || window.innerHeight) * this.pixelRatio));
+    // very large / ultra-wide / high-DPI screens: cap the internal resolution per preset (the image is scaled up by the browser)
+    const cap = (this.p && this.p.maxPixels) || 3.7e6;
+    if (w * h > cap) { const k = Math.sqrt(cap / (w * h)); w = Math.max(2, Math.floor(w * k)); h = Math.max(2, Math.floor(h * k)); }
     if (!force && w === this.size.w && h === this.size.h) return;
     this.size = { w, h };
     this.renderer.setPixelRatio(1);
@@ -345,16 +389,20 @@ export class Gfx {
     const old = this.targets;
     for (const k in old) { const t = old[k]; if (Array.isArray(t)) t.forEach((x) => x.dispose()); else t.dispose(); }
     const p = this.p;
+    if (this.compat) { this.targets = {}; return; }   // the compatibility renderer draws straight to the screen
     const maxS = this.renderer.capabilities.maxSamples;
-    const samples = Math.min(p.msaa, maxS);
-    const depth = new THREE.DepthTexture(w, h);
-    depth.type = THREE.UnsignedIntType; depth.format = THREE.DepthFormat;
-    const scene = new THREE.WebGLRenderTarget(w, h, { type: THREE.HalfFloatType, format: THREE.RGBAFormat, samples, depthTexture: depth, minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter });
+    // a sampleable depth texture is only made when AO / depth of field need it, and then never together with MSAA:
+    // resolving multisampled depth into a texture is unreliable on some GPUs/drivers (it showed up as whole-frame flashing)
+    const needDepth = !!(p.ssao || p.dof) && !this.compat;
+    const samples = needDepth || this.compat ? 0 : Math.min(p.msaa, maxS);
+    let depth = null;
+    if (needDepth) { depth = new THREE.DepthTexture(w, h); depth.type = THREE.UnsignedIntType; depth.format = THREE.DepthFormat; }
+    const scene = new THREE.WebGLRenderTarget(w, h, { type: THREE.HalfFloatType, format: THREE.RGBAFormat, samples, depthTexture: depth, depthBuffer: true, minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter });
     scene.texture.colorSpace = THREE.LinearSRGBColorSpace;
     const t = { scene };
     const hw = Math.max(2, w >> 1), hh = Math.max(2, h >> 1);
     const mk = (a, b, type = THREE.HalfFloatType) => new THREE.WebGLRenderTarget(a, b, { type, format: THREE.RGBAFormat, minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, depthBuffer: false });
-    if (p.ssao) { t.ao = mk(hw, hh, THREE.UnsignedByteType); t.ao2 = mk(hw, hh, THREE.UnsignedByteType); }
+    if (p.ssao && needDepth) { t.ao = mk(hw, hh, THREE.UnsignedByteType); t.ao2 = mk(hw, hh, THREE.UnsignedByteType); }
     if (p.bloom) {
       const lv = 6; t.down = []; t.up = [];
       let bw = Math.max(2, Math.floor(w * 0.5 * p.bloomRes)), bh = Math.max(2, Math.floor(h * 0.5 * p.bloomRes));
@@ -405,6 +453,14 @@ export class Gfx {
     camera.updateMatrixWorld();
     updateAtmosphere(camera, scatterDir || new THREE.Vector3(0, 1, 0));
 
+    if (this.compat) {
+      r.setRenderTarget(null);
+      r.toneMappingExposure = g.exposure * fx.exposureMul * 1.1;
+      r.clear(); r.render(scene, camera);
+      this._compatOverlay(g, fx);
+      return;
+    }
+
     // 1. scene
     r.setRenderTarget(t.scene);
     r.clear();
@@ -432,7 +488,7 @@ export class Gfx {
     }
 
     // 4. composite
-    const dofOn = p.dof ? 1 : 0;
+    const dofOn = p.dof && t.scene.depthTexture ? 1 : 0;
     this._pass(this.mFinal, null, (u) => {
       u.tScene.value = t.scene.texture; u.tDepth.value = t.scene.depthTexture; u.tAO.value = t.ao2 ? t.ao2.texture : null; u.tBloom.value = t.up ? t.up[0].texture : null;
       u.uRes.value.set(this.size.w, this.size.h); u.uTime.value = this.time; u.uNear.value = camera.near; u.uFar.value = camera.far;

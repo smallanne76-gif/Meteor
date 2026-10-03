@@ -10,7 +10,7 @@
     "textures": "python3 tools/gen_textures.py",
     "qa": "node tools/qa/multi.mjs",
     "start": "npm run serve",
-    "desktop": "npm run build && cd desktop && npm i --no-save @electron/packager && node -e \"require('fs').cpSync('../dist','game',{recursive:true})\" && npx @electron/packager . LeaveTheLightOn --platform=win32 --arch=x64 --electron-version=33.2.0 --out=out --overwrite --no-prune --ignore='^/node_modules|^/out'"
+    "desktop": "npm run build && cd desktop && npm i --no-save @electron/packager && node -e \"require('fs').cpSync('../dist','game',{recursive:true})\" && npx @electron/packager . LeaveTheLightOn --platform=win32 --arch=x64 --electron-version=33.2.0 --out=out --overwrite --no-prune --ignore='^/node_modules|^/out|^/launchers|^/README.txt' && node -e \"const fs=require('fs');for(const f of fs.readdirSync('launchers'))fs.copyFileSync('launchers/'+f,'out/LeaveTheLightOn-win32-x64/'+f);fs.copyFileSync('README.txt','out/LeaveTheLightOn-win32-x64/README.txt')\""
   },
   "dependencies": {
     "@fontsource/caveat": "^5.3.0",

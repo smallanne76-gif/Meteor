@@ -193,3 +193,5 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden;color:var(--ink);
 #postcredit .call.show{opacity:1;animation:cb 2.4s ease-in-out infinite}
 @keyframes cb{50%{box-shadow:0 0 22px rgba(120,220,160,.35)}}
 @media (max-height:640px){#settings .panel{max-height:94vh;padding:20px 32px}#settings h2{margin-bottom:10px}.tabs{margin-bottom:10px}}
+#clicklook{position:absolute;left:50%;top:calc(50% + 34px);transform:translateX(-50%);font-size:18px;letter-spacing:.2em;text-transform:uppercase;color:#fff4dd;text-shadow:0 1px 10px #000;opacity:0;transition:opacity .4s;white-space:nowrap;padding:6px 14px;border:1px solid rgba(255,230,190,.35);background:rgba(0,0,0,.4)}
+#clicklook.show{opacity:.9}

@@ -45,14 +45,14 @@ export class ProloguePhase {
   armPhone() {
     const w = this.w, g = this.g, car = w.car;
     const pw = car.userData.phone.getWorldPosition(new THREE.Vector3());
-    this.phoneIt = g.interact.add({ pos: pw, radius: 0.34, maxDist: 2.6, label: 'Pick up the phone', icon: 'hand', onUse: () => this.takePhone() });
-    this.phoneGlow = true;
-    g.ui.hint('interact', 'Look around. Use what you can reach.', 7);
+    this.phoneIt = g.interact.add({ pos: pw, radius: 0.55, maxDist: 3.0, label: 'Pick up the phone', icon: 'hand', onUse: () => this.takePhone() });
+    this.phoneGlow = true; this.armT = g.time; this.nagT = g.time;
+    g.ui.hint('interact', 'Your phone is glowing on the seat beside you. Look at it and press E.', 9);
   }
 
   async takePhone() {
-    const w = this.w, g = this.g, car = w.car; this.phoneGlow = false;
-    this.phoneIt.remove();
+    const w = this.w, g = this.g, car = w.car; if (this.phoneTaken) return; this.phoneTaken = true; this.phoneGlow = false;
+    this.phoneIt.remove(); g.ui.hideHint();
     g.mode = 'locked';
     g.hands.setVisible(true); g.hands.held.R = 'phone'; g.hands.held.L = null; g.hands.gesture('grab', car.userData.phone.getWorldPosition(new THREE.Vector3()), 'R');
     g.audio.sfx('pickup', { vol: 0.8 });
@@ -76,12 +76,14 @@ export class ProloguePhase {
     g.flags.flashlightHint = true;
     // door
     const door = new THREE.Vector3(-1.0, 1.05, -0.35).applyMatrix4(car.matrixWorld);
-    this.doorIt = g.interact.add({ pos: door, radius: 0.4, maxDist: 2.6, label: 'Get out', icon: 'door', onUse: () => this.exitCar(false) });
+    this.doorIt = g.interact.add({ pos: door, radius: 0.7, maxDist: 3.0, label: 'Get out', icon: 'door', onUse: () => this.exitCar(false) });
+    this.armT = g.time; this.nagT = g.time;
+    g.ui.hint('interact', 'Look left at the door and press E to get out.', 8);
   }
 
   async exitCar(instant) {
-    const w = this.w, g = this.g, car = w.car, P = g.player;
-    if (this.doorIt) this.doorIt.remove();
+    const w = this.w, g = this.g, car = w.car, P = g.player; if (this.exiting) return; this.exiting = true;
+    if (this.doorIt) this.doorIt.remove(); g.ui.hideHint();
     if (!instant) { g.mode = 'locked'; g.audio.sfx('door_open', { pos: car.position.clone().add(new THREE.Vector3(0, 1, 0)), vol: 1 }); await g.fadeTo(1, 0.7); }
     const out = new THREE.Vector3(-1.9, 0, -0.5).applyMatrix4(car.matrixWorld);
     P.noclip = false; P.frozen = false; P.lookLimit = null; P.eyeOverride = null; P.eye = 1.62; w.inCar = false;
@@ -129,6 +131,12 @@ export class ProloguePhase {
     if (w.inCar) {
       this.tickT = (this.tickT ?? 2) - dt; if (this.tickT <= 0) { this.tickT = 2.2 + Math.random() * 2.2; g.audio.sfx('click', { vol: 0.2 }); }
       const sc = w.car.userData.phoneScreen; if (sc && this.phoneGlow) sc.material.emissiveIntensity = 0.6 + Math.sin(g.time * 3) * 0.4;
+      // never get stuck in the car: repeat the hint, and after a while E works without aiming
+      const waiting = g.mode === 'free' && ((this.phoneIt && !this.phoneTaken) || (this.doorIt && !this.exiting));
+      if (waiting) {
+        if (g.time - this.nagT > 14) { this.nagT = g.time; g.ui.hint('interact', this.phoneTaken ? 'Press E to get out of the car.' : 'Press E to pick up the phone.', 8); }
+        if (g.time - this.armT > 12 && g.input.wasPressed('interact')) { if (!this.phoneTaken) this.takePhone(); else this.exitCar(false); }
+      }
     }
     if (!this.fired.exit) return;
     const near = T.road.nearest(p.x, p.z); const rt = near.t; const L = T.road.length;

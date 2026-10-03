@@ -54,6 +54,8 @@ export class Game extends Emitter {
 
     addEventListener('resize', () => this.resize());
     settings.on('change', (k) => this.onSettings(k));
+    // a click on the game always (re)captures the mouse: browsers refuse pointer lock that isn't tied to a click
+    this.canvas.addEventListener('mousedown', () => { if (!this.input.locked && ['free', 'hide', 'locked', 'cutscene'].includes(this.mode)) this.input.lock(); });
     this.input.onLockChange = (locked) => { if (!locked && this.mode === 'free' && !this.suppressAutoPause) this.pause(true); };
     this.resize();
   }
@@ -73,6 +75,7 @@ export class Game extends Emitter {
       // force shadow/material refresh
       this.scene.traverse((o) => { if (o.material) { const ms = Array.isArray(o.material) ? o.material : [o.material]; ms.forEach((m) => { m.needsUpdate = true; }); } });
     }
+    if (k === 'compatRenderer' || k === '*') { this.gfx.setCompat(settings.get('compatRenderer')); if (k !== '*' && this.ui) this.ui.toast(settings.get('compatRenderer') ? 'Compatibility renderer on (F9 to switch back)' : 'Full renderer on (F9 for compatibility)'); }
     if (k === 'fullscreen') { if (settings.get('fullscreen')) document.documentElement.requestFullscreen?.().catch(() => {}); else if (document.fullscreenElement) document.exitFullscreen?.(); }
     if (k === 'fov' || k === '*') { this.camera.fov = settings.get('fov'); this.camera.updateProjectionMatrix(); }
     this.audio && this.audio.applyVolumes();
@@ -193,6 +196,7 @@ export class Game extends Emitter {
     this.fpsAcc += dt; this.fpsN++;
     if (this.fpsAcc > 0.5) { this.fps = this.fpsN / this.fpsAcc; this.fpsAcc = 0; this.fpsN = 0; }
 
+    if (input.wasPressed('compat')) settings.set('compatRenderer', !settings.get('compatRenderer'));
     if (this.mode === 'paused') {
       if (input.wasPressed('pause')) this.pause(false);
       if (render) this.drawFrame(0);

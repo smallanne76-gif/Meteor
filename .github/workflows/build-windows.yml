@@ -18,7 +18,8 @@ jobs:
           cd desktop
           npm i --no-save --no-audit --no-fund @electron/packager
           cp -r ../dist game
-          npx @electron/packager . LeaveTheLightOn --platform=win32 --arch=x64 --electron-version=33.2.0 --out=out --overwrite --no-prune --ignore='^/node_modules|^/out'
+          npx @electron/packager . LeaveTheLightOn --platform=win32 --arch=x64 --electron-version=33.2.0 --out=out --overwrite --no-prune --ignore='^/node_modules|^/out|^/launchers|^/README.txt'
+          cp launchers/*.cmd README.txt out/LeaveTheLightOn-win32-x64/
         shell: bash
       - uses: actions/upload-artifact@v4
         with:

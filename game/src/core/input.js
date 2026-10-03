@@ -4,7 +4,7 @@ import { settings } from './settings.js';
 export const ACTIONS = {
   forward: ['KeyW', 'ArrowUp'], back: ['KeyS', 'ArrowDown'], left: ['KeyA', 'ArrowLeft'], right: ['KeyD', 'ArrowRight'],
   run: ['ShiftLeft', 'ShiftRight'], crouch: ['KeyC', 'ControlLeft'], interact: ['KeyE', 'Enter'], flashlight: ['KeyF'],
-  still: ['Space'], journal: ['Tab', 'KeyJ'], pause: ['Escape', 'KeyP'], recorder: ['KeyQ'], skip: ['Space', 'Enter', 'Escape'],
+  still: ['Space'], journal: ['Tab', 'KeyJ'], pause: ['Escape', 'KeyP'], recorder: ['KeyQ'], compat: ['F9'], skip: ['Space', 'Enter', 'Escape'],
 };
 
 export class Input {
