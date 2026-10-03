@@ -33,7 +33,7 @@ export class LightRig {
 
   rebuild() {
     const p = settings.preset;
-    for (const arr of Object.values(this.pool)) for (const l of arr) { this.root.remove(l); if (l.shadow && l.shadow.map) l.shadow.map.dispose(); }
+    for (const arr of Object.values(this.pool)) for (const l of arr) { this.root.remove(l); if (l.target) this.root.remove(l.target); if (l.shadow && l.shadow.map) { l.shadow.map.dispose(); l.shadow.map = null; } }
     this.pool = { points: [], shadowPoints: [], spots: [], shadowSpots: [] };
     const sm = p.shadowMap;
     const np = p.maxPointLights, nsp = p.shadows ? (sm >= 2048 ? 2 : 1) : 0;
@@ -44,6 +44,9 @@ export class LightRig {
     for (let i = 0; i < nss; i++) { const l = new THREE.SpotLight(0xffffff, 0, 10, 0.6, 0.6, 2); l.castShadow = true; l.shadow.mapSize.set(sm >= 2048 ? 1024 : 512, sm >= 2048 ? 1024 : 512); l.shadow.bias = -0.0004; l.shadow.normalBias = 0.02; this._mk('shadowSpots', l); }
     // sun
     this.sun.shadow.mapSize.set(sm, sm);
+    // three keeps the old render target when only mapSize changes: drop it so the map is re-created at the new size
+    if (this.sun.shadow.map && this.sun.shadow.map.width !== sm) { this.sun.shadow.map.dispose(); this.sun.shadow.map = null; }
+    this.sun.shadow.needsUpdate = true;
     this.sun.shadow.camera.near = 1; this.sun.shadow.camera.far = 220;
     const R = 38; Object.assign(this.sun.shadow.camera, { left: -R, right: R, top: R, bottom: -R }); this.sun.shadow.camera.updateProjectionMatrix();
     this.sun.shadow.bias = -0.0006; this.sun.shadow.normalBias = 0.05;
