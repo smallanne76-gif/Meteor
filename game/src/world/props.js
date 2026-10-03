@@ -95,28 +95,66 @@ export function bookshelf(B, x, z, yaw = 0, { w = 1.1, h = 2.0, d = 0.3, y = 0, 
   B.col.addBox(x, z, Math.abs(c) * w + Math.abs(s) * d, Math.abs(s) * w + Math.abs(c) * d, y, y + h, 0, {});
 }
 
+
+/** a hearth fire: a handful of billboarded flame tongues (additive, noise-shaped) plus a few rising sparks */
+function makeFlames(parent, _unused, L, y) {
+  const mat = new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, fog: false, uniforms: { uTime: { value: 0 } },
+    vertexShader: `attribute float aSeed; attribute vec3 aBase; uniform float uTime; varying vec2 vUv; varying float vSeed;
+      void main(){ vUv = uv; vSeed = aSeed; vec3 center = (modelMatrix * vec4(aBase, 1.0)).xyz; vec3 toCam = cameraPosition - center; toCam.y = 0.0; toCam = normalize(toCam + 1e-5);
+        vec3 right = normalize(cross(vec3(0.0,1.0,0.0), toCam)); float sway = sin(uTime * (2.0 + aSeed) + aSeed * 9.0 + position.y * 4.0) * 0.06 * position.y;
+        vec3 wp = center + right * (position.x + sway) + vec3(0.0, position.y * (1.0 + 0.12 * sin(uTime * 7.0 + aSeed * 13.0)), 0.0); gl_Position = projectionMatrix * viewMatrix * vec4(wp, 1.0); }`,
+    fragmentShader: `varying vec2 vUv; varying float vSeed; uniform float uTime;
+      float h(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+      float n(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.0-2.0*f); return mix(mix(h(i), h(i+vec2(1,0)), f.x), mix(h(i+vec2(0,1)), h(i+vec2(1,1)), f.x), f.y); }
+      void main(){ float t = vUv.y; float x = (vUv.x - 0.5) * 2.0; float nz = n(vec2(vUv.x * 3.0 + vSeed * 7.0, t * 2.4 - uTime * 2.6 + vSeed * 5.0)) * 0.7 + n(vec2(vUv.x * 7.0, t * 5.0 - uTime * 4.0 + vSeed)) * 0.3;
+        float width = (1.0 - t) * (0.55 + 0.6 * nz); float body = smoothstep(width, width * 0.15, abs(x + (nz - 0.5) * 0.7 * t));
+        float a = body * smoothstep(1.0, 0.35, t) * (0.7 + 0.5 * nz);
+        vec3 col = mix(vec3(1.0, 0.92, 0.5), vec3(1.0, 0.38, 0.04), smoothstep(0.0, 0.7, t)); col = mix(col, vec3(0.55, 0.08, 0.02), t * t);
+        gl_FragColor = vec4(col * 2.4, a); }`,
+  });
+  const meshes = [];
+  const n = 7;
+  for (let i = 0; i < n; i++) {
+    const lu = -0.4 + (i / (n - 1)) * 0.8 + (i % 2 ? 0.03 : -0.03); const wdt = 0.3 + (i % 3) * 0.06, hgt = 0.45 + ((i * 37) % 5) * 0.07;
+    const g = new THREE.PlaneGeometry(wdt, hgt); g.translate(0, hgt / 2, 0);
+    const bp = L(lu, 0.6); const base = new THREE.Vector3(bp[0], y + 0.2, bp[1]);
+    g.setAttribute('aSeed', new THREE.BufferAttribute(new Float32Array(4).fill(i * 0.61 % 1 + 0.2), 1));
+    g.setAttribute('aBase', new THREE.BufferAttribute(new Float32Array([...base.toArray(), ...base.toArray(), ...base.toArray(), ...base.toArray()]), 3));
+    const m = new THREE.Mesh(g, mat); m.frustumCulled = false; m.renderOrder = 8; parent.add(m); meshes.push(m);
+  }
+  return { mat, meshes };
+}
+
 export function fireplace(B, game, x, z, yaw = 0, { y = 0, w = 2.2, h = 1.2 } = {}) {
   // faces +x (into the room) by default when yaw=0 at the west wall; pieces built in local space (u along wall, v out)
   const c = Math.cos(yaw), s = Math.sin(yaw); const L = (lu, lv) => [x + lv * c + lu * s * -1, z + lv * s + lu * c];
   const st = mats().stone, dark = mats().blackWood;
-  // breast of stone
-  const bp = L(0, 0.45); B.box(0.9, 2.7, w + 0.6, st, { pos: [bp[0], y + 1.35, bp[1]], rot: [0, yaw + Math.PI / 2, 0], tile: 0.8 });
-  // opening: black firebox
-  const fb = L(0, 0.58); B.box(0.5, h * 0.62, w * 0.62, mats().iron, { pos: [fb[0], y + h * 0.31 + 0.18, fb[1]], rot: [0, yaw + Math.PI / 2, 0], tile: 1, cast: false });
-  // hearth slab
-  const hp = L(0, 0.9); B.box(0.9, 0.12, w + 1.0, st, { pos: [hp[0], y + 0.06, hp[1]], rot: [0, yaw + Math.PI / 2, 0], tile: 0.8 });
-  // mantel
-  const mp = L(0, 0.72); B.box(0.4, 0.1, w + 0.8, mats().woodDark, { pos: [mp[0], y + 1.55, mp[1]], rot: [0, yaw + Math.PI / 2, 0], tile: 0.8 });
+  // breast of stone: two piers, a stone mass over an oak lintel, a sooty firebox behind the opening
+  const ow = 1.3, oh = 1.0, fy = 0.12, rotY = yaw;   // box dims are (depth along the room, height, width along the wall); built for yaw = 0
+  const pc = (lu, lv, d, hh, ww, py, mat, o = {}) => { const q = L(lu, lv); return B.box(d, hh, ww, mat, { pos: [q[0], y + py, q[1]], rot: [0, rotY, 0], tile: o.tile ?? 0.8, round: o.round ?? 0, cast: o.cast ?? true }); };
+  const soot = (P.soot ||= solid(0x16110d, { rough: 0.95 }));
+  for (const sg of [-1, 1]) pc(sg * (ow / 2 + (w + 0.6 - ow) / 4), 0.45, 0.9, 2.7, (w + 0.6 - ow) / 2, 1.35, st);   // piers
+  pc(0, 0.45, 0.9, 2.7 - fy - oh, w + 0.6, fy + oh + (2.7 - fy - oh) / 2, st);                                      // stone over the opening
+  pc(0, 0.92, 0.12, 0.2, ow + 0.34, fy + oh + 0.1, mats().woodDark, { tile: 0.5, round: 0.01 });                    // oak lintel
+  pc(0, 0.26, 0.12, oh, ow, fy + oh / 2, soot, { cast: false });                                                    // firebox back
+  pc(0, 0.55, 0.62, 0.04, ow, fy + 0.02, soot, { cast: false });                                                   // firebox floor
+  pc(0, 1.35, 0.9, 0.12, w + 1.0, 0.06, st);                                                                         // hearth slab (stone apron)
+  pc(0, 1.12, 0.34, 0.07, w + 0.9, 1.43, mats().woodDark, { tile: 0.6, round: 0.01 });                               // mantel shelf
+  for (const sg of [-1, 1]) pc(sg * (ow / 2 - 0.12), 0.66, 0.05, 0.28, 0.05, fy + 0.14, mats().iron, { cast: false }); // andiron posts
+  pc(0, 0.66, 0.05, 0.04, ow - 0.18, fy + 0.07, mats().iron, { cast: false });                                       // andiron bar
   // logs & embers
   const logs = new THREE.Group();
-  const lp = L(0, 0.72); logs.position.set(lp[0], y + 0.25, lp[1]);
+  const lp = L(0, 0.66); logs.position.set(lp[0], y + 0.2, lp[1]);
   for (let i = 0; i < 4; i++) { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.06, 0.7, 8), mats().blackWood); m.rotation.z = Math.PI / 2; m.rotation.y = (i - 1.5) * 0.35 + yaw; m.position.set((i % 2) * 0.05, i * 0.07, (i - 1.5) * 0.14); m.castShadow = true; logs.add(m); }
   const emberMat = new THREE.MeshStandardMaterial({ color: 0x220a02, emissive: 0xff5a14, emissiveIntensity: 1.6, roughness: 0.9 });
   const ember = new THREE.Mesh(new THREE.SphereGeometry(0.28, 12, 8), emberMat); ember.scale.set(1.5, 0.3, 1.8); ember.position.y = -0.12; logs.add(ember);
   B.parent.add(logs);
-  B.col.addBox(x + 0.3 * c, z + 0.3 * s, 0.9, w + 0.6, y, y + 2.7, yaw + Math.PI / 2, {});
-  const lt = game.lights.add({ pos: [lp[0], y + 0.5, lp[1]], color: 0xff7a2a, intensity: 9, distance: 9, flicker: { amp: 0.35, speed: 9 }, tag: 'fire', shadow: true });
-  return { logs, ember, emberMat, light: lt };
+  B.col.addBox(x + 0.45 * c, z + 0.45 * s, 0.9, w + 0.6, y, y + 2.7, yaw, {});
+  const flame = makeFlames(B.parent, [0, 0, 0].map(() => 0), L, y);
+  const lt = game.lights.add({ pos: [lp[0], y + 0.55, lp[1]], color: 0xff8630, intensity: 30, distance: 12, decay: 1.8, flicker: { amp: 0.3, speed: 9 }, tag: 'fire', shadow: true });
+  const glow = game.lights.add({ pos: [lp[0] + 0.5 * c, y + 1.2, lp[1] + 0.5 * s], color: 0xff7a28, intensity: 6, distance: 14, decay: 1.5, flicker: { amp: 0.2, speed: 5 }, tag: 'fire', shadow: false });
+  return { logs, ember, emberMat, light: lt, glow, flameMat: flame.mat };
 }
 
 export function lamp(B, game, x, z, { y = 0, h = 0.55, base = 0.8, tag = 'room', color = 0xffc77a, intensity = 14, distance = 8, shade = 0xe8d6a8, on = false, floor = false, shadow = false, name = '' } = {}) {
@@ -216,12 +254,40 @@ export function counter(B, x, z, w, { y = 0, d = 0.62, yaw = 0, top = mats().woo
 }
 
 export function piano(B, game, x, z, yaw = 0, { y = 0 } = {}) {
-  // upright piano facing local +z; width 1.5
+  // upright piano facing local +z; width 1.55. Polished walnut cabinet, fretwork front, brass candle arms, pedals, a metronome.
   const c = Math.cos(yaw), s = Math.sin(yaw); const L = (lx, lz) => [x + lx * c + lz * s, z - lx * s + lz * c];
-  const wood = mats().blackWood; const w = 1.55;
-  const body = L(0, 0); B.box(w, 1.25, 0.6, wood, { pos: [body[0], y + 0.63, body[1]], rot: [0, yaw, 0], tile: 0.9, round: 0.015 });
-  const lid = L(0, 0.02); B.box(w + 0.04, 0.05, 0.66, wood, { pos: [lid[0], y + 1.27, lid[1]], rot: [0, yaw, 0], tile: 0.9 });
-  const kb = L(0, 0.43); B.box(w - 0.1, 0.07, 0.3, wood, { pos: [kb[0], y + 0.72, kb[1]], rot: [0, yaw, 0], tile: 0.9 });
+  const M = mats(); const wood = (P.pianoWood ||= pbr('wood_dark', { key: 'piano', tint: 0x8a6a52, rough: 0.6 })); const w = 1.55;
+  const bx = (ww, hh, dd, lx, py, lz, o = {}) => { const p = L(lx, lz); return B.box(ww, hh, dd, o.mat || wood, { pos: [p[0], y + py, p[1]], rot: [0, yaw, 0], tile: 0.9, round: o.round ?? 0.008, cast: o.cast ?? true }); };
+  bx(w + 0.02, 0.1, 0.6, 0, 0.06, 0, { cast: false });                       // plinth
+  bx(w, 1.1, 0.56, 0, 0.66, 0);                                              // carcase
+  bx(w + 0.07, 0.05, 0.64, 0, 1.235, 0.01);                                  // overhanging top board
+  bx(w - 0.2, 0.004, 0.3, 0, 1.262, 0.0, { mat: M.canvas, round: 0, cast: false });   // lace runner
+  // lower front: framed panel (recessed centre, frame rails)
+  for (const [lx, ww] of [[-w / 2 + 0.06, 0.1], [w / 2 - 0.06, 0.1]]) bx(ww, 0.5, 0.025, lx, 0.38, 0.288);
+  bx(w - 0.2, 0.05, 0.025, 0, 0.14, 0.288); bx(w - 0.2, 0.05, 0.025, 0, 0.62, 0.288);
+  bx(w - 0.22, 0.4, 0.012, 0, 0.38, 0.272, { cast: false });
+  // keybed with cheek blocks
+  const kb = L(0, 0.43); B.box(w - 0.1, 0.07, 0.3, wood, { pos: [kb[0], y + 0.72, kb[1]], rot: [0, yaw, 0], tile: 0.9, round: 0.006 });
+  for (const sx of [-1, 1]) bx(0.09, 0.3, 0.42, sx * (w / 2 - 0.07), 0.82, 0.37);
+  // fretwork panel above the keys: vertical slats over red cloth
+  bx(w - 0.3, 0.34, 0.02, 0, 0.99, 0.276, { mat: M.fabricRed, round: 0, cast: false });
+  for (let i = 0; i < 17; i++) bx(0.022, 0.34, 0.03, -0.64 + i * 0.08, 0.99, 0.292, { round: 0.004, cast: false });
+  bx(w - 0.22, 0.04, 0.04, 0, 1.18, 0.29); bx(w - 0.22, 0.03, 0.04, 0, 0.815, 0.29, { cast: false });
+  // music desk (leaning back) with a sheet of staff paper
+  { const dk = new THREE.Group(); const p = L(0, 0.2); dk.position.set(p[0], y + 1.1, p[1]); dk.rotation.y = yaw; B.parent.add(dk);
+    const lean = new THREE.Group(); lean.rotation.x = -0.28; dk.add(lean);
+    lean.add(Object.assign(new THREE.Mesh(new THREE.BoxGeometry(0.78, 0.4, 0.012), wood), { castShadow: true, receiveShadow: true }));
+    const sheet = new THREE.Mesh(new THREE.PlaneGeometry(0.4, 0.3), M.paper); sheet.position.set(0, 0.02, 0.008); lean.add(sheet);
+    const ledge = new THREE.Mesh(new THREE.BoxGeometry(0.78, 0.02, 0.05), wood); ledge.position.set(0, -0.19, 0.03); lean.add(ledge);
+    for (const sx of [-1, 1]) { const arm = new THREE.Mesh(new THREE.BoxGeometry(0.018, 0.018, 0.14), M.brass); arm.position.set(sx * 0.3, -0.15, 0.1); dk.add(arm); }
+  }
+  // brass candle arms with unlit candles
+  for (const sx of [-1, 1]) { const ap = L(sx * 0.62, 0.34); B.box(0.02, 0.02, 0.18, M.brass, { pos: [ap[0], y + 1.07, ap[1]], rot: [0, yaw, 0], tile: 0.3, cast: false }); const cp = L(sx * 0.62, 0.42); B.cyl(0.016, 0.016, 0.09, M.paper, { pos: [cp[0], y + 1.17, cp[1]], tile: 0.3, cast: false }); B.cyl(0.026, 0.026, 0.01, M.brass, { pos: [cp[0], y + 1.12, cp[1]], tile: 0.3, cast: false }); }
+  // pedals on a lyre bar
+  for (const sx of [-0.07, 0.07]) { const pp = L(sx, 0.33); B.box(0.05, 0.012, 0.12, M.brass, { pos: [pp[0], y + 0.045, pp[1]], rot: [0, yaw, 0], tile: 0.3, cast: false }); }
+  // things on top: a metronome, a framed photograph
+  { const mp = L(-0.55, 0.0); B.cyl(0.018, 0.055, 0.22, wood, { pos: [mp[0], y + 1.38, mp[1]], tile: 0.4 }); B.cyl(0.004, 0.004, 0.16, M.brass, { pos: [mp[0], y + 1.42, mp[1] + 0.0], tile: 0.2, cast: false }); }
+  { const fp = L(0.5, -0.02); B.box(0.2, 0.26, 0.022, M.woodPale, { pos: [fp[0], y + 1.39, fp[1]], rot: [0, yaw, 0], tile: 0.4, cast: false }); const ip = L(0.5, 0.0); B.box(0.15, 0.2, 0.004, M.paper, { pos: [ip[0], y + 1.39, ip[1]], rot: [0, yaw, 0], tile: 0.3, cast: false }); }
   const keyW = (w - 0.2) / 36;
   const keysGroup = new THREE.Group(); keysGroup.position.set(kb[0], y + 0.77, kb[1]); keysGroup.rotation.y = yaw; B.parent.add(keysGroup);
   const whiteMat = solid(0xf2eee0, { rough: 0.35 }), blackMat = solid(0x121212, { rough: 0.3 });
@@ -239,6 +305,30 @@ export function piano(B, game, x, z, yaw = 0, { y = 0 } = {}) {
   const sheet = L(0.05, 0.1); // music stand
   B.col.addBox(x, z, Math.abs(c) * w + Math.abs(s) * 0.62, Math.abs(s) * w + Math.abs(c) * 0.62, y, y + 1.3, 0, {});
   return { keys, keysGroup, center: new THREE.Vector3(kb[0], y + 0.78, kb[1]), yaw, standPos: new THREE.Vector3(...L(0, 0.2)).setY(y + 1.05) };
+}
+
+/** a pair of pleated drapes either side of a window, tied back, hung on a brass rod. Faces +local z (rotate with yaw). */
+export function curtains(B, x, z, { span = 1.5, y0 = 0.1, y1 = 2.75, yaw = 0, mat = (P.curtain ||= solid(0xa88f68, { rough: 0.96 })), folds = 4, amp = 0.075, drape = 0.8, gap = 0.04 } = {}) {
+  const c = Math.cos(yaw), s = Math.sin(yaw); const h = y1 - y0; const rr = new RNG(Math.floor(x * 100 + z * 10));
+  for (const sg of [-1, 1]) {
+    const geo = new THREE.PlaneGeometry(drape, h, 22, 16); const p = geo.attributes.position;
+    const phase = rr.next() * 6;
+    for (let i = 0; i < p.count; i++) {
+      const u = p.getX(i) / drape + 0.5, v = p.getY(i) / h + 0.5;                    // 0..1 across / up
+      const tie = Math.exp(-(((v - 0.42) / 0.12) ** 2)) * 0.6;                       // tie-back pinches the cloth
+      const px = (u - 0.5) * drape * (1 - 0.38 * tie) + (sg > 0 ? -1 : 1) * 0.0;
+      const fold = Math.sin(u * folds * Math.PI * 2 + phase) * amp * (1 - 0.35 * tie) * (0.75 + 0.25 * v) + Math.sin(u * 17 + v * 3 + phase) * 0.004;
+      p.setXYZ(i, px + sg * (span / 2 + gap + drape / 2 - (1 - 0.38 * tie) * 0.0 - tie * 0.1 * 0), p.getY(i), fold);
+    }
+    geo.translate(0, y0 + h / 2, 0); geo.computeVertexNormals(); worldUV(geo, 0.9);
+    B.add(geo, mat, { pos: [x, 0, z], rot: [0, yaw, 0], cast: false, recv: true });
+    // tie-back cord
+    const tx = sg * (span / 2 + gap + drape * 0.35); const q = [x + tx * c, z - tx * s];
+    B.cyl(0.012, 0.012, drape * 0.62, mats().brass, { pos: [q[0], y0 + h * 0.42, q[1] + 0.0], rot: [0, 0, Math.PI / 2], tile: 0.3, cast: false });
+  }
+  const rodLen = span + 2 * (gap + drape) + 0.3;
+  B.cyl(0.014, 0.014, rodLen, mats().brass, { pos: [x, y1 + 0.07, z + 0.03], rot: [0, yaw, Math.PI / 2], tile: 0.3, cast: false });
+  for (const sg of [-1, 1]) { const fx = x + sg * rodLen / 2 * c, fz = z - sg * rodLen / 2 * s; B.add(new THREE.SphereGeometry(0.03, 10, 8), mats().brass, { pos: [fx, y1 + 0.07, fz + 0.03], cast: false }); }
 }
 
 export function coatHooks(B, game, x, z, yaw, { y = 1.75, count = 5, w = 1.5 } = {}) {

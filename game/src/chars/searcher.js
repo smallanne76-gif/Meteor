@@ -53,6 +53,11 @@ export class Searcher {
 
   /** begin walking a route [[x,z],...]; speed multiplier */
   patrol(points, { loop = false, speedMul = 1 } = {}) { this.state = 'patrol'; this.path = points.map((p) => new THREE.Vector3(p[0], 0, p[1])); this.pathI = 0; this.loop = loop; this.speedMul = speedMul; this.show(true); this.body.walking = true; this.body.walkSpeed = this.walkSpeed * speedMul; }
+  /** walk a scripted route [[x,z],…] ignoring light/hearing; resolves at the end. state stays 'script'. */
+  scriptWalk(points, { speed = 1 } = {}) {
+    this.state = 'script'; this.sPath = points.map((p) => new THREE.Vector3(p[0], 0, p[1])); this.sI = 0; this.sSpeed = speed; this.body.walking = true;
+    return new Promise((res) => { this.sDone = res; });
+  }
   stand(yaw) { this.state = 'standing'; if (yaw !== undefined) this.yaw = yaw; this.body.walking = false; }
   vanish() { this.state = 'absent'; this.show(false); this.body.walking = false; this.light.on = false; }
   hear(pos, loud = 0.5) { if (this.state === 'absent' || this.state === 'script') return; this.noiseHeard = { pos: pos.clone(), loud, t: this.game.time }; }
@@ -134,7 +139,21 @@ export class Searcher {
     } else if (this.state === 'standing') {
       this.body.walking = false;
       if (this.faceTarget) { const dx = this.faceTarget.x - this.pos.x, dz = this.faceTarget.z - this.pos.z; this.yaw = dampAngle(this.yaw, Math.atan2(dx, dz), 2, dt); }
-    } else if (this.state === 'script') { /* driven externally */ }
+    } else if (this.state === 'script') {
+      // scripted walk: ignores light and hearing; used for set pieces
+      const goal = this.sPath && this.sPath[this.sI];
+      if (goal) {
+        const sp = this.walkSpeed * (this.sSpeed || 1); this.body.walkSpeed = sp;
+        const dx = goal.x - this.pos.x, dz = goal.z - this.pos.z, dist = Math.hypot(dx, dz);
+        if (dist < 0.3) { this.sI++; if (this.sI >= this.sPath.length) { this.sPath = null; this.body.walking = false; const d = this.sDone; this.sDone = null; d && d(); } }
+        else {
+          this.yaw = dampAngle(this.yaw, Math.atan2(dx, dz), 4, dt);
+          const step = Math.min(dist, sp * dt); this.pos.x += Math.sin(this.yaw) * step; this.pos.z += Math.cos(this.yaw) * step; this.body.walking = true;
+          if (world.ground) this.pos.y = damp(this.pos.y, world.ground(this.pos.x, this.pos.z, this.pos.y), 12, dt);
+          this.stepAcc += step; if (this.stepAcc > 0.95) { this.stepAcc = 0; this.footstep(); }
+        }
+      } else this.body.walking = false;
+    }
 
     // calls
     this.callT -= dt;

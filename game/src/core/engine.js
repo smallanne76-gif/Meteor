@@ -100,6 +100,7 @@ export class Game extends Emitter {
     this.mode = 'locked';
     this.ui && this.ui.showLoading(true, ch.title || '');
     await new Promise((r) => setTimeout(r, 30));
+    if (!this._core) this._core = new Map([...this._h].map(([k, v]) => [k, [...v]])); // listeners registered at boot survive chapter swaps
     this.unloadChapter();
     this.chapter = ch; this.chapterId = ch.id;
     this.indoor = 0; this.indoorTarget = 0; this.fogMul = 1; this.fogMulTarget = 1;
@@ -119,7 +120,7 @@ export class Game extends Emitter {
     this.lights.clear();
     this.collision.clear();
     this.systems.length = 0;
-    this._h = new Map(); // drop chapter listeners
+    this._h = new Map([...(this._core || [])].map(([k, v]) => [k, [...v]])); // drop chapter listeners, keep the boot ones
     this.audio && this.audio.clearChapter();
     for (const c of [...this.root.children]) { this.root.remove(c); disposeObject(c); }
     this.player.lookLimit = null; this.player.frozen = false; this.player.walkMul = 1; this.player.canRun = true;

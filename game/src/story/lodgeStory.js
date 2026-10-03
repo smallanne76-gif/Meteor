@@ -37,8 +37,8 @@ export class LodgePhase {
     const think = (t) => w.think(t);
     const seq = async (lines, gap = 0.5) => { for (const l of lines) { await w.think(l); await g.wait(gap); } };
     H.porchSwitch = () => { g.journal.add('tape_switch'); g.ui.read('tape_switch').then(() => seq(['I taped it on.', 'Why did I tape it on?'])); };
-    H.readJoNote = () => { g.ui.objective('The north bay. Go and find him.'); };
-    H.readBreaker = () => { /* after the reader closes */ g.once && 0; this.afterRead(async () => { await w.think('That’s my handwriting.'); await g.wait(0.5); await w.think('I don’t remember writing that.'); }); };
+    H.readJoNote = () => this.afterRead(async () => { await w.think('Back by four.'); await g.wait(0.6); await w.think('He was going to call me from the ice.'); });
+    H.readBreaker = () => this.afterRead(async () => { await w.think('That’s my handwriting.'); await g.wait(0.5); await w.think('I don’t remember writing that.'); });
     H.readFieldLog = () => this.afterRead(() => w.think('He wrote down every night. Every one.'));
     H.readMap = () => seq(['Jo’s pencil. The north bay.', 'Three in the morning, underlined twice.', 'He always underlines twice.']);
     H.readComics = () => this.readComics();
@@ -56,7 +56,7 @@ export class LodgePhase {
     const gi = g.interact.add({ object: G.objs.gift, radius: 0.32, maxDist: 2.4, label: 'The gift', icon: 'hand', onUse: () => { gi.used = false; this.gift(); } });
     ex(G.objs.fire.logs, 'The fire', () => this.w.game.flags.wokeByFire ? ['The embers are never out.', 'They’re never out.'] : ['Embers. Still hot.', 'Someone banked this fire.'], { radius: 0.8, maxDist: 3 });
     ex(G.objs.radio.group, 'The radio', ['Dad’s radio. Static, mostly.']);
-    this.mantel = g.interact.add({ pos: V(-6.9, 1.7, -2.6), radius: 1.0, maxDist: 3.2, label: 'The photographs', icon: 'eye', onUse: () => { this.mantel.used = false; seq(['Dad. Me. Jo at every age.', 'He blinked in every single one.']); } });
+    this.mantel = g.interact.add({ pos: V(-5.98, 1.6, -2.6), radius: 1.3, maxDist: 3.0, label: 'The photographs', icon: 'eye', onUse: () => { this.mantel.used = false; seq(['Dad. Me. Jo at every age.', 'He blinked in every single one.']); } });
     // the kettle — memory trigger
     this.kettleIt = g.interact.add({ object: G.objs.kettle, radius: 0.28, maxDist: 2.4, label: 'The kettle', icon: 'hand', onUse: () => this.touchKettle() });
     // the cookie jar
@@ -68,12 +68,11 @@ export class LodgePhase {
     // study door gets unlocked by flag studyKey inside Door; add a hook for the first entry
     L.doors.study.def.onOpen = () => this.onStudyOpened();
     L.doors.study.def.onUnlock = () => { g.ui.objective('Dad’s study.'); };
-    L.doors.joDoor = L.doors.jo; L.doors.jo.def.onOpen = () => this.onJoOpened();
+    L.doors.jo.def.onOpen = () => this.onJoOpened();
     L.doors.back.def.onUnlock = () => { g.ui.objective('Follow the trail to the boathouse.'); };
     L.doors.back.def.onOpen = () => this.leaveHouse();
     // a muffled footstep upstairs now and then, only while she is on the ground floor and before the intrusion
     this.stepsT = 40;
-    g.on && 0;
   }
 
   async afterRead(fn) { const g = this.g; await new Promise((res) => { const off = g.on('noteClose', () => { off(); res(); }); }); await g.wait(0.4); return fn(); }
@@ -166,7 +165,7 @@ export class LodgePhase {
     const w = this.w, g = this.g, P = g.player, S = w.searcher; this.deaths++; g.flags.wokeByFire = true;
     g.mode = 'locked'; g.ui.clearSubs(); g.audio.setDuck({ amb: 1 });
     await g.fadeTo(1, 0.8); S.vanish(); this.intrusion = null; this.fired.intrusionStarted = false;
-    const W = this.wardrobe; W.hidden = false; W.target = 0; W.open = 0; P.lookLimit = null; P.eyeOverride = 1.12; P.frozen = true; P.noclip = false;
+    const W = this.wardrobe; W.hidden = false; W.target = 0; W.open = 0; P.lookLimit = null; P.noResolve = false; P.fovScale = 1; P.eyeOverride = 1.12; P.frozen = true; P.noclip = false;
     g.audio.sfx('splash', { vol: 0.8, big: true }); g.audio.muffleTarget = 900; g.gfx.fx.eyes = 1;
     // power back; doors as they were
     this.powerOut = false; this.w.baseFear = 0.1;

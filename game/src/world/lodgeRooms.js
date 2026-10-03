@@ -1,7 +1,7 @@
 // Furnishes Halden Lodge. Everything here is environmental storytelling: a house kept exactly as it was.
 // `hooks` lets the chapter attach story logic to the interactive pieces.
 import * as THREE from 'three';
-import { PM, table, chair, stool, sofa, armchair, rug, bookshelf, fireplace, lamp, ceilingLight, wallSwitch, wallFrame, bed, desk, wardrobe, fridge, counter, piano, coatHooks, coat, boots, book, mug, plate, candle, jar, radio, phone, clock, crate, barrel, shelfWall, woodpile, contactShadow } from './props.js';
+import { PM, table, chair, stool, sofa, armchair, rug, bookshelf, fireplace, lamp, ceilingLight, wallSwitch, wallFrame, bed, desk, wardrobe, fridge, counter, piano, coatHooks, curtains, coat, boots, book, mug, plate, candle, jar, radio, phone, clock, crate, barrel, shelfWall, woodpile, contactShadow } from './props.js';
 import { solid, pbr, glass, card } from '../gfx/materials.js';
 import { box as boxGeo, rbox, plane } from '../gfx/geo.js';
 import { RNG } from '../core/util.js';
@@ -54,6 +54,26 @@ export function dressGround(game, B, lodge, hooks) {
   {
     const g = game;
     const fp = fireplace(B, g, -7.1, -2.6, 0, { w: 2.0, h: 1.15 }); out.objs.fire = fp;
+    // framed family photographs along the mantel (x ≈ -5.98, shelf top y = 1.465)
+    {
+      const fig = (c, x, y, sc, skin, coat, hair) => { c.fillStyle = coat; c.beginPath(); c.ellipse(x, y + 46 * sc, 22 * sc, 30 * sc, 0, Math.PI, 0); c.fill(); c.fillRect(x - 22 * sc, y + 46 * sc, 44 * sc, 30 * sc); c.fillStyle = skin; c.beginPath(); c.arc(x, y + 20 * sc, 13 * sc, 0, 7); c.fill(); c.fillStyle = hair; c.beginPath(); c.arc(x, y + 16 * sc, 14 * sc, Math.PI, 0); c.fill(); };
+      const kinds = [
+        (c, w, h) => { fig(c, 55, 28, 1.5, '#c9a285', '#6a7a8a', '#3a2a20'); },                                               // Mom, young
+        (c, w, h) => { fig(c, 40, 24, 1.3, '#c9a285', '#556b5a', '#7a7468'); fig(c, 78, 52, 0.9, '#d2ae92', '#a04a3a', '#4a3322'); fig(c, 20, 70, 0.62, '#d2ae92', '#d6b020', '#3c2a1c'); }, // Dad, Mara, small Jo
+        (c, w, h) => { fig(c, 38, 52, 0.95, '#d2ae92', '#a04a3a', '#4a3322'); fig(c, 82, 66, 0.7, '#d2ae92', '#d6b020', '#3c2a1c'); c.fillStyle = '#e9eef3'; c.fillRect(0, h - 26, w, 26); },   // sled day
+        (c, w, h) => { fig(c, 55, 22, 1.4, '#d2ae92', '#d6b020', '#3c2a1c'); c.fillStyle = 'rgba(255,255,255,.25)'; c.fillRect(10, 8, 20, 6); },          // Jo, twenty-two, in the yellow coat
+        (c, w, h) => { fig(c, 44, 30, 1.2, '#c9a285', '#556b5a', '#7a7468'); fig(c, 86, 30, 1.2, '#c9a285', '#a04a3a', '#4a3322'); },                      // Dad and Mara
+      ];
+      const zs = [-3.55, -3.15, -2.6, -2.05, -1.65];
+      kinds.forEach((draw, i) => {
+        const tex = canvasTex(110, 128, (c, w, h) => { const gr = c.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, '#a9a08a'); gr.addColorStop(1, '#6e6552'); c.fillStyle = gr; c.fillRect(0, 0, w, h); draw(c, w, h); c.fillStyle = 'rgba(70,40,10,.18)'; c.fillRect(0, 0, w, h); });
+        const grp = new THREE.Group(); grp.position.set(-5.98, 1.465 + 0.1, zs[i]); grp.rotation.y = Math.PI / 2; grp.rotation.x = -0.06; B.parent.add(grp);
+        grp.add(Object.assign(new THREE.Mesh(boxGeo(0.17, 0.2, 0.02, 0.5), i % 2 ? M.woodDark : M.brass), { castShadow: true }));
+        const ph = new THREE.Mesh(new THREE.PlaneGeometry(0.135, 0.158), new THREE.MeshStandardMaterial({ map: tex, roughness: 0.55 })); ph.position.z = 0.0115; grp.add(ph);
+      });
+      // a candle stub and a small clock-key dish at the far end
+      B.cyl(0.02, 0.02, 0.12, PM().paper, { pos: [-5.98, 1.5, -1.25], tile: 0.3, cast: false });
+    }
     // sofa faces the fire (west); Dad's armchair at an angle; coffee table
     sofa(B, -3.6, -2.6, Math.PI / 2, { w: 2.1, mat: PM().fabricRed });
     armchair(B, -4.6, -4.4, Math.PI / 2 + 0.5, { mat: PM().leather });
@@ -84,7 +104,7 @@ export function dressGround(game, B, lodge, hooks) {
     // Jo's guitar leaning on the piano? (ukulele) — a small instrument case
     B.box(0.38, 0.12, 0.6, M.leather, { pos: [0.55, 0.06, -2.2], rot: [0, 0.3, 0], round: 0.03, tile: 0.4, collide: true });
     // the deck door curtain
-    for (const wx of [-6.0, -3.5]) B.box(1.9, 2.6, 0.04, PM().fabricGreen, { pos: [wx, 1.55, -5.28], tile: 0.5, cast: false, recv: true });
+    for (const wx of [-6.0, -3.5]) curtains(B, wx, -5.34, { span: 1.5, y0: 0.15, y1: 2.72, yaw: 0 });
   }
 
   // ============================ KITCHEN ==============================================================================
@@ -173,14 +193,14 @@ export function dressGround(game, B, lodge, hooks) {
       c.strokeStyle = '#2b4a8a'; c.lineWidth = 3; c.setLineDash([6, 5]); c.beginPath(); c.moveTo(w * 0.49, h * 0.77); c.lineTo(w * 0.62, h * 0.7); c.lineTo(w * 0.8, h * 0.62); c.stroke(); c.setLineDash([]);
       c.strokeStyle = '#b3261e'; c.lineWidth = 3; c.beginPath(); c.arc(w * 0.5, h * 0.15, 20, 0, 7); c.stroke(); c.fillStyle = '#b3261e'; c.font = '600 20px Caveat, cursive'; c.fillText('north bay — J.', w * 0.52, h * 0.1); c.fillText('3 AM (!!)', w * 0.52, h * 0.2);
     });
-    const mp = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 0.9), new THREE.MeshStandardMaterial({ map: mapTex, roughness: 0.85 })); mp.position.set(-7.33, 1.55, 3.5); mp.rotation.y = Math.PI / 2; B.parent.add(mp); out.objs.map = mp;
+    const mp = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 0.9), new THREE.MeshStandardMaterial({ map: mapTex, roughness: 0.85 })); mp.position.set(-6.7, 1.6, 0.585); mp.rotation.y = 0; B.parent.add(mp); out.objs.map = mp;
     out.interact.map = I({ object: mp, radius: 0.6, label: 'Study the map', icon: 'eye', maxDist: 2.4, onUse: () => { out.interact.map.used = false; hooks.readMap && hooks.readMap(); } });
     // bookshelves
     bookshelf(B, -4.0, 4.0, 0, { w: 1.0, h: 2.1, seed: 8 }); // against hall wall? x=-3.15..; face -x? yaw 0 faces +z; use yaw pi/2 to face west
     // polaroids pinned on the corkboard above the desk
     const polas = [];
     for (let i = 0; i < 4; i++) { const t = canvasTex(110, 120, (c, w, h) => { c.fillStyle = '#ece6d6'; c.fillRect(0, 0, w, h); const g2 = c.createLinearGradient(0, 8, 0, 90); g2.addColorStop(0, '#9fb7cf'); g2.addColorStop(1, '#e9eef3'); c.fillStyle = g2; c.fillRect(8, 8, w - 16, 84); c.fillStyle = '#3a4a5a'; c.beginPath(); c.moveTo(8, 70); c.lineTo(40, 40 + i * 4); c.lineTo(70, 66); c.lineTo(w - 8, 54); c.lineTo(w - 8, 92); c.lineTo(8, 92); c.fill(); c.fillStyle = '#e8b81c'; c.fillRect(50 + i * 6, 52, 10, 22); c.fillStyle = '#c7a'; c.font = '13px Caveat, cursive'; c.fillStyle = '#333'; c.fillText(['Feb 3 · 41cm', 'Feb 9 · 37cm', 'Feb 14 · 44cm', 'Feb 11 · ??'][i], 10, 110); });
-      const pl = new THREE.Mesh(new THREE.PlaneGeometry(0.17, 0.185), new THREE.MeshStandardMaterial({ map: t, roughness: 0.6 })); pl.position.set(-7.34, 1.65 + (i % 2) * 0.12, 2.2 + i * 0.22); pl.rotation.y = Math.PI / 2; pl.rotation.z = (i - 1.5) * 0.06; B.parent.add(pl); polas.push(pl); }
+      const pl = new THREE.Mesh(new THREE.PlaneGeometry(0.17, 0.185), new THREE.MeshStandardMaterial({ map: t, roughness: 0.6 })); pl.position.set(-4.5 + i * 0.25, 1.62 + (i % 2) * 0.1, 0.585); pl.rotation.y = 0; pl.rotation.z = (i - 1.5) * 0.06; B.parent.add(pl); polas.push(pl); }
     out.objs.polaroids = polas;
     // Dad's tin on a high shelf (4-dial lock): interactive -> puzzle in the chapter
     shelfWall(B, -7.2, 1.9, 4.2, Math.PI / 2, 1.0, 0.25);
@@ -263,7 +283,7 @@ export function dressUpper(game, B, lodge, hooks) {
     }
     out.objs.wardrobeInner = new THREE.Group(); out.objs.wardrobeInner.position.copy(wg.position);
     // clothes inside: a few shirts hanging
-    for (let i = 0; i < 5; i++) { const sh = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.75, 0.4), solid([0x3a5a7a, 0x8a3a2a, 0x5a6a4a, 0xc8b070, 0x4a4a52][i], { rough: 0.9 })); sh.position.set(0.95 + 0.0, y + 1.3, -3.0 - 0.45 + i * 0.22); B.parent.add(sh); }
+    for (let i = 0; i < 5; i++) { const sh = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.75, 0.4), solid([0x3a5a7a, 0x8a3a2a, 0x5a6a4a, 0xc8b070, 0x4a4a52][i], { rough: 0.9 })); sh.position.set(1.17, y + 1.3, -3.0 - 0.45 + i * 0.22); B.parent.add(sh); }
     // a hanging rod
     B.cyl(0.012, 0.012, 1.2, M.chrome, { pos: [0.95, y + 1.78, -3.0], rot: [Math.PI / 2, 0, 0] });
     // tally marks on the inside of the doorframe handled in chapter (mesh with note)

@@ -25,14 +25,14 @@ export class Player {
     this.lookLimit = null;       // {yaw0, yawRange, pitchMin, pitchMax} for hide spots
     this.frozen = false;         // no locomotion (cutscenes, inspect)
     this.canRun = true;
-    this.noclip = false; this.eyeOverride = null;
+    this.noclip = false; this.noResolve = false; this.eyeOverride = null;
     this.walkMul = 1; this.lookMul = 1;
     this.lastBreathSound = 0;
     this.shake = 0; this.shakeT = 0;
     this.sway = new THREE.Vector2();
     this.flashDir = new THREE.Quaternion();   // lagged flashlight orientation
     this.kick = new THREE.Vector2();          // transient camera kick (pitch,roll)
-    this.roll = 0; this.fovKick = 0;
+    this.roll = 0; this.fovKick = 0; this.fovScale = 1;
     this.wasGrounded = true;
     this.noise = 0;              // 0..1 loudness this frame (for the Searcher)
     this.breathAmp = 1;
@@ -109,9 +109,9 @@ export class Player {
     const prevX = this.pos.x, prevZ = this.pos.z;
     this.pos.x += this.vel.x * dt; this.pos.z += this.vel.z * dt;
     const y0 = this.pos.y + 0.4, y1 = this.pos.y + this.height;
-    if (!this.noclip) col.resolve(this.pos, RADIUS, y0, y1);
+    if (!this.noclip && !this.noResolve) col.resolve(this.pos, RADIUS, y0, y1);
     // soft boundary: stay inside the walkable region (the dark forest is not an option)
-    if (!this.noclip && col.walkable && !col.walkable(this.pos.x, this.pos.z)) {
+    if (!this.noclip && !this.noResolve && col.walkable && !col.walkable(this.pos.x, this.pos.z)) {
       const nx = this.pos.x, nz = this.pos.z;
       this.pos.x = prevX; this.pos.z = prevZ;
       if (col.walkable(nx, prevZ)) this.pos.x = nx; else if (col.walkable(prevX, nz)) this.pos.z = nz;
@@ -179,7 +179,7 @@ export class Player {
     camPos.set(this.pos.x + bobX * Math.cos(this.yaw), this.pos.y + this.eye + bobY + breathY, this.pos.z - bobX * Math.sin(this.yaw));
     const e = new THREE.Euler(this.pitch + breathPitch + ty2 + this.kick.x, this.yaw + tx2, this.roll + this.kick.y + (this.moving && bobOn ? Math.sin(this.bobPhase) * 0.004 : 0), 'YXZ');
     this.camera.quaternion.setFromEuler(e);
-    const fov = settings.get('fov') + (this.running ? 3 : 0) + this.fovKick;
+    const fov = (settings.get('fov') + (this.running ? 3 : 0) + this.fovKick) * (this.fovScale ?? 1);
     if (Math.abs(this.camera.fov - fov) > 0.01) { this.camera.fov = damp(this.camera.fov, fov, 6, dt); this.camera.updateProjectionMatrix(); }
     this.fovKick = damp(this.fovKick, 0, 3, dt);
     this.camera.updateMatrixWorld();

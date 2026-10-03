@@ -199,8 +199,8 @@ void main(){
   // memory: golden, soft, light-bleeding
   if (uMemory > 0.001) {
     float l = dot(col, vec3(0.2126, 0.7152, 0.0722));
-    vec3 warm = vec3(1.18, 1.0, 0.78);
-    col = mix(col, mix(vec3(l), col, 0.55) * warm + vec3(0.025, 0.015, 0.0) * l, uMemory);
+    vec3 warm = vec3(1.3, 1.03, 0.72);
+    col = mix(col, mix(vec3(l), col, 0.5) * warm + vec3(0.024, 0.014, 0.005) + vec3(0.03, 0.018, 0.0) * l, uMemory);
     // light veil
     col += vec3(0.05, 0.035, 0.02) * uMemory * smoothstep(0.1, 0.6, r2) ;
   }

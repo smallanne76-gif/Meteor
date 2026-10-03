@@ -26,8 +26,11 @@ export async function kitchenMemory(ph) {
   w.snow.setIntensity(0.25);
   // clean, alive: kitchen lamp on, steam, pan, plates
   G.lamps.kitchen.set(true);
+  // a low golden sun slants through the window over the sink and lands on the floor
+  const sun = g.lights.add({ name: 'memorySun', pos: [4.0, 1.9, -6.6], color: 0xffd08a, intensity: 190, distance: 11, decay: 1.6, shadow: true, tag: 'kitchen', spot: { dir: [0.12, -0.85, 1], angle: 0.42, penumbra: 0.75 }, on: false, fadeRate: 0.6 });
+  sun.on = true;
   const room = new THREE.Group(); g.root.add(room);
-  const steam = makeSteam(g, room, V(3.95, 0.95, -5.1)); ph.memoryCleanup = [() => { g.root.remove(room); steam.dispose(); }];
+  const steam = makeSteam(g, room, V(3.95, 0.95, -5.1)); ph.memoryCleanup = [() => { g.root.remove(room); steam.dispose(); g.lights.remove(sun); }];
   const pan = new THREE.Group(); pan.position.set(4.0, 0.88, -5.12); room.add(pan);
   pan.add(Object.assign(new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.11, 0.035, 20), new THREE.MeshStandardMaterial({ color: 0x1b1b1b, roughness: 0.5, metalness: 0.6 })), { castShadow: true }));
   const handle = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.015, 0.025), new THREE.MeshStandardMaterial({ color: 0x1b1b1b })); handle.position.set(0.19, 0.005, 0); pan.add(handle);
@@ -200,7 +203,7 @@ async function enterWardrobe(ph) {
   const w = ph.w, g = ph.g, P = g.player, W = ph.wardrobe; const y = 2.85;
   g.mode = 'locked'; g.lights.flashOn = false; g.audio.sfx('door_open', { pos: V(0.6, y + 1, -3), vol: 0.7, creaky: false });
   W.target = 1; await g.wait(0.45);
-  P.pos.set(1.0, y, -3.0); P.eyeOverride = 1.5; P.yaw = Math.PI / 2; P.pitch = 0.02; P.syncCamera();
+  P.pos.set(1.0, y, -3.0); P.noResolve = true; P.fovScale = 0.72; P.vel.set(0, 0, 0); P.eyeOverride = 1.5; P.yaw = Math.PI / 2; P.pitch = 0.02; P.syncCamera();
   W.target = 0; g.audio.sfx('door_close', { pos: V(0.6, y + 1, -3), vol: 0.4 });
   await g.wait(0.35);
   W.hidden = true; g.mode = 'hide'; P.lookLimit = { yaw0: Math.PI / 2, yawRange: 0.5, pitchMin: -0.25, pitchMax: 0.3 };
@@ -211,7 +214,7 @@ async function enterWardrobe(ph) {
 async function leaveWardrobe(ph) {
   const g = ph.g, P = g.player, W = ph.wardrobe; const y = 2.85;
   W.target = 1; g.audio.sfx('door_open', { pos: V(0.6, y + 1, -3), vol: 0.7, creaky: false });
-  await g.wait(0.5); P.pos.set(0.1, y, -3.0); P.yaw = Math.PI / 2; P.eyeOverride = null; P.lookLimit = null; P.syncCamera();
+  await g.wait(0.5); P.noResolve = false; P.fovScale = 1; P.pos.set(0.1, y, -3.0); P.yaw = Math.PI / 2; P.eyeOverride = null; P.lookLimit = null; P.syncCamera();
   g.mode = 'free'; W.hidden = false; g.hands.setVisible(true); g.audio.muffleTarget = 22000; W.target = 0; g.emit('hide', false);
 }
 
@@ -242,8 +245,8 @@ export async function searcherInHouse(ph) {
   g.ui.hint('interact', 'Find somewhere to hide', 7);
   if (!ph.hideIt.enabled) ph.hideIt.enabled = () => ph.intrusion && !ph.wardrobe.hidden && !I.over;
   // ---- route through the house
-  const walk = (pts, speed = 1) => new Promise((res) => { S.state = 'patrol'; S.path = pts.map((p) => V(p[0], 0, p[1])); S.pathI = 0; S.loop = false; S.speedMul = speed; S.body.walking = true; S.opts.stopOnWaypoints = false; S.onPathEnd = res; });
-  const listen = async (sec) => { S.state = 'standing'; S.body.walking = false; S.body.opts.headTilt = 0.2; await g.wait(sec); S.body.opts.headTilt = 0; };
+  const walk = (pts, speed = 1) => S.scriptWalk(pts, { speed });
+  const listen = async (sec) => { S.state = 'script'; S.sPath = null; S.body.walking = false; S.body.opts.headTilt = 0.2; await g.wait(sec); S.body.opts.headTilt = 0; };
   if (I.caught) return 'caught';
   await walk([[-0.3, 4.2], [-0.4, 2.2], [-0.5, 0.2]], 1.0); if (I.caught) return 'caught';
   g.audio.at(V(-1.5, 1.2, -1), 'creak', { vol: 0.6 });
@@ -261,7 +264,7 @@ export async function searcherInHouse(ph) {
   await walk([[-1.3, -2.6], [-1.6, -3.6]], 0.8); await listen(1.2);
   await walk([[-1.7, -2.0]], 0.8); await listen(1.0);
   await walk([[-0.6, -3.0], [0.0, -3.0]], 0.7);
-  S.yaw = Math.PI / 2; S.state = 'standing'; S.body.walking = false; S.syncRoot();
+  S.yaw = Math.PI / 2; S.state = 'script'; S.sPath = null; S.body.walking = false; S.syncRoot();
   // ---- three listening windows at the wardrobe doors
   const windows = [3.4, 4.8, 3.0];
   for (let i = 0; i < windows.length; i++) {
@@ -282,7 +285,7 @@ export async function searcherInHouse(ph) {
   // ---- it leaves
   await g.wait(1.6);
   await walk([[-0.4, -1.8], [-0.7, -0.2], [0.6, 0.3], [2.3, 1.2], [2.3, 4.9], [-0.3, 4.6], [-0.3, 6.8]], 0.95);
-  S.vanish(); S.callT = 12; S.body.walking = false; D.front.slam && D.front.slam();
+  S.vanish(); S.callT = 12; S.body.walking = false; S.opts.noHunt = false; S.sPath = null; D.front.slam && D.front.slam();
   I.over = true;
   // power returns
   lamps.forEach((l, i) => { if (l.interact) l.interact.enabled = true; });

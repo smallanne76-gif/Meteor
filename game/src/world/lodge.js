@@ -48,7 +48,7 @@ export function buildLodge(game, parent, opts = {}) {
     logOut: pbr('log_wall', { tint: 0xb89a78, key: 'logOut' }),
     logIn: pbr('log_wall', { tint: 0x9a7a58, key: 'logIn' }),
     wallpaper: pbr('wallpaper', { key: 'wp', tint: 0xd8cdb4 }),
-    plaster: pbr('plaster', { key: 'pl', tint: 0xcfc4ad }),
+    plaster: pbr('plaster', { key: 'pl', tint: 0xcfc4ad, normal: 0.55 }),
     plasterG: pbr('plaster', { key: 'plg', tint: 0xa9b7a2 }),
     paintGreen: pbr('wood_paint', { key: 'wpg', tint: 0xbfd0bd }),
     paintCream: pbr('wood_paint', { key: 'wpc', tint: 0xf1ead2 }),

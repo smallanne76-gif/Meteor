@@ -94,6 +94,9 @@ function solveArm(S, T, L1, L2, pole, outE, outW) {
 
 function orient(mesh, from, to) { _v.copy(to).sub(from); const l = _v.length(); mesh.position.copy(from); mesh.quaternion.setFromUnitVectors(UP, _v.divideScalar(l || 1)); mesh.scale.y = l / mesh.userData.len; }
 
+const cuffMats = new WeakMap();
+function glovemat0(sleeve) { let m = cuffMats.get(sleeve); if (!m) { m = pbr('fabric_wool', { key: 'cuff2', normal: 0.6, tint: 0x6a6a5e }).clone(); m.userData.shared = true; cuffMats.set(sleeve, m); } return m; }
+
 class Arm {
   constructor(side, sleeveMat, gloveMat, stitchMat) {
     this.side = side; this.root = new THREE.Group();
@@ -103,7 +106,7 @@ class Arm {
     this.elbow = new THREE.Mesh(new THREE.SphereGeometry(0.052, 12, 10), sleeveMat);
     this.shoulderBall = new THREE.Mesh(new THREE.SphereGeometry(0.06, 12, 10), sleeveMat);
     // fur-ish cuff at the end of the sleeve
-    this.cuffMesh = new THREE.Mesh(tube(0.052, 0.05, 0.05, 14), solid(0x3a352c, { rough: 0.95 })); this.cuffMesh.userData.len = 0.05;
+    this.cuffMesh = new THREE.Mesh(worldUV(tube(0.053, 0.051, 0.055, 14), 0.4), glovemat0(sleeveMat)); this.cuffMesh.userData.len = 0.05;
     for (const m of [this.upper, this.lower, this.elbow, this.shoulderBall, this.cuffMesh]) { m.castShadow = false; m.receiveShadow = true; this.root.add(m); }
     this.hand = new Hand(side, gloveMat, stitchMat); this.root.add(this.hand.root);
     this.shoulder = new THREE.Vector3(side === 'L' ? -0.2 : 0.2, -0.25, 0.12);
@@ -179,8 +182,8 @@ export class Hands {
   constructor(game) {
     this.game = game;
     this.root = new THREE.Group(); this.root.name = 'hands';
-    const sleeve = pbr('parka', { key: 'sleeve', normal: 1.2, tint: 0x9aa690 }).clone(); sleeve.userData.shared = true; sleeve.color.setRGB(1.5, 1.6, 1.45);
-    const glove = pbr('wool_knit', { key: 'glove', normal: 1.4 }).clone(); glove.userData.shared = true; glove.color.setRGB(1.1, 1.15, 1.05);
+    const sleeve = pbr('canvas', { key: 'sleeve2', normal: 0.5, tint: 0x8a9684 }).clone(); sleeve.userData.shared = true; sleeve.color.setRGB(1.25, 1.35, 1.2);
+    const glove = pbr('wool_knit', { key: 'glove', normal: 0.8 }).clone(); glove.userData.shared = true; glove.color.setRGB(1.1, 1.15, 1.05);
     const stitch = new THREE.MeshStandardMaterial({ color: 0xe6b422, roughness: 0.8 }); stitch.userData.shared = true;
     this.arms = { L: new Arm('L', sleeve, glove, stitch), R: new Arm('R', sleeve, glove, stitch) };
     this.root.add(this.arms.L.root, this.arms.R.root);

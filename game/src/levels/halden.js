@@ -180,7 +180,7 @@ export class Halden extends Chapter {
     // porch halo flicker
     this.porch.halo.material.opacity = 0.5 + Math.sin(game.time * 2.1) * 0.03 + (Math.random() < 0.01 ? -0.15 : 0);
     // ember flicker
-    const fire = this.ground.objs.fire; if (fire) fire.emberMat.emissiveIntensity = 1.2 + Math.sin(game.time * 3.1) * 0.35 + Math.sin(game.time * 7.7) * 0.15;
+    const fire = this.ground.objs.fire; if (fire) { fire.emberMat.emissiveIntensity = 1.2 + Math.sin(game.time * 3.1) * 0.35 + Math.sin(game.time * 7.7) * 0.15; fire.flameMat.uniforms.uTime.value = game.time; }
     // searcher
     this.searcher.update(dt);
     this.phaseObj && this.phaseObj.update && this.phaseObj.update(dt);
