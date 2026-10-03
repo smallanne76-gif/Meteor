@@ -96,8 +96,12 @@ export class SynthKit {
       this.burst(dest, { t, dur: 0.05, gain: 0.35 * g, bp: 3400, bq: 1 });
       this.tone(dest, { t: t + 0.005, f0: rr(1400, 2600), f1: rr(500, 900), dur: 0.35, gain: 0.04 * g, attack: 0.002 });
     } else if (S === 'grass' || S === 'dirt') {
-      this.burst(dest, { t, dur: 0.15, gain: 0.22 * g, bp: 1300 * v, bq: 0.5, kind: 'pink' });
-      this.tone(dest, { t, f0: 80, f1: 52, dur: 0.1, gain: 0.2 * g });
+      this.burst(dest, { t, dur: 0.15, gain: 0.34 * g, bp: 1300 * v, bq: 0.5, kind: 'pink' });
+      this.tone(dest, { t, f0: 80, f1: 52, dur: 0.1, gain: 0.3 * g });
+      if (S === 'grass') {   // blades brushing the legs: a longer, airier swish, and now and then a stem
+        this.burst(dest, { t: t + 0.02, dur: 0.28, attack: 0.05, gain: 0.13 * g, bp: 3800 * v, bq: 0.35, kind: 'pink' });
+        if (R() < 0.3) this.burst(dest, { t: t + 0.04 + R() * 0.1, dur: 0.012, attack: 0.001, gain: 0.12 * g, bp: rr(2400, 4200), bq: 2 });
+      }
     } else if (S === 'water') {
       this.burst(dest, { t, dur: 0.3, gain: 0.35 * g, bp: 900, bq: 0.6, lp: 3000 });
       this.tone(dest, { t: t + 0.03, f0: rr(300, 500), f1: rr(700, 1100), dur: 0.12, gain: 0.05 * g });

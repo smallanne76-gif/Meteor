@@ -29,7 +29,7 @@ const res = await p.evaluate(async () => {
   const out = [];
   const surf = ['snow', 'road', 'wood', 'concrete', 'gravel', 'ice', 'grass', 'water', 'carpet', 'tile', 'dock'];
   out.push(await run('steps-all', 8, (e) => surf.forEach((s, i) => e.kit.step(e.buses.sfx, s, { t: 0.1 + i * 0.6, loud: 0.6 }))));
-  for (const s of ['snow', 'wood', 'concrete', 'ice']) out.push(await run('step-' + s, 1.2, (e) => e.kit.step(e.buses.sfx, s, { t: 0.05, loud: 0.6 })));
+  for (const s of ['snow', 'wood', 'concrete', 'ice', 'grass', 'dirt', 'gravel']) out.push(await run('step-' + s, 1.2, (e) => e.kit.step(e.buses.sfx, s, { t: 0.05, loud: 0.6 })));
   const sf = (name, secs, o = {}) => run('sfx-' + name, secs, (e) => e.sfx(name, o));
   for (const [n, s] of [['door_open', 3], ['door_close', 2], ['door_slam', 2], ['drawer', 2], ['keys', 1.5], ['unlock', 1.5], ['knock', 2], ['glass', 2], ['paper', 1.5], ['ice_pew', 3], ['ice_crack', 3], ['ice_boom', 5], ['owl', 8], ['loon', 4], ['cricket', 1], ['frog', 1.5], ['bird', 2], ['phone_ring', 8], ['dialtone', 4], ['static', 2], ['gasp', 2], ['heartbeat', 1], ['splash', 3], ['wet_step', 1], ['snow_whump', 2], ['wood_crack', 2], ['creak', 2], ['lantern', 1.5], ['tape', 1]]) out.push(await sf(n, s, { vol: 1 }));
   for (const [n, sec] of [['paddle', 2], ['match', 2], ['lantern', 2], ['reel', 3], ['tape', 2], ['handset', 2], ['phone_ring', 4], ['static', 2], ['switch', 1], ['ceramic', 2], ['pickup', 1.5], ['thud', 1.5], ['hiss', 2], ['splash', 3], ['loon', 5], ['frog', 2], ['bird', 2], ['wood_crack', 2], ['ice_boom', 5]]) out.push(await sf(n, sec, { vol: 1 }));

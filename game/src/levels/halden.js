@@ -4,6 +4,7 @@ import { Chapter } from './chapter.js';
 import { HaldenTerrain, LAYOUT } from '../world/halden.js';
 import { TerrainStreamer } from '../world/terrainMesh.js';
 import { Forest } from '../world/trees.js';
+import { Meadow } from '../world/meadow.js';
 import { ParticleField, BreathVapour } from '../gfx/particles.js';
 import { buildLodge, roomAt, ROOMS, LODGE } from '../world/lodge.js';
 import { dressGround, dressUpper } from '../world/lodgeRooms.js';
@@ -58,6 +59,16 @@ export class Halden extends Chapter {
       ],
       density: [1, 0.8, 0.6, 0.45, 0.35][['ULTRA', 'HIGH', 'MEDIUM', 'LOW', 'LOW'].indexOf('HIGH')] ?? 1,
     });
+
+    // ---- summer: a living meadow (tufts + wildflowers) wherever nothing has been built
+    if (summer) {
+      this.meadow = new Meadow(terrain, game.root, {
+        keep: (x, z) => !(x > LODGE.x0 - 1.2 && x < LODGE.x1 + 1.2 && z > LODGE.z0 - 1.2 && z < LODGE.z1 + 3.2)
+          && Math.hypot(x - LAYOUT.boathouse.x, z - LAYOUT.boathouse.z) > 14
+          && Math.hypot(x - LAYOUT.dock.x, z - (LAYOUT.dock.z + 3)) > 5,
+      });
+      game.on('quality', () => this.meadow && this.meadow.refresh());
+    }
 
     // ---- the lodge
     this.lodge = buildLodge(game, game.root);
@@ -125,6 +136,7 @@ export class Halden extends Chapter {
     const pp = this.startPos(this.startPhase);
     this.streamer.buildAllNear(pp, 70);
     this.forest.warm(pp, 150);
+    if (this.meadow) this.meadow.warm(pp);
     game.flashlightAvailable = true;
     game.audio && game.audio.amb.set('winterNight', { fade: 0.1 });
 
@@ -180,7 +192,7 @@ export class Halden extends Chapter {
   // ---- per frame ----------------------------------------------------------------------------------------------------
   update(dt, game) {
     const p = game.player.pos;
-    this.streamer.update(p, 2); this.forest.update(p, dt, 1);
+    this.streamer.update(p, 2); this.forest.update(p, dt, 1); if (this.meadow) this.meadow.update(p, dt, 1);
     this.snow.update(dt, game); this.vapour.update(dt);
     this.lake.update(dt);
     for (const d of Object.values(this.lodge.doors)) d.update(dt);

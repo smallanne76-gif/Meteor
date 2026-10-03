@@ -62,7 +62,7 @@ Everything that matters is in the objects: read the notes, turn the photographs 
   A custom HDR pipeline replaces the stock renderer path: MSAA half-float scene target, depth-only SSAO, dual-filter bloom, one final composite pass
   (ACES, per-scene colour grades, DOF, camera-rotation motion blur, chromatic aberration, vignette, film grain, eyelids/memory/cold/dread overlays),
   height-fog with directional scattering patched into the stock fog chunks, a fixed light pool (no shader recompiles when lights change),
-  a streamed terrain with instanced 3-LOD pines, planar mirror (the Searcher in the bathroom mirror), and procedural fire/steam/snow/pollen/breath particles.
+  a streamed terrain with instanced 3-LOD pines (and, in summer, a swaying grass-and-wildflower meadow, `src/world/meadow.js`), planar mirror (the Searcher in the bathroom mirror), and procedural fire/steam/snow/pollen/breath particles.
 * **Art:** every texture (snow, bark, plaster, brick, wool, wood, tile, ice, water…) is **baked procedurally with numpy** (`tools/gen_textures.py`, PBR albedo + normal + ORM) and every model is generated in code
   (lofted skinned characters with a sculpted, morph-target face and strand hair; articulated first-person hands; the lodge, boathouse, ice house, canoe, piano, fireplace…). No scanned or downloaded assets were used.
 * **Audio:** *all* sound is synthesised live in WebAudio — footsteps by surface, wind, ice song, doors, a formant-synth voice for hums, calls and murmured dialogue, a convolution reverb generated per space,

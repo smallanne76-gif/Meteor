@@ -114,10 +114,12 @@ export class HaldenTerrain {
 
   /** ground type for footsteps/materials */
   surface(x, z) {
+    const summer = this.season === 'summer';
     const ld = this.lakeDist(x, z);
-    if (ld < 0.965) return 'ice';
+    if (ld < 0.965) return summer ? 'water' : 'ice';
     const r = this.road.nearest(x, z);
-    if (r.d < 2.6) return 'road';
+    if (r.d < 2.6) return summer ? 'gravel' : 'road';
+    if (summer) return this.forestMask(x, z) > 0.6 ? 'dirt' : 'grass';
     return 'snow';
   }
 
@@ -126,6 +128,8 @@ export class HaldenTerrain {
     const dl = Math.hypot(x - LAYOUT.lodge.x, z - LAYOUT.lodge.z);
     let f = smooth(0.35, 0.62, fbm2(x * 0.013 + 40, z * 0.013 - 7, 3) * 0.5 + 0.5);
     f *= smooth(20, 34, dl);
+    // the lakeside meadow in front of the lodge is open ground (no trees are planted there either)
+    f *= 1 - (1 - smooth(14, 26, Math.abs(x))) * smooth(-2, -14, z) * smooth(-72, -62, z);
     const r = this.road.nearest(x, z); f *= smooth(3.5, 9, r.d) * 0.85 + 0.15 * (r.d > 12 ? 1 : 0);
     return f;
   }

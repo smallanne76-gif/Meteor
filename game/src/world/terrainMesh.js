@@ -35,6 +35,8 @@ export function makeTerrainMaterial(season = 'winter') {
 varying vec3 vW; varying vec3 vWP;
 uniform sampler2D c0, c1, c2, n0, n1, n2; uniform vec3 uScale, uRough; uniform float uSnow;
 float th(vec3 p){ return fract(sin(dot(p, vec3(127.1,311.7,74.7))) * 43758.5453); }
+float h2(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+float vn(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f); return mix(mix(h2(i), h2(i + vec2(1.0, 0.0)), f.x), mix(h2(i + vec2(0.0, 1.0)), h2(i + vec2(1.0, 1.0)), f.x), f.y); }
 vec3 splat3(vec3 a, vec3 b, vec3 c, vec3 w){ return a * w.x + b * w.y + c * w.z; }
 // anti-tiling: blend two samples at different scales/rotations
 vec4 sTex(sampler2D t, vec2 p, float s){ vec4 a = texture2D(t, p / s); vec4 b = texture2D(t, (mat2(0.8,0.6,-0.6,0.8) * p) / (s * 2.7) + 0.37); return mix(a, b, 0.35); }
@@ -46,6 +48,16 @@ vec3 wt = vec3(max(0.0, 1.0 - wF - wR), wF * (1.0 - wR), wR);
 wt /= (wt.x + wt.y + wt.z + 1e-4);
 vec3 col0 = sTex(c0, wp, uScale.x).rgb, col1 = sTex(c1, wp, uScale.y).rgb, col2 = sTex(c2, wp, uScale.z).rgb;
 vec3 tcol = splat3(col0, col1, col2, wt);
+// large-scale variation breaks the tiling up: lush / sun-dried patches in summer, faint drifts in winter
+float macro = vn(wp / 41.0) * 0.55 + vn(wp / 13.0) * 0.3 + vn(wp / 4.3) * 0.15;
+vec3 macroTint = uSnow > 0.5 ? vec3(mix(0.95, 1.04, macro)) : mix(vec3(0.80, 0.90, 0.66), vec3(1.16, 1.08, 0.86), macro);
+tcol *= mix(vec3(1.0), macroTint, wt.x);
+// far away the fine texture only shimmers: fade towards each layer's average colour
+float camD = length(vWP - cameraPosition);
+vec3 avgCol = splat3(textureLod(c0, vec2(0.5), 9.0).rgb, textureLod(c1, vec2(0.5), 9.0).rgb, textureLod(c2, vec2(0.5), 9.0).rgb, wt) * mix(vec3(1.0), macroTint, wt.x);
+tcol = mix(tcol, avgCol, smoothstep(26.0, 80.0, camD) * 0.75);
+// summer: the tufts carry the detail, so the ground under them is calmer and darker (as if in the shade of the blades)
+if (uSnow < 0.5) tcol = mix(tcol, avgCol * 0.8, 0.55 * wt.x) * mix(vec3(1.0), vec3(0.66, 0.86, 0.55), wt.x);
 // slope: steep ground loses snow
 float steep = smoothstep(0.78, 0.55, normalize(vNormalLocal).y);
 tcol = mix(tcol, col1 * 0.8, steep * 0.7 * uSnow);
@@ -57,7 +69,7 @@ float roughnessFactor = dot(wt, uRough) * roughness;
       .replace('#include <normal_fragment_maps>', `
 {
   vec3 nm = splat3(sTex(n0, wp, uScale.x).xyz, sTex(n1, wp, uScale.y).xyz, sTex(n2, wp, uScale.z).xyz, wt) * 2.0 - 1.0;
-  nm.xy *= 1.15;
+  nm.xy *= 1.15 * (1.0 - 0.8 * smoothstep(24.0, 70.0, length(vWP - cameraPosition)));
   vec3 q0 = dFdx( - vViewPosition ), q1 = dFdy( - vViewPosition );
   vec2 st0 = dFdx( wp ), st1 = dFdy( wp );
   vec3 N = normal;
