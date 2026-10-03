@@ -152,7 +152,7 @@ export class Searcher {
           if (world.ground) this.pos.y = damp(this.pos.y, world.ground(this.pos.x, this.pos.z, this.pos.y), 12, dt);
           this.stepAcc += step; if (this.stepAcc > 0.95) { this.stepAcc = 0; this.footstep(); }
         }
-      } else this.body.walking = false;
+      } else this.body.walking = !!this.scriptWalking;
     }
 
     // calls

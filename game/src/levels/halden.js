@@ -11,6 +11,7 @@ import { buildCar, buildMailbox, buildRoadSign, buildLampPost, buildRibbon, buil
 import { buildPorchLight } from '../world/porch.js';
 import { Lake } from '../world/lake.js';
 import { buildIsland } from '../world/island.js';
+import { setSeason } from '../gfx/materials.js';
 import { Searcher } from '../chars/searcher.js';
 import { PM, woodpile } from '../world/props.js';
 import { Builder } from '../world/builder.js';
@@ -20,15 +21,18 @@ import { LodgePhase } from '../story/lodgeStory.js';
 import { SearchPhase } from '../story/search.js';
 import { LakePhase } from '../story/lakeStory.js';
 import { FinalPhase } from '../story/finale.js';
+import { TitlePhase } from '../story/title.js';
+import { SummerPhase } from '../story/summer.js';
 
-const PHASES = { prologue: ProloguePhase, lodge: LodgePhase, search: SearchPhase, lake: LakePhase, final: FinalPhase };
+const PHASES = { title: TitlePhase, prologue: ProloguePhase, lodge: LodgePhase, search: SearchPhase, summer: SummerPhase, lake: LakePhase, final: FinalPhase };
 
 export class Halden extends Chapter {
   constructor(phase = 'prologue', opts = {}) { super('halden', 'Halden Lake'); this.startPhase = phase; this.opts = opts; this.phaseObj = null; this.phaseName = ''; }
 
   async build(game, opts = {}) {
     await super.build(game, opts);
-    const terrain = this.terrain = new HaldenTerrain('winter');
+    const summer = this.summer = this.opts.season === 'summer'; setSeason(summer ? 'summer' : 'winter');
+    const terrain = this.terrain = new HaldenTerrain(summer ? 'summer' : 'winter');
     const col = game.collision;
     col.terrain = (x, z) => (terrain.lakeDist(x, z) < 0.965 ? LAYOUT.iceY : terrain.height(x, z));
     col.terrainSurface = (x, z) => terrain.surface(x, z);
@@ -37,8 +41,8 @@ export class Halden extends Chapter {
     this.zones = { lodge: true, road: true, trail: false, boathouse: false, lake: false, deck: false };
 
     // ---- sky / atmosphere
-    game.setSky(this.startPhase === 'final' ? 'dawn' : (this.startPhase === 'lake' ? 'auroraNight' : 'nightSnow'));
-    game.setGrade(this.startPhase === 'final' ? 'dawn' : 'nightSnow', true);
+    game.setSky(summer ? 'summerEvening' : (this.startPhase === 'final' ? 'dawn' : (this.startPhase === 'lake' ? 'auroraNight' : 'nightSnow')));
+    game.setGrade(summer ? 'summer' : (this.startPhase === 'final' ? 'dawn' : 'nightSnow'), true);
 
     // ---- terrain & forest
     this.streamer = new TerrainStreamer(terrain, game.root, { radius: 250 });
@@ -65,41 +69,48 @@ export class Halden extends Chapter {
     this.porch.set(true);
     this.rooms = ROOMS;
 
-    // ---- exterior set pieces
+    this.lampPosts = []; this.camp = null; this.car = null;
     const road = terrain.road;
-    const carT = 14; const rp = road.at(carT); const cy = terrain.height(rp.x, rp.z);
-    const carYaw = Math.atan2(-rp.dirx, -rp.dirz);
-    // the road runs south->north: its points go from far south towards the lodge, so "dir" already points toward the lodge
-    this.carBase = { x: rp.x + 1.0, z: rp.z, yaw: carYaw, y: cy };
-    this.car = buildCar(game, game.root, this.carBase);
-    const sg = road.at(30); buildRoadSign(game, game.root, { x: sg.x + 4.2, z: sg.z, y: terrain.height(sg.x + 4.2, sg.z), yaw: -0.4 });
-    const mb = road.at(road.length - 34); this.mailbox = buildMailbox(game, game.root, { x: mb.x + 3.2, z: mb.z, y: terrain.height(mb.x + 3.2, mb.z), yaw: Math.PI / 2 });
-    const mbp = this.mailbox.getWorldPosition(new THREE.Vector3()); mbp.y += 1.28;
-    this.mailboxInteract = game.interact.add({ pos: mbp, radius: 0.5, maxDist: 2.6, label: 'The mailbox', icon: 'eye', onUse: () => { this.mailboxInteract.used = false; this.phaseObj && this.phaseObj.onMailbox && this.phaseObj.onMailbox(); } });
-    this.truck = buildTruck(game, game.root, { x: -11.5, z: 11.5, y: terrain.height(-11.5, 11.5), yaw: 0.25 });
-    this.truckInteract = game.interact.add({ pos: new THREE.Vector3(-11.5, 1.2, 11.5), radius: 1.3, maxDist: 3.6, label: 'Jo\'s truck', icon: 'eye', onUse: () => { this.truckInteract.used = false; this.phaseObj && this.phaseObj.onTruck && this.phaseObj.onTruck(); } });
-    const wb = new Builder(game, game.root); woodpile(wb, 9.6, 1.0, Math.PI / 2, { w: 3, h: 1.2, y: 0.0 }); wb.finish();
-    // lamp posts along the trail
-    this.lampPosts = [];
-    [[18, -10], [38, -17], [62, -13], [86, -18], [110, -38], [136, -62]].forEach(([lx, lz], i) => {
-      const t = terrain.trail.nearest(lx, lz); const px = t.x + 1.7, pz = t.z + 0.6;
-      this.lampPosts.push(buildLampPost(game, game.root, { x: px, z: pz, y: terrain.height(px, pz), id: 'L' + i, onLight: (lp) => this.onLampLit(lp) }));
-    });
-    // ribbons on trees along the trail
-    const rr = new RNG(8); for (let t = 6; t < terrain.trail.length; t += 6 + rr.next() * 5) { const p = terrain.trail.at(t); const side = rr.next() < 0.5 ? -1 : 1; const x = p.x - p.dirz * side * (2.2 + rr.next() * 1.8), z = p.z + p.dirx * side * (2.2 + rr.next() * 1.8); buildRibbon(game.root, x, terrain.height(x, z) + 1.5 + rr.next() * 0.8, z, rr.next() < 0.7 ? 0xff6a1a : 0xffd21a); }
-    // search camp
-    this.camp = buildSearchCamp(game, game.root, { x: camp.x, z: camp.z, y: terrain.height(camp.x, camp.z), yaw: 0.35 });
-    { const cp = { x: camp.x + 4.4, z: camp.z + 2.2 }; const cl = buildLampPost(game, game.root, { x: cp.x, z: cp.z, y: terrain.height(cp.x, cp.z), id: 'camp', lit: true }); cl.radius = 11; this.lampPosts.push(cl); this.campLamp = cl; }
+    if (!summer) {
+        // ---- exterior set pieces
+      const road = terrain.road;
+      const carT = 14; const rp = road.at(carT); const cy = terrain.height(rp.x, rp.z);
+      const carYaw = Math.atan2(-rp.dirx, -rp.dirz);
+      // the road runs south->north: its points go from far south towards the lodge, so "dir" already points toward the lodge
+      this.carBase = { x: rp.x + 1.0, z: rp.z, yaw: carYaw, y: cy };
+      this.car = buildCar(game, game.root, this.carBase);
+      const sg = road.at(30); buildRoadSign(game, game.root, { x: sg.x + 4.2, z: sg.z, y: terrain.height(sg.x + 4.2, sg.z), yaw: -0.4 });
+      const mb = road.at(road.length - 34); this.mailbox = buildMailbox(game, game.root, { x: mb.x + 3.2, z: mb.z, y: terrain.height(mb.x + 3.2, mb.z), yaw: Math.PI / 2 });
+      const mbp = this.mailbox.getWorldPosition(new THREE.Vector3()); mbp.y += 1.28;
+      this.mailboxInteract = game.interact.add({ pos: mbp, radius: 0.5, maxDist: 2.6, label: 'The mailbox', icon: 'eye', onUse: () => { this.mailboxInteract.used = false; this.phaseObj && this.phaseObj.onMailbox && this.phaseObj.onMailbox(); } });
+      this.truck = buildTruck(game, game.root, { x: -11.5, z: 11.5, y: terrain.height(-11.5, 11.5), yaw: 0.25 });
+      this.truckInteract = game.interact.add({ pos: new THREE.Vector3(-11.5, 1.2, 11.5), radius: 1.3, maxDist: 3.6, label: 'Jo\'s truck', icon: 'eye', onUse: () => { this.truckInteract.used = false; this.phaseObj && this.phaseObj.onTruck && this.phaseObj.onTruck(); } });
+      const wb = new Builder(game, game.root); woodpile(wb, 9.6, 1.0, Math.PI / 2, { w: 3, h: 1.2, y: 0.0 }); wb.finish();
+      // lamp posts along the trail
+      this.lampPosts = [];
+      [[18, -10], [38, -17], [62, -13], [86, -18], [110, -38], [136, -62]].forEach(([lx, lz], i) => {
+        const t = terrain.trail.nearest(lx, lz); const px = t.x + 1.7, pz = t.z + 0.6;
+        this.lampPosts.push(buildLampPost(game, game.root, { x: px, z: pz, y: terrain.height(px, pz), id: 'L' + i, onLight: (lp) => this.onLampLit(lp) }));
+      });
+      // ribbons on trees along the trail
+      const rr = new RNG(8); for (let t = 6; t < terrain.trail.length; t += 6 + rr.next() * 5) { const p = terrain.trail.at(t); const side = rr.next() < 0.5 ? -1 : 1; const x = p.x - p.dirz * side * (2.2 + rr.next() * 1.8), z = p.z + p.dirx * side * (2.2 + rr.next() * 1.8); buildRibbon(game.root, x, terrain.height(x, z) + 1.5 + rr.next() * 0.8, z, rr.next() < 0.7 ? 0xff6a1a : 0xffd21a); }
+      // search camp
+      this.camp = buildSearchCamp(game, game.root, { x: camp.x, z: camp.z, y: terrain.height(camp.x, camp.z), yaw: 0.35 });
+      { const cp = { x: camp.x + 4.4, z: camp.z + 2.2 }; const cl = buildLampPost(game, game.root, { x: cp.x, z: cp.z, y: terrain.height(cp.x, cp.z), id: 'camp', lit: true }); cl.radius = 11; this.lampPosts.push(cl); this.campLamp = cl; }
+    }
     // boathouse & docks
     const bh = LAYOUT.boathouse; this.boathouse = buildBoathouse(game, game.root, { x: bh.x, z: bh.z, y: terrain.height(bh.x, bh.z) });
     this.dock = buildDock(game, game.root, { x: LAYOUT.dock.x, z: LAYOUT.dock.z, y: LAYOUT.iceY + 0.55, yaw: 0, len: 15, w: 2 });
     // the lake
     this.lake = new Lake(game, game.root, terrain);
-    this.island = buildIsland(game, game.root, { x: LAYOUT.bay.x, z: LAYOUT.bay.z });
+    this.island = buildIsland(game, game.root, { x: LAYOUT.bay.x, z: LAYOUT.bay.z, summer });
+    if (summer) this.lake.setThaw(1);
     col.terrain = (x, z) => { const hi = this.island.height(x, z); if (hi !== null) return hi; return terrain.lakeDist(x, z) < 0.965 ? LAYOUT.iceY : terrain.height(x, z); };
 
     // ---- particles & atmosphere
-    this.snow = new ParticleField(game, { count: 9500, box: [44, 24, 44], size: 0.05, fall: 1.05, wind: [0.7, 0, 0.25], turb: 0.6 });
+    this.snow = summer
+      ? new ParticleField(game, { count: 700, box: [40, 14, 40], size: 0.035, fall: -0.04, wind: [0.25, 0, 0.12], turb: 0.9, color: '#fff2cf', base: 0.3, opacity: 0.55 })       // pollen, drifting in the low sun
+      : new ParticleField(game, { count: 9500, box: [44, 24, 44], size: 0.05, fall: 1.05, wind: [0.7, 0, 0.25], turb: 0.6 });
     this.snow.indoorFade = 1; this.snow.setDrawCount(game.gfx.p.particles);
     this.vapour = new BreathVapour(game); this.vapour.setCold(1);
     this.cleanup(() => { this.snow.dispose(); this.vapour.dispose(); });

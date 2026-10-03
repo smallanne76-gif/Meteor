@@ -119,7 +119,13 @@ diffuseColor.rgb *= 1.0 - wetMask * 0.45;`);
 }
 
 /** Snow surface: adds sparkle + a cold sub-surface tint. Sampled in world space so it never tiles visibly. */
+let SEASON = 'winter';
+/** summer hides every snow cap (roofs, rocks, cars) without touching the code that places them */
+export function setSeason(s) { SEASON = s; }
+export const getSeason = () => SEASON;
+let _noSnow = null;
 export function snowMaterial(o = {}) {
+  if (SEASON === 'summer') return (_noSnow ||= Object.assign(new THREE.MeshBasicMaterial({ visible: false }), { userData: { shared: true } }));
   const key = 'snowmat|' + (o.name ?? 'snow') + (o.tint ?? '');
   if (matCache.has(key)) return matCache.get(key);
   const m = pbr(o.name ?? 'snow', { tint: o.tint ?? 0xffffff, key: 'snowbase', normal: 1.0, rough: 1 }).clone();

@@ -221,6 +221,7 @@ export class Game extends Emitter {
       this.fogObj.density = this.skyDef.fogDensity * this.fogMul * lerp(1, 0.35, this.indoor);
     }
 
+    if (this.allowEyesClosed) this.gfx.fx.eyes = damp(this.gfx.fx.eyes, this.player.eyesClosed ? 0.97 : 0, 7, dt);   // lids follow the Space key where closing your eyes is part of the puzzle
     this.emit('update', dt);
     for (const s of this.systems) s.update && s.update(dt, this);
     this.chapter && this.chapter.update && this.chapter.update(dt, this);

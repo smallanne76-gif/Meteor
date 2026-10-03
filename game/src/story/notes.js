@@ -113,6 +113,11 @@ export const NOTES = {
     kind: 'note', style: 'hand', rot: -1.2, list: 'The card on the gift',
     html: `<p>Mar —</p><p>Happy birthday!! (It's tomorrow now. You waited. I'm so proud.)</p><p>It's a music box. It plays the song. It stops one note short because I couldn't find it and the guy at the shop said he could only build what I could hum.</p><p>Maybe you'll find it.</p><p>No rush.</p><p class="sig">— J</p><p style="font-size:.75em">p.s. the one shaped like Ohio is mine.</p>`,
   },
+  // ---------------------------------------------------------------- THE ICE HOUSE
+  tape_a: { kind: 'note', style: 'type', rot: -0.6, list: 'Tape — “XMAS ’02 (DON’T)”', html: `<p><b>Label: XMAS ’02 — DO NOT PLAY</b></p><p>A boy’s voice, tinny, a little out of breath:</p><p>“Mar. You’re gonna hate that I’m calling at three in the —”</p><p style="opacity:.6">(the tape runs on, blank, for a long time)</p>` },
+  tape_b: { kind: 'note', style: 'type', rot: 0.5, list: 'Tape — “LAKE — FEB 03”', html: `<p><b>Label: LAKE — FEB 03</b></p><p>“— morning, but listen. Just — <i>listen.</i>”</p><p style="opacity:.7">(a long falling note, and a lower one under it)</p><p>“Hear that? It’s doing the laser thing, but lower. Like the whole lake is a cello. Dad was right. It isn’t breaking. It’s stretching.”</p>` },
+  tape_c: { kind: 'note', style: 'type', rot: -0.3, list: 'Tape — “BIRTHDAY (NOT YET)”', html: `<p><b>Label: BIRTHDAY — NOT YET</b></p><p>“I’m gonna walk out a little further, get a cleaner take. Leave the porch light on? So I can find the shore when I —”</p><p style="opacity:.6">(static. the tape ends here, torn.)</p>` },
+  tape_d: { kind: 'note', style: 'type', rot: 0.7, list: 'Tape — “GOOD NIGHT, LAKE”', html: `<p><b>Label: (none)</b></p><p>An older man, close to the microphone, unhurried:</p><p>“Forty-one centimetres. Kids are asleep. Good night, lake.”</p>` },
 
   // ---------------------------------------------------------------- GENERIC
   gift: {

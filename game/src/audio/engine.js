@@ -191,6 +191,7 @@ export class AudioEngine {
       case 'snow_whump': k.snowWhump(d, { t, gain: v }); dur = 1; break;
       case 'splash': k.splash(d, { t, gain: v, big: o.big }); dur = 2; break;
       case 'drip': k.drip(d, { t, gain: 0.2 * v }); dur = 0.5; break;
+      case 'paddle': k.splash(d, { t, gain: 0.3 * v }); for (let i = 0; i < 4; i++) k.drip(d, { t: t + 0.22 + i * 0.13, gain: 0.1 * v }); dur = 1.4; break;
       case 'owl': k.owl(d, { t, gain: 0.3 * v }); dur = 7; break;
       case 'loon': (o.tremolo ? k.loonTremolo : k.loonWail).call(k, d, { t, gain: 0.25 * v }); dur = 3; break;
       case 'cricket': k.cricket(d, { t, gain: 0.05 * v, n: 3 }); dur = 0.6; break;
