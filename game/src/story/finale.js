@@ -36,9 +36,19 @@ export class FinalPhase {
     g.hands.hold('L', null); g.hands.holdFlashlight(); g.lights.flashOn = false;
     g.ui.chapterCard('VII', 'GOODBYE', '', 4);
     g.fadeTo(0, 7, 0xfff3d8);
+    const rid = opts.resumeAt && opts.resumeAt.id;
+    if (rid === 'final:dock' || rid === 'final:gift') { this.fastForward(rid, opts.resumeAt); return; }
     await g.wait(5);
     g.ui.objective('The end of the dock.');
     this.stage = 'walk';
+  }
+
+  /** from a save: Jo has gone, the lantern is out, she is walking home */
+  fastForward(rid, at) {
+    const w = this.w, g = this.g, P = g.player; this.fired.talk = true; this.jo.root.visible = false; this.stage = 'home'; P.canRun = true; P.walkMul = 0.9; this.setupPorch();
+    P.teleport(at.x, at.y ?? 0, at.z, at.yaw ?? 0);
+    if (rid === 'final:gift') { w.porch.set(false); this.fired.porch = true; const G = w.ground; [G.lamps.hall, G.lamps.kitchen, G.lamps.livingFloor, G.lamps.livingTable].filter(Boolean).forEach((l) => l.set(true)); this.boxHeard = true; this.setupInside(); g.ui.objective('Dad’s piano.', true); this.giftIt && this.giftIt.remove(); }
+    else g.ui.objective('Go up to the house.', true);
   }
 
   // ------------------------------------------------------------------------------------------------------------------------

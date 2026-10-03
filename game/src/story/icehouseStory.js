@@ -21,7 +21,7 @@ export class IceHousePhase {
     g.audio.music.stopAll && g.audio.music.stopAll(1); g.audio.music.setDread(0.08);
     P.teleport(-2.4, 0, 0, -Math.PI / 2); P.pitch = 0.18; P.walkMul = 1; P.canRun = true;
     this.hookUp();
-    if (opts.resumeAt) this.restore(opts.resumeAt);
+    if (opts.resumeAt) { this.restore(opts.resumeAt); if (g.flags.heardVoicemail) { this.state = 'tapes'; g.wait(4).then(() => this.lightsDie()); } }
     g.fadeTo(0, 3.5, 0x000000);
     if (!opts.resumeAt) { g.ui.chapterCard('III', 'THE ICE HOUSE', '', 4.5); this.intro(); }
   }

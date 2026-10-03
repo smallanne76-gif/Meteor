@@ -97,7 +97,7 @@ export const NOTES = {
   },
   clipping: {
     kind: 'note', style: 'print', rot: 1.3, list: 'Clipping — Halden Weekly',
-    html: `<h3 style="font-family:'IM Fell English',serif">SEARCH ON HALDEN LAKE SUSPENDED</h3>
+    html: `<h3 style="font-family:Fell,serif">SEARCH ON HALDEN LAKE SUSPENDED</h3>
       <p>After nine days and some 1,400 volunteer hours, the sheriff’s office announced Thursday that active efforts to locate Jonah Linden, 22, have ended. Linden was last seen February 11 near the north bay, where the lake’s ice is known to shift.</p>
       <p>Linden is the son of the late Walter Linden, a sound engineer who built the lakeside lodge. His sister, Mara Linden, 28, said she would “keep looking.” <i>Neighbours say the porch light at the Linden lodge has been left on every night since.</i></p>`,
   },

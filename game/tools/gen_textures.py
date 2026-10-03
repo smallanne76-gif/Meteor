@@ -414,10 +414,10 @@ def parka(n=1024):
     seam = 1 - smooth(puff, .0, .35)
     rip = ((np.floor(xs * 220) % 6 == 0) | (np.floor(ys * 220) % 6 == 0)).astype(float) * .12
     base = np.array([.22, .26, .22]) * (.85 + .3 * fbm(n, 4, 4)[..., None])
-    col = base * (.7 + .5 * puff[..., None]) * (1 + rip[..., None])
+    col = base * (.86 + .2 * puff[..., None]) * (1 + rip[..., None])
     col *= (1 - .3 * smooth(fbm(n, 5, 5), .55, .85)[..., None] * 1)   # dirt/wet
     h = puff * .8 + rip * .3
-    save('parka', col, h, .55 + .25 * seam, nstrength=3.0)
+    save('parka', col, h, .55 + .12 * seam, nstrength=1.5)
 
 
 def wool_knit(n=1024):

@@ -23,6 +23,7 @@ export class SearchPhase {
     for (let i = 0; i < w.lampPosts.length; i++) if (g.flags['lamp' + i]) w.lampPosts[i].set(true);
     this.hi = g.flags.lampHi ?? -1;
     if (opts.skipTo) { this.skipTo(opts.skipTo); }
+    if (opts.resumeAt) { const lp = this.w.lampPosts[Math.max(0, this.hi)]; this.lastSafe = this.hi >= 0 ? { x: lp.pos.x, z: lp.pos.z + 1.6 } : null; if (this.hi >= 1) this.startPatrol(); g.ui.objective(g.flags.boatKey ? 'Follow the trail to the boathouse.' : 'Follow the trail to the boathouse.', true); if (g.flags.boathouseDone) { /* back from below? */ } }
     if (!opts.resumeAt && !opts.skipTo) {
       g.ui.chapterCard('II', 'THE SEARCH', 'Feb 11', 4.5);
       await g.wait(3.5);

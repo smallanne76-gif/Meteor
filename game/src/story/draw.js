@@ -213,7 +213,7 @@ export function owlKeys(ctx, w, h) {
 export function flyer(ctx, w, h) {
   paperFill(ctx, w, h, '#efe9d8');
   ctx.fillStyle = '#161616'; ctx.textAlign = 'center';
-  ctx.font = "900 150px 'Special Elite', Impact, monospace"; ctx.fillText('MISSING', w / 2, 170);
+  ctx.font = "900 150px Elite, Impact, monospace"; ctx.fillText('MISSING', w / 2, 170);
   // halftone portrait
   const px = w / 2 - 210, py = 205, pw = 420, ph = 470; const step = 7;
   const rr = (() => { let a = 99; return () => (a = (a * 16807) % 2147483647) / 2147483647; })();
@@ -230,14 +230,14 @@ export function flyer(ctx, w, h) {
     if (r > 0.4) { ctx.beginPath(); ctx.arc(px + x, py + y, r, 0, 7); ctx.fill(); }
   }
   ctx.strokeStyle = '#161616'; ctx.lineWidth = 5; ctx.strokeRect(px - 4, py - 4, pw + 8, ph + 8);
-  ctx.font = "700 44px 'Special Elite', monospace"; ctx.fillText('JONAH “JO” LINDEN, 22', w / 2, 735);
-  ctx.font = "26px 'Special Elite', monospace";
+  ctx.font = "700 44px Elite, monospace"; ctx.fillText('JONAH “JO” LINDEN, 22', w / 2, 735);
+  ctx.font = "26px Elite, monospace";
   ['Last seen Mon. Feb 11, about 3 AM,', 'north bay, Halden Lake. 5′11″, brown curly hair.', 'Yellow rain jacket. Hums when he walks.', 'He is not in any trouble. He is just late.'].forEach((t, i) => ctx.fillText(t, w / 2, 785 + i * 36));
-  ctx.font = "600 34px 'Special Elite', monospace"; ctx.fillText('Call Mara — 555 0143', w / 2, 960);
+  ctx.font = "600 34px Elite, monospace"; ctx.fillText('Call Mara — 555 0143', w / 2, 960);
   // hand-written, later, in a different pen
   ctx.fillStyle = '#26358a'; ctx.font = "34px Caveat, cursive"; ctx.save(); ctx.translate(w / 2, 1005); ctx.rotate(-0.02); ctx.fillText('(porch light is on)', 0, 0); ctx.restore();
   // tear-off tabs, all gone but one
-  ctx.fillStyle = '#161616'; const tw = (w - 60) / 8; ctx.font = "16px 'Special Elite', monospace";
+  ctx.fillStyle = '#161616'; const tw = (w - 60) / 8; ctx.font = "16px Elite, monospace";
   for (let i = 0; i < 8; i++) { const x0 = 30 + i * tw; ctx.strokeStyle = '#555'; ctx.setLineDash([5, 5]); ctx.beginPath(); ctx.moveTo(x0, 1030); ctx.lineTo(x0, h); ctx.stroke(); ctx.setLineDash([]);
     if (i === 5) { ctx.save(); ctx.translate(x0 + tw / 2, 1085); ctx.rotate(-Math.PI / 2); ctx.fillText('MARA 555 0143', 0, 0); ctx.restore(); } else { ctx.fillStyle = '#d9d2bd'; ctx.fillRect(x0 + 2, 1032, tw - 4, h - 1032); ctx.fillStyle = '#161616'; } }
   ctx.textAlign = 'left';

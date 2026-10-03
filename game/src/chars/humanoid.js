@@ -64,6 +64,19 @@ function skinnedTube({ path, radii, seg = 16, bones, boneIndex, sigma = 0.06, re
   return g;
 }
 
+const plaidCache = {};
+/** a soft flannel plaid: broad bands over a brushed weave, nothing like a grid */
+function plaidMaterial(color) {
+  if (plaidCache[color]) return plaidCache[color].clone();
+  const c = document.createElement('canvas'); c.width = c.height = 256; const x = c.getContext('2d'); const base = new THREE.Color(color); const css = (k) => `rgb(${Math.round(Math.min(1, base.r * k) * 255)},${Math.round(Math.min(1, base.g * k) * 255)},${Math.round(Math.min(1, base.b * k) * 255)})`;
+  x.fillStyle = css(1); x.fillRect(0, 0, 256, 256);
+  for (const [pos, wd, k, al] of [[40, 54, 0.62, 0.55], [168, 30, 0.7, 0.5], [112, 10, 1.3, 0.35]]) { x.fillStyle = css(k); x.globalAlpha = al; x.fillRect(pos, 0, wd, 256); x.fillRect(0, pos, 256, wd); }
+  x.globalAlpha = 1; x.strokeStyle = 'rgba(255,240,220,0.18)'; x.lineWidth = 2; for (const p of [20, 96, 150, 220]) { x.beginPath(); x.moveTo(p, 0); x.lineTo(p, 256); x.moveTo(0, p); x.lineTo(256, p); x.stroke(); }
+  const img = x.getImageData(0, 0, 256, 256); for (let i = 0; i < img.data.length; i += 4) { const n = (Math.random() - 0.5) * 16; img.data[i] += n; img.data[i + 1] += n; img.data[i + 2] += n; } x.putImageData(img, 0, 0);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = 4;
+  const m = new THREE.MeshStandardMaterial({ map: t, roughness: 0.93, color: 0xcfc4bc }); plaidCache[color] = m; return m.clone();
+}
+
 export class Humanoid {
   /**
    * opts: { kind:'jo'|'searcher'|'mara', outfit:'flannel'|'tee'|'parka', shirt, pants, skin, boots, hood:bool, wet:0..1 }
@@ -109,7 +122,7 @@ export class Humanoid {
 
     // face first (its skin material is shared by neck / forearms / hands)
     this.face = buildHead(this.kind, opts.face || {});
-    this.headBone.add(this.face.root); this.face.root.position.set(0, 0.092, 0.012); this.face.root.scale.setScalar(1.13);
+    this.headBone.add(this.face.root); this.face.root.position.set(0, 0.088, 0.012); this.face.root.scale.setScalar(this.kind === 'searcher' ? 1.16 : 1.24);
     this.buildMeshes();
     if (opts.hood) this.buildHood();
     // hands
@@ -141,8 +154,8 @@ export class Humanoid {
     const ring = (y, rx, rz, zo = 0) => ({ p: V(0, y, zo), r: [rx * puff, rz * puff] });
     const sh = B.shoulder;
     const t = [ring(hipsY - 0.08 * H, B.hip[0] * 0.95, B.hip[1] * 0.98), ring(hipsY, B.hip[0], B.hip[1]), ring(hipsY + 0.08 * H, B.waist[0], B.waist[1], 0.003), ring(hipsY + 0.17 * H, B.waist[0] * 1.04, B.waist[1] * 1.02),
-      ring(chestY + 0.0, B.chest[0] * 1.0, B.chest[1] * 1.06, 0.006), ring(chestY + 0.08 * H, B.chest[0] * 1.06, B.chest[1] * 1.06, 0.004), ring(neckY - 0.07 * H, sh * 0.98, B.chest[1] * 0.92),
-      ring(neckY - 0.035 * H, sh * 0.78, B.chest[1] * 0.78), ring(neckY - 0.005 * H, B.neck * 2.0, B.neck * 1.45), ring(neckY + 0.012, B.neck * 1.3 * puff * 0.92, B.neck * 1.2 * puff * 0.9)];
+      ring(chestY + 0.0, B.chest[0] * 1.0, B.chest[1] * 1.06, 0.006), ring(chestY + 0.08 * H, B.chest[0] * 1.06, B.chest[1] * 1.06, 0.004), ring(neckY - 0.07 * H, sh * 0.88, B.chest[1] * 0.92),
+      ring(neckY - 0.035 * H, sh * 0.66, B.chest[1] * 0.78), ring(neckY - 0.005 * H, B.neck * 2.0, B.neck * 1.45), ring(neckY + 0.012, B.neck * 1.3 * puff * 0.92, B.neck * 1.2 * puff * 0.9)];
     const torsoBones = [seg('hips', 'spine'), seg('spine', 'chest'), seg('chest', 'neck'), seg('neck', 'head')];
     const torsoGeo = skinnedTube({ path: t.map((x) => x.p), radii: t.map((x) => x.r), seg: 28, bones: torsoBones, boneIndex: bi, sigma: 0.07, ref: V(1, 0, 0), capEnds: false, uvTile: 0.45 });
     this.torso = this.skinMesh(torsoGeo, shirtMat);
@@ -159,8 +172,8 @@ export class Humanoid {
       const r0 = B.arm * puff * (type === 'parka' ? 1.25 : 1);
       const sleeveEnd = o.sleeveEnd ?? (type === 'tee' ? 0.38 : 1.0);
       const up = (f) => V().lerpVectors(sh, el, f), lo = (f) => V().lerpVectors(el, wr, f);
-      const pts = [sh.clone().add(V(-s * 0.075, 0.02, 0)), sh.clone().add(V(-s * 0.02, 0.012, 0)), up(0.12), up(0.5), up(0.92), el.clone(), lo(0.12), lo(0.5), lo(0.9), wr.clone()];
-      const rad = [[r0 * 1.2, r0 * 1.2], [r0 * 1.22, r0 * 1.2], [r0 * 1.12, r0 * 1.08], [r0 * 1.02, r0 * 1.0], [r0 * 0.94, r0 * 0.93], [r0 * 0.9, r0 * 0.9], [r0 * 0.9, r0 * 0.88], [r0 * 0.78, r0 * 0.75], [r0 * 0.66, r0 * 0.64], [r0 * 0.6, r0 * 0.58]];
+      const pts = [sh.clone().add(V(-s * 0.05, 0.012, 0)), sh.clone().add(V(-s * 0.012, 0.008, 0)), up(0.12), up(0.5), up(0.92), el.clone(), lo(0.12), lo(0.5), lo(0.9), wr.clone()];
+      const rad = [[r0 * 1.0, r0 * 1.0], [r0 * 1.12, r0 * 1.1], [r0 * 1.12, r0 * 1.08], [r0 * 1.02, r0 * 1.0], [r0 * 0.94, r0 * 0.93], [r0 * 0.9, r0 * 0.9], [r0 * 0.9, r0 * 0.88], [r0 * 0.78, r0 * 0.75], [r0 * 0.66, r0 * 0.64], [r0 * 0.6, r0 * 0.58]];
       const cut = Math.max(2, Math.round(pts.length * sleeveEnd));
       const cloth = skinnedTube({ path: pts.slice(0, cut), radii: rad.slice(0, cut), seg: 14, bones: aBones, boneIndex: bi, sigma: 0.05, ref: V(1, 0, 0), capEnds: false, uvTile: 0.4 });
       this.skinMesh(cloth, shirtMat);
@@ -195,7 +208,7 @@ export class Humanoid {
   getSkinMat() { if (!this._bodySkin) { this._bodySkin = this.face.skin.clone(); this._bodySkin.vertexColors = false; this._bodySkin.needsUpdate = true; } return this._bodySkin; }
   makeShirt() {
     const o = this.opts; const type = o.outfit || 'flannel';
-    if (type === 'flannel') { const m = pbr('fabric_wool', { key: 'flan' + (o.shirt || ''), tint: o.shirt ?? 0xc27a62, normal: 1.0 }).clone(); m.roughness = 0.92; return m; }
+    if (type === 'flannel') { return plaidMaterial(o.shirt ?? 0xc27a62); }
     if (type === 'raincoat') { const m = solid(o.shirt ?? 0xe8b81c, { rough: 0.38 }).clone(); return m; }
     if (type === 'tee') { const m = solid(o.shirt ?? 0xe8e2d0, { rough: 0.9 }).clone(); return m; }
     if (type === 'parka') { const m = pbr('parka', { key: 'parkaN', tint: 0x55604f, normal: 1.4, wet: 0.7 }).clone(); m.roughness = 0.5; m.color.setRGB(0.9, 0.95, 0.88); return m; }
@@ -210,7 +223,7 @@ export class Humanoid {
     const p = hg.attributes.position;
     for (let i = 0; i < p.count; i++) { const z = p.getZ(i), y = p.getY(i); p.setZ(i, z * 1.18 - 0.02); p.setY(i, y * 1.12); if (z > 0.06 && y < 0.1) { p.setZ(i, z * 1.25 + 0.03); } }
     hg.computeVertexNormals();
-    const mat = this.torso.material.clone(); mat.side = THREE.DoubleSide;
+    const mat = solid(0x424b3f, { rough: 0.7 }).clone(); mat.side = THREE.DoubleSide;
     const hood = new THREE.Mesh(hg, mat); hood.position.set(0, 0.095, -0.01); hood.castShadow = true; this.headBone.add(hood); this.hood = hood;
     // dark void inside so the face reads as "not there"
     const inner = new THREE.Mesh(new THREE.SphereGeometry(0.1, 20, 14), new THREE.MeshBasicMaterial({ color: 0x030405 })); inner.scale.set(0.9, 1.15, 0.9); inner.position.set(0, 0.095, 0.02); inner.visible = false; this.headBone.add(inner); this.hoodVoid = inner;

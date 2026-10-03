@@ -64,7 +64,7 @@ export class Loop extends Chapter {
   buildParty(B, game, M) {
     const G = LOOPG, rng = new RNG(5);
     // the banner across the hall: HAPPY BIRTHDAY MAR
-    const bt = canvasTex(1024, 128, (c, w, h) => { c.clearRect(0, 0, w, h); const txt = 'HAPPY BIRTHDAY MAR'; const cols = ['#d94a3a', '#e8b81c', '#4a7ac8', '#4aa86a', '#c85aa0']; c.font = "700 74px 'Special Elite', monospace"; c.textAlign = 'center'; c.textBaseline = 'middle'; let x = 56; for (let i = 0; i < txt.length; i++) { const ch = txt[i]; if (ch === ' ') { x += 30; continue; } c.fillStyle = cols[i % cols.length]; c.fillText(ch, x, 66 + Math.sin(i * 0.7) * 6); x += 52; } });
+    const bt = canvasTex(1024, 128, (c, w, h) => { c.clearRect(0, 0, w, h); const txt = 'HAPPY BIRTHDAY MAR'; const cols = ['#d94a3a', '#e8b81c', '#4a7ac8', '#4aa86a', '#c85aa0']; c.font = "700 74px Elite, monospace"; c.textAlign = 'center'; c.textBaseline = 'middle'; let x = 56; for (let i = 0; i < txt.length; i++) { const ch = txt[i]; if (ch === ' ') { x += 30; continue; } c.fillStyle = cols[i % cols.length]; c.fillText(ch, x, 66 + Math.sin(i * 0.7) * 6); x += 52; } });
     const ban = new THREE.Mesh(new THREE.PlaneGeometry(3.0, 0.4), new THREE.MeshStandardMaterial({ map: bt, transparent: true, side: THREE.DoubleSide, roughness: 0.8 })); ban.position.set(0, 2.15, 9.0); game.root.add(ban); this.banner = ban;
     const cord = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 3.1, 4), solid(0xd8d0c0)); cord.rotation.z = Math.PI / 2; cord.position.set(0, 2.38, 9.0); game.root.add(cord);
     // balloons: clusters in the corners and floating at the ceiling
@@ -111,7 +111,7 @@ export class Loop extends Chapter {
     const pop = new THREE.Mesh(new THREE.CircleGeometry(0.08, 24), new THREE.MeshStandardMaterial({ color: 0x111111, transparent: true, opacity: 0.35, side: THREE.DoubleSide })); pop.position.set(0, 0.78, 0.1); mic.add(pop);
     chair(B, 0, -16.4, Math.PI, { mat: M.wood, cushion: M.red });
     const red = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.12, 0.03), new THREE.MeshStandardMaterial({ color: 0x300000, emissive: 0xff1a1a, emissiveIntensity: 1.2 })); red.position.set(0, 2.2, z1 - 0.02); red.rotation.y = 0; game.root.add(red); this.recLamp = red;
-    const rt = new THREE.Mesh(new THREE.PlaneGeometry(0.3, 0.06), new THREE.MeshBasicMaterial({ map: canvasTex(256, 48, (c, w, h) => { c.fillStyle = '#220000'; c.fillRect(0, 0, w, h); c.fillStyle = '#ff6a5a'; c.font = "700 30px 'Special Elite', monospace"; c.textAlign = 'center'; c.fillText('RECORDING', w / 2, 34); }) })); rt.position.set(0, 2.2, z1 + 0.0 + 0.0 - 0.0); rt.position.z = z0 + 0.12; rt.rotation.y = 0; game.root.add(rt);
+    const rt = new THREE.Mesh(new THREE.PlaneGeometry(0.3, 0.06), new THREE.MeshBasicMaterial({ map: canvasTex(256, 48, (c, w, h) => { c.fillStyle = '#220000'; c.fillRect(0, 0, w, h); c.fillStyle = '#ff6a5a'; c.font = "700 30px Elite, monospace"; c.textAlign = 'center'; c.fillText('RECORDING', w / 2, 34); }) })); rt.position.set(0, 2.2, z1 + 0.0 + 0.0 - 0.0); rt.position.z = z0 + 0.12; rt.rotation.y = 0; game.root.add(rt);
     this.boothLight = game.lights.add({ pos: [0, 2.0, -17.5], color: 0xff6a4a, intensity: 5, distance: 6, tag: 'booth', decay: 1.8, shadow: false, on: false });
     this.boothDesk = game.lights.add({ pos: [0.2, 1.2, -17.6], color: 0xffd9a0, intensity: 3, distance: 4, tag: 'booth', decay: 1.9, shadow: false, on: false });
     // the phone

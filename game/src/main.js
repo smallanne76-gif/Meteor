@@ -16,6 +16,7 @@ addEventListener('pointerdown', unlock); addEventListener('keydown', unlock);
 window.__game = game;
 
 await game.init();
+try { await Promise.all(['16px Elite', '16px Cormorant', 'italic 16px Cormorant', '600 16px Cormorant', '500 16px Caveat', '600 16px Caveat', '16px Fell', 'italic 16px Fell'].map((f) => document.fonts.load(f))); } catch (e) { /* fonts are a nicety: canvas text falls back to serif */ }
 const q = new URLSearchParams(location.search);
 if (q.get('test') === 'lodge') { const { TestLodge } = await import('./levels/test_lodge.js'); await game.loadChapter(new TestLodge()); }
 else if (q.get('test') === 'halden') { const { Halden } = await import('./levels/halden.js'); await game.loadChapter(new Halden(q.get('phase') || 'prologue', { skipIntro: q.has('skipintro'), season: q.get('season') || 'winter' })); }

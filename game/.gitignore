@@ -3,3 +3,4 @@ game/node_modules/
 __pycache__/
 *.pyc
 *.raw
+dist/

@@ -24,6 +24,8 @@ export class LodgePhase {
     g.wait(1.2).then(() => { L.doors.front.toggle(false); g.audio.sfx('door_close', { pos: V(-0.3, 1.2, 5.5), vol: 0.7 }); });
     g.ui.objective('Find Jo.');
     if (opts.skipTo) { this.skipTo(opts.skipTo); return; }
+    if (opts.resumeAt) { this.restore(); return; }
+    g.saveCheckpoint('lodge:start', { x: -0.3, y: 0, z: 4.2, yaw: Math.PI });
     await g.wait(2.5);
     await w.think('Jo?');
     await g.wait(1.0);
@@ -279,6 +281,15 @@ export class LodgePhase {
   leaveHouse() {
     const w = this.w, g = this.g; if (this.fired.leave) return; this.fired.leave = true;
     g.wait(2.2).then(() => { w.setPhase('search'); });
+  }
+
+  /** coming back from a save: the house as she left it */
+  restore() {
+    const g = this.g, w = this.w, L = w.lodge, F = g.flags, G = w.ground;
+    if (F.joKey) L.doors.jo.unlock(); if (F.studyKey) L.doors.study.unlock(); if (F.backKey) L.doors.back.unlock();
+    if (F.memory1Done) this.memory1Done = true; if (F.sawScore) this.fired.score = true; if (F.intrusionSurvived) this.fired.intrusionStarted = true; if (F.phoneAnswered) this.fired.study = true;
+    L.doors.front.toggle(false); for (const l of [G.lamps.hall, G.lamps.livingFloor]) l && l.set(true);
+    g.ui.objective(F.backKey ? 'The back door. Then the trail to the boathouse.' : (F.tinOpen ? 'The back door.' : (F.studyKey ? 'Dad’s study.' : (F.intrusionSurvived ? 'Play Jo’s tune on the piano.' : (F.joKey ? 'Jo’s room.' : (this.memory1Done ? 'Look in the cookie jar.' : 'Find Jo.'))))), true);
   }
 
   skipTo(step) {

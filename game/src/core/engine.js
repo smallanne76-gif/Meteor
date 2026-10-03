@@ -170,7 +170,7 @@ export class Game extends Emitter {
   /** persist progress */
   saveCheckpoint(id, at) {
     const p = this.player;
-    this.lastCheckpoint = { id, x: at?.x ?? p.pos.x, z: at?.z ?? p.pos.z, y: at?.y, yaw: at?.yaw ?? p.yaw };
+    this.lastCheckpoint = { id, x: at?.x ?? p.pos.x, z: at?.z ?? p.pos.z, y: at?.y ?? p.pos.y, yaw: at?.yaw ?? p.yaw };
     if (this.noSave) return;
     Save.write({ phase: this.flags.phase, chapterId: this.chapterId, checkpoint: this.lastCheckpoint, flags: this.flags, journal: this.journal.serialize(), playTime: this.playTime });
   }

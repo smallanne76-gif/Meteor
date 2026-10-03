@@ -274,7 +274,7 @@ export class Gfx {
     r.shadowMap.enabled = true;
     r.shadowMap.autoUpdate = true;
     r.setClearColor(0x05070a, 1);
-    this.info = r.info;
+    this.info = r.info; r.info.autoReset = false;   // accumulate over every pass of a frame; reset at the start of render()
     this.maxAniso = r.capabilities.getMaxAnisotropy();
 
     this.quad = new THREE.Mesh(new THREE.BufferGeometry(), null);
@@ -381,6 +381,7 @@ export class Gfx {
 
   // ---- frame ----------------------------------------------------------------------------------------------------
   render(scene, camera, dt, scatterDir) {
+    this.renderer.info.reset();
     const r = this.renderer, t = this.targets, p = this.p, fx = this.fx;
     this.time += dt;
     // grade easing

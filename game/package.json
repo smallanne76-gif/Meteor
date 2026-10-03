@@ -7,7 +7,9 @@
   "scripts": {
     "serve": "python3 -m http.server 8080 --directory .",
     "build": "node tools/build.mjs",
-    "textures": "python3 tools/gen_textures.py"
+    "textures": "python3 tools/gen_textures.py",
+    "qa": "node tools/qa/multi.mjs",
+    "start": "npm run serve"
   },
   "dependencies": {
     "@fontsource/caveat": "^5.3.0",

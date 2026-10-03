@@ -169,6 +169,7 @@ export class Halden extends Chapter {
     if (this.phaseObj && this.phaseObj.dispose) this.phaseObj.dispose();
     this.phaseName = name; this.game.flags.phase = name;
     const P = PHASES[name]; this.phaseObj = new P(this, opts); this.phaseObj.start(opts);
+    if (opts.resumeAt && opts.resumeAt.x !== undefined) { const r = opts.resumeAt; this.game.player.teleport(r.x, r.y ?? 0, r.z, r.yaw ?? 0); }
   }
   onLampLit(lp) { this.phaseObj && this.phaseObj.onLamp && this.phaseObj.onLamp(lp); this.checkpoint('lamp:' + lp.id, { x: lp.pos.x, z: lp.pos.z + 1.5 }); }
   checkpoint(id, at) { this.game.saveCheckpoint && this.game.saveCheckpoint(id, at); }
