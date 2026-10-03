@@ -1,0 +1,386 @@
+TITLE: METEORSMALL_IRONMAN_REMAKE
+FCM: NON-DROP FRAME
+
+001  SRC      V     C        00:00:00:07 00:00:00:16 00:00:00:17 00:00:01:05
+M2   SRC        015.0                00:00:00:07
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 0 | shot rx_hand_a | flip - | zoom 0.92->0.98
+
+002  SRC      V     C        00:00:00:21 00:00:01:09 00:00:01:05 00:00:01:23
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 1 | shot bark_a | flip - | zoom 0.86->0.90
+
+003  SRC      V     C        00:00:01:16 00:00:02:04 00:00:01:23 00:00:02:12
+M2   SRC        028.4                00:00:01:16
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 2 | shot bark_a | flip h | zoom 0.88->0.92
+
+004  SRC      V     C        00:00:02:09 00:00:02:27 00:00:02:12 00:00:03:00
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 3 | shot bark_a | flip - | zoom 0.88->0.94
+
+005  SRC      V     C        00:00:03:02 00:00:03:18 00:00:03:00 00:00:03:18
+M2   SRC        026.7                00:00:03:02
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 4 | shot dark_rx | flip - | zoom 0.90->0.96
+
+006  SRC      V     C        00:00:03:20 00:00:04:05 00:00:03:18 00:00:04:07
+M2   SRC        023.7                00:00:03:20
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 5 | shot dark_rx | flip v | zoom 0.86->0.92
+
+007  SRC      V     C        00:00:04:08 00:00:04:22 00:00:04:07 00:00:04:25
+M2   SRC        023.3                00:00:04:08
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 6 | shot dark_rx | flip - | zoom 0.94->1.02
+
+008  SRC      V     C        00:00:05:04 00:00:05:13 00:00:04:25 00:00:05:14
+M2   SRC        014.2                00:00:05:04
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 7 | shot rx_hand_b | flip - | zoom 0.90->0.98
+
+009  SRC      V     C        00:00:05:16 00:00:05:24 00:00:05:14 00:00:05:23
+M2   SRC        026.7                00:00:05:16
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 8 | shot tony_walk | flip - | zoom 0.92->1.00
+
+010  SRC      V     C        00:00:05:24 00:00:06:02 00:00:05:23 00:00:06:02
+M2   SRC        026.7                00:00:05:24
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 8.5 | shot tony_walk | flip h | zoom 0.95->1.00
+
+011  SRC      V     C        00:00:06:09 00:00:06:22 00:00:06:02 00:00:06:20
+M2   SRC        021.7                00:00:06:09
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 9 | shot nano | flip - | zoom 0.88->0.95
+
+012  SRC      V     C        00:00:06:24 00:00:07:08 00:00:06:20 00:00:07:09
+M2   SRC        022.1                00:00:06:24
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 10 | shot nano | flip hv | zoom 0.88->0.95
+
+013  SRC      V     C        00:00:07:12 00:00:07:25 00:00:07:09 00:00:07:18
+M2   SRC        043.3                00:00:07:12
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 11 | shot nano | flip - | zoom 0.90->0.96
+
+014  SRC      V     C        00:00:08:01 00:00:08:09 00:00:07:18 00:00:07:27
+M2   SRC        026.7                00:00:08:01
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 11.5 | shot tony_prof | flip h | zoom 0.95->1.00
+
+015  SRC      V     C        00:00:08:19 00:00:09:04 00:00:07:27 00:00:08:15
+M2   SRC        025.0                00:00:08:19
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 12 | shot wide | flip - | zoom 1.00->1.00
+
+016  SRC      V     C        00:00:09:04 00:00:09:19 00:00:08:15 00:00:09:04
+M2   SRC        023.7                00:00:09:04
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 13 | shot wide | flip h | zoom 1.00->1.00
+
+017  SRC      V     C        00:00:09:19 00:00:10:03 00:00:09:04 00:00:09:22
+M2   SRC        023.3                00:00:09:19
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 14 | shot wide | flip - | zoom 1.00->1.00
+
+018  SRC      V     C        00:00:08:02 00:00:08:09 00:00:09:22 00:00:10:01
+M2   SRC        023.3                00:00:08:02
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 15 | shot tony_prof | flip - | zoom 0.95->1.00
+
+019  SRC      V     C        00:00:08:09 00:00:08:15 00:00:10:01 00:00:10:11
+M2   SRC        018.0                00:00:08:09
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 15.5 | shot tony_prof | flip h | zoom 1.00->1.05
+
+020  SRC      V     C        00:00:10:13 00:00:10:26 00:00:10:11 00:00:10:29
+M2   SRC        021.7                00:00:10:13
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 16 | shot helm_fire | flip - | zoom 0.90->0.95
+
+021  SRC      V     C        00:00:10:26 00:00:11:15 00:00:10:29 00:00:11:17
+M2   SRC        031.7                00:00:10:26
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 17 | shot helm_fire | flip h | zoom 0.92->0.97
+
+022  SRC      V     C        00:00:11:21 00:00:12:09 00:00:11:17 00:00:12:06
+M2   SRC        028.4                00:00:11:21
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 18 | shot dark_mk | flip - | zoom 0.95->1.00
+
+023  SRC      V     C        00:00:12:09 00:00:12:16 00:00:12:06 00:00:12:15
+M2   SRC        023.3                00:00:12:09
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 19 | shot dark_mk | flip h | zoom 0.95->1.00
+
+024  SRC      V     C        00:00:12:16 00:00:12:23 00:00:12:15 00:00:12:24
+M2   SRC        023.3                00:00:12:16
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 19.5 | shot dark_mk | flip - | zoom 1.00->1.04
+
+025  SRC      V     C        00:00:12:28 00:00:13:15 00:00:12:24 00:00:13:12
+M2   SRC        028.3                00:00:12:28
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 20 | shot flare_fist | flip - | zoom 0.95->1.00
+
+026  SRC      V     C        00:00:13:15 00:00:14:00 00:00:13:12 00:00:14:01
+M2   SRC        023.7                00:00:13:15
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 21 | shot flare_fist | flip h | zoom 0.95->1.00
+
+027  SRC      V     C        00:00:14:04 00:00:14:18 00:00:14:01 00:00:14:19
+M2   SRC        023.3                00:00:14:04
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 22 | shot lunge | flip - | zoom 0.92->1.00
+
+028  SRC      V     C        00:00:14:22 00:00:15:08 00:00:14:19 00:00:15:07
+M2   SRC        026.7                00:00:14:22
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 23 | shot run_tree | flip - | zoom 1.00->1.00
+
+029  SRC      V     C        00:00:15:08 00:00:15:26 00:00:15:07 00:00:15:26
+M2   SRC        028.4                00:00:15:08
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 24 | shot run_tree | flip h | zoom 1.00->1.00
+
+030  SRC      V     C        00:00:15:28 00:00:16:14 00:00:15:26 00:00:16:14
+M2   SRC        026.7                00:00:15:28
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 25 | shot shoulder | flip - | zoom 0.86->0.92
+
+031  SRC      V     C        00:00:16:17 00:00:16:28 00:00:16:14 00:00:16:23
+M2   SRC        036.7                00:00:16:17
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 26 | shot whip_blue | flip h | zoom 0.95->1.00
+
+032  SRC      V     C        00:00:17:02 00:00:17:12 00:00:16:23 00:00:17:03
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 26.5 | shot whip_blue | flip - | zoom 0.95->1.00
+
+033  SRC      V     C        00:00:17:12 00:00:17:20 00:00:17:03 00:00:17:21
+M2   SRC        013.3                00:00:17:12
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 27 | shot whip_blue | flip - | zoom 0.95->1.05
+
+034  SRC      V     C        00:00:17:23 00:00:18:09 00:00:17:21 00:00:18:09
+M2   SRC        026.7                00:00:17:23
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 28 | shot leap | flip - | zoom 0.95->1.00
+
+035  SRC      V     C        00:00:18:09 00:00:18:27 00:00:18:09 00:00:18:28
+M2   SRC        028.4                00:00:18:09
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 29 | shot leap | flip h | zoom 0.95->1.00
+
+036  SRC      V     C        00:00:19:01 00:00:19:17 00:00:18:28 00:00:19:16
+M2   SRC        026.7                00:00:19:01
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 30 | shot front1 | flip - | zoom 1.00->1.00
+
+037  SRC      V     C        00:00:19:17 00:00:20:03 00:00:19:16 00:00:20:04
+M2   SRC        026.7                00:00:19:17
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 31 | shot front1 | flip h | zoom 1.00->1.00
+
+038  SRC      V     C        00:00:20:07 00:00:20:15 00:00:20:04 00:00:20:14
+M2   SRC        024.0                00:00:20:07
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 32 | shot helm_close | flip - | zoom 0.88->0.95
+
+039  SRC      V     C        00:00:20:15 00:00:20:19 00:00:20:14 00:00:20:18
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 32.5 | shot helm_close | flip h | zoom 0.90->0.94
+
+040  SRC      V     C        00:00:20:19 00:00:20:21 00:00:20:18 00:00:20:23
+M2   SRC        012.0                00:00:20:19
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 32.75 | shot helm_close | flip hv | zoom 0.90->0.96
+
+041  SRC      V     C        00:00:20:26 00:00:21:14 00:00:20:23 00:00:21:11
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 33 | shot bleed | flip - | zoom 0.95->1.00
+
+042  SRC      V     C        00:00:21:14 00:00:22:00 00:00:21:11 00:00:22:00
+M2   SRC        025.3                00:00:21:14
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 34 | shot bleed | flip h | zoom 0.95->1.00
+
+043  SRC      V     C        00:00:22:04 00:00:22:21 00:00:22:00 00:00:22:18
+M2   SRC        028.3                00:00:22:04
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 35 | shot hulk | flip - | zoom 0.90->0.96
+
+044  SRC      V     C        00:00:22:21 00:00:23:04 00:00:22:18 00:00:23:06
+M2   SRC        021.7                00:00:22:21
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 36 | shot hulk | flip h | zoom 0.90->0.96
+
+045  SRC      V     C        00:00:23:09 00:00:23:26 00:00:23:06 00:00:23:25
+M2   SRC        026.8                00:00:23:09
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 37 | shot blue_suit | flip - | zoom 0.95->1.00
+
+046  SRC      V     C        00:00:23:26 00:00:24:12 00:00:23:25 00:00:24:13
+M2   SRC        026.7                00:00:23:26
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 38 | shot blue_suit | flip h | zoom 0.95->1.00
+
+047  SRC      V     C        00:00:24:16 00:00:25:02 00:00:24:13 00:00:25:01
+M2   SRC        026.7                00:00:24:16
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 39 | shot front2 | flip - | zoom 1.00->1.00
+
+048  SRC      V     C        00:00:25:02 00:00:25:19 00:00:25:01 00:00:25:20
+M2   SRC        026.8                00:00:25:02
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 40 | shot front2 | flip h | zoom 1.00->1.00
+
+049  SRC      V     C        00:00:25:23 00:00:26:09 00:00:25:20 00:00:26:08
+M2   SRC        026.7                00:00:25:23
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 41 | shot bark_b | flip - | zoom 0.88->0.93
+
+050  SRC      V     C        00:00:26:09 00:00:26:26 00:00:26:08 00:00:26:27
+M2   SRC        026.8                00:00:26:09
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 42 | shot bark_b | flip h | zoom 0.88->0.93
+
+051  SRC      V     C        00:00:26:26 00:00:27:12 00:00:26:27 00:00:27:15
+M2   SRC        026.7                00:00:26:26
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 43 | shot bark_b | flip - | zoom 0.90->0.96
+
+052  SRC      V     C        00:00:27:12 00:00:27:19 00:00:27:15 00:00:27:24
+M2   SRC        023.3                00:00:27:12
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 44 | shot bark_b | flip h | zoom 0.95->1.00
+
+053  SRC      V     C        00:00:27:19 00:00:27:26 00:00:27:24 00:00:28:03
+M2   SRC        023.3                00:00:27:19
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 44.5 | shot bark_b | flip - | zoom 0.95->1.00
+
+054  SRC      V     C        00:00:28:00 00:00:28:16 00:00:28:03 00:00:28:22
+M2   SRC        025.3                00:00:28:00
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 45 | shot face | flip - | zoom 0.82->0.88
+
+055  SRC      V     C        00:00:28:18 00:00:29:03 00:00:28:22 00:00:29:10
+M2   SRC        025.0                00:00:28:18
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 46 | shot face | flip h | zoom 0.82->0.88
+
+056  SRC      V     C        00:00:29:04 00:00:29:26 00:00:29:10 00:00:29:28
+M2   SRC        036.7                00:00:29:04
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 47 | shot face | flip - | zoom 0.84->0.95
+
+057  SRC      V     C        00:00:30:02 00:00:30:18 00:00:29:28 00:00:30:17
+M2   SRC        025.3                00:00:30:02
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 48 | shot chest_hero | flip - | zoom 0.95->1.00
+
+058  SRC      V     C        00:00:30:18 00:00:31:04 00:00:30:17 00:00:31:05
+M2   SRC        026.7                00:00:30:18
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 49 | shot chest_hero | flip h | zoom 0.92->0.97
+
+059  SRC      V     C        00:00:31:04 00:00:31:21 00:00:31:05 00:00:31:24
+M2   SRC        026.8                00:00:31:04
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 50 | shot chest_hero | flip - | zoom 0.88->0.93
+
+060  SRC      V     C        00:00:25:06 00:00:25:15 00:00:31:24 00:00:32:03
+M2   SRC        030.0                00:00:25:06
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 51 | shot front2 | flip h | zoom 1.00->1.00 | REVERSE (play backwards in Resolve: Change Clip Speed > Reverse)
+
+061  SRC      V     C        00:00:19:15 00:00:19:24 00:00:32:03 00:00:32:12
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 51.5 | shot front1 | flip - | zoom 1.00->1.00
+
+062  SRC      V     C        00:00:33:03 00:00:33:19 00:00:32:12 00:00:33:00
+M2   SRC        026.7                00:00:33:03
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 52 | shot chest_med | flip - | zoom 0.95->1.00
+
+063  SRC      V     C        00:00:33:19 00:00:34:04 00:00:33:00 00:00:33:19
+M2   SRC        023.7                00:00:33:19
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 53 | shot chest_med | flip h | zoom 0.95->1.00
+
+064  SRC      V     C        00:00:34:04 00:00:34:23 00:00:33:19 00:00:34:07
+M2   SRC        031.7                00:00:34:04
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 54 | shot chest_med | flip - | zoom 0.92->1.00
+
+065  SRC      V     C        00:00:34:28 00:00:35:14 00:00:34:07 00:00:34:25
+M2   SRC        026.7                00:00:34:28
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 55 | shot arms_out | flip - | zoom 1.00->1.00
+
+066  SRC      V     C        00:00:35:14 00:00:36:00 00:00:34:25 00:00:35:14
+M2   SRC        025.3                00:00:35:14
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 56 | shot arms_out | flip h | zoom 1.00->1.00
+
+067  SRC      V     C        00:00:37:12 00:00:37:28 00:00:35:14 00:00:36:02
+M2   SRC        026.7                00:00:37:12
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 57 | shot forest | flip - | zoom 0.95->1.00
+
+068  SRC      V     C        00:00:36:05 00:00:36:25 00:00:36:02 00:00:36:21
+M2   SRC        031.6                00:00:36:05
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 58 | shot night | flip - | zoom 1.00->1.00
+
+069  SRC      V     C        00:00:36:29 00:00:37:06 00:00:36:21 00:00:37:00
+M2   SRC        023.3                00:00:36:29
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 59 | shot arm_flash | flip - | zoom 0.90->1.00
+
+070  SRC      V     C        00:00:39:25 00:00:40:03 00:00:37:00 00:00:37:09
+M2   SRC        026.7                00:00:39:25
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 59.5 | shot boost | flip h | zoom 0.95->1.00
+
+071  SRC      V     C        00:00:37:21 00:00:38:06 00:00:37:09 00:00:37:27
+M2   SRC        025.0                00:00:37:21
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 60 | shot forest | flip - | zoom 0.95->1.00
+
+072  SRC      V     C        00:00:38:06 00:00:38:22 00:00:37:27 00:00:38:16
+M2   SRC        025.3                00:00:38:06
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 61 | shot forest | flip h | zoom 0.95->1.00
+
+073  SRC      V     C        00:00:24:18 00:00:25:04 00:00:38:16 00:00:39:04
+M2   SRC        026.7                00:00:24:18
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 62 | shot front2 | flip - | zoom 1.00->1.00
+
+074  SRC      V     C        00:00:38:24 00:00:39:02 00:00:39:04 00:00:39:13
+M2   SRC        026.7                00:00:38:24
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 63 | shot forest | flip h | zoom 0.95->1.00
+
+075  SRC      V     C        00:00:39:03 00:00:39:20 00:00:39:13 00:00:39:22
+M2   SRC        056.7                00:00:39:03
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 63.5 | shot forest | flip - | zoom 0.95->1.03
+
+076  SRC      V     C        00:00:39:26 00:00:40:11 00:00:39:22 00:00:40:11
+M2   SRC        023.7                00:00:39:26
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 64 | shot boost | flip - | zoom 1.00->1.00
+
+077  SRC      V     C        00:00:40:15 00:00:41:00 00:00:40:11 00:00:40:29
+M2   SRC        025.0                00:00:40:15
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 65 | shot fly | flip - | zoom 1.00->1.00
+
+078  SRC      V     C        00:00:41:00 00:00:41:15 00:00:40:29 00:00:41:16
+M2   SRC        026.5                00:00:41:00
+* FROM CLIP NAME: edit_current.mp4
+* COMMENT: beat 66 | shot fly | flip - | zoom 1.00->1.00

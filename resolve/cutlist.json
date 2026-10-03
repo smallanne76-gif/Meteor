@@ -1,0 +1,2432 @@
+{
+ "fps": 30,
+ "bpm": 97.98,
+ "beat_period_s": 0.6124,
+ "first_beat_s": 0.552,
+ "source": "edit_current.mp4",
+ "cuts": [
+  {
+   "n": 1,
+   "beat": 0.0,
+   "shot": "rx_hand_a",
+   "record_in": 17,
+   "record_out": 35,
+   "source_in": 7,
+   "source_out": 16,
+   "speed": 0.5,
+   "flip": "",
+   "zoom": [
+    0.92,
+    0.98
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     4,
+     1.0
+    ]
+   ],
+   "note": "reactor ignites on beat 1"
+  },
+  {
+   "n": 2,
+   "beat": 1.0,
+   "shot": "bark_a",
+   "record_in": 35,
+   "record_out": 53,
+   "source_in": 21,
+   "source_out": 39,
+   "speed": 1.0,
+   "flip": "",
+   "zoom": [
+    0.86,
+    0.9
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.03,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "whip",
+     1,
+     2,
+     0.7
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 3,
+   "beat": 2.0,
+   "shot": "bark_a",
+   "record_in": 53,
+   "record_out": 72,
+   "source_in": 46,
+   "source_out": 64,
+   "speed": 0.947,
+   "flip": "h",
+   "zoom": [
+    0.88,
+    0.92
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "glitch",
+     0,
+     3,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 4,
+   "beat": 3.0,
+   "shot": "bark_a",
+   "record_in": 72,
+   "record_out": 90,
+   "source_in": 69,
+   "source_out": 87,
+   "speed": 1.0,
+   "flip": "",
+   "zoom": [
+    0.88,
+    0.94
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "whip",
+     1,
+     2,
+     0.7
+    ]
+   ],
+   "note": "eye slit hit"
+  },
+  {
+   "n": 5,
+   "beat": 4.0,
+   "shot": "dark_rx",
+   "record_in": 90,
+   "record_out": 108,
+   "source_in": 92,
+   "source_out": 108,
+   "speed": 0.889,
+   "flip": "",
+   "zoom": [
+    0.9,
+    0.96
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.45,
+   "transitions": [
+    [
+     "dip",
+     0,
+     4,
+     0.5
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 6,
+   "beat": 5.0,
+   "shot": "dark_rx",
+   "record_in": 108,
+   "record_out": 127,
+   "source_in": 110,
+   "source_out": 125,
+   "speed": 0.789,
+   "flip": "v",
+   "zoom": [
+    0.86,
+    0.92
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.45,
+   "transitions": [
+    [
+     "whip",
+     1,
+     2,
+     0.7
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 7,
+   "beat": 6.0,
+   "shot": "dark_rx",
+   "record_in": 127,
+   "record_out": 145,
+   "source_in": 128,
+   "source_out": 142,
+   "speed": 0.778,
+   "flip": "",
+   "zoom": [
+    0.94,
+    1.02
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.3,
+   "transitions": [
+    [
+     "whip",
+     1,
+     2,
+     0.7
+    ],
+    [
+     "flash",
+     0,
+     3,
+     0.55
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 8,
+   "beat": 7.0,
+   "shot": "rx_hand_b",
+   "record_in": 145,
+   "record_out": 164,
+   "source_in": 154,
+   "source_out": 163,
+   "speed": 0.474,
+   "flip": "",
+   "zoom": [
+    0.9,
+    0.98
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "whip",
+     3,
+     3,
+     1.0
+    ]
+   ],
+   "note": "reactor hologram"
+  },
+  {
+   "n": 9,
+   "beat": 8.0,
+   "shot": "tony_walk",
+   "record_in": 164,
+   "record_out": 173,
+   "source_in": 166,
+   "source_out": 174,
+   "speed": 0.889,
+   "flip": "",
+   "zoom": [
+    0.92,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 16,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     4,
+     1.0
+    ]
+   ],
+   "note": "DROP"
+  },
+  {
+   "n": 10,
+   "beat": 8.5,
+   "shot": "tony_walk",
+   "record_in": 173,
+   "record_out": 182,
+   "source_in": 174,
+   "source_out": 182,
+   "speed": 0.889,
+   "flip": "h",
+   "zoom": [
+    0.95,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "glitch",
+     0,
+     3,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 11,
+   "beat": 9.0,
+   "shot": "nano",
+   "record_in": 182,
+   "record_out": 200,
+   "source_in": 189,
+   "source_out": 202,
+   "speed": 0.722,
+   "flip": "",
+   "zoom": [
+    0.88,
+    0.95
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "whip",
+     2,
+     3,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 12,
+   "beat": 10.0,
+   "shot": "nano",
+   "record_in": 200,
+   "record_out": 219,
+   "source_in": 204,
+   "source_out": 218,
+   "speed": 0.737,
+   "flip": "hv",
+   "zoom": [
+    0.88,
+    0.95
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     3,
+     0.55
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 13,
+   "beat": 11.0,
+   "shot": "nano",
+   "record_in": 219,
+   "record_out": 228,
+   "source_in": 222,
+   "source_out": 235,
+   "speed": 1.444,
+   "flip": "",
+   "zoom": [
+    0.9,
+    0.96
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "whip",
+     1,
+     2,
+     0.7
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 14,
+   "beat": 11.5,
+   "shot": "tony_prof",
+   "record_in": 228,
+   "record_out": 237,
+   "source_in": 241,
+   "source_out": 249,
+   "speed": 0.889,
+   "flip": "h",
+   "zoom": [
+    0.95,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     3,
+     0.55
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 15,
+   "beat": 12.0,
+   "shot": "wide",
+   "record_in": 237,
+   "record_out": 255,
+   "source_in": 259,
+   "source_out": 274,
+   "speed": 0.833,
+   "flip": "",
+   "zoom": [
+    1.0,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.03,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     4,
+     1.0
+    ]
+   ],
+   "note": "street sign / wall placement"
+  },
+  {
+   "n": 16,
+   "beat": 13.0,
+   "shot": "wide",
+   "record_in": 255,
+   "record_out": 274,
+   "source_in": 274,
+   "source_out": 289,
+   "speed": 0.789,
+   "flip": "h",
+   "zoom": [
+    1.0,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flip",
+     2,
+     3,
+     1.0
+    ]
+   ],
+   "note": "street sign / wall placement"
+  },
+  {
+   "n": 17,
+   "beat": 14.0,
+   "shot": "wide",
+   "record_in": 274,
+   "record_out": 292,
+   "source_in": 289,
+   "source_out": 303,
+   "speed": 0.778,
+   "flip": "",
+   "zoom": [
+    1.0,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "whip",
+     1,
+     2,
+     0.7
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 18,
+   "beat": 15.0,
+   "shot": "tony_prof",
+   "record_in": 292,
+   "record_out": 301,
+   "source_in": 242,
+   "source_out": 249,
+   "speed": 0.778,
+   "flip": "",
+   "zoom": [
+    0.95,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     3,
+     0.55
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 19,
+   "beat": 15.5,
+   "shot": "tony_prof",
+   "record_in": 301,
+   "record_out": 311,
+   "source_in": 249,
+   "source_out": 255,
+   "speed": 0.6,
+   "flip": "h",
+   "zoom": [
+    1.0,
+    1.05
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "invert",
+     0,
+     2,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 20,
+   "beat": 16.0,
+   "shot": "helm_fire",
+   "record_in": 311,
+   "record_out": 329,
+   "source_in": 313,
+   "source_out": 326,
+   "speed": 0.722,
+   "flip": "",
+   "zoom": [
+    0.9,
+    0.95
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 14,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     4,
+     1.0
+    ]
+   ],
+   "note": "neon sign swap"
+  },
+  {
+   "n": 21,
+   "beat": 17.0,
+   "shot": "helm_fire",
+   "record_in": 329,
+   "record_out": 347,
+   "source_in": 326,
+   "source_out": 345,
+   "speed": 1.056,
+   "flip": "h",
+   "zoom": [
+    0.92,
+    0.97
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flip",
+     2,
+     3,
+     1.0
+    ]
+   ],
+   "note": "neon sign swap"
+  },
+  {
+   "n": 22,
+   "beat": 18.0,
+   "shot": "dark_mk",
+   "record_in": 347,
+   "record_out": 366,
+   "source_in": 351,
+   "source_out": 369,
+   "speed": 0.947,
+   "flip": "",
+   "zoom": [
+    0.95,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     3,
+     0.55
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 23,
+   "beat": 19.0,
+   "shot": "dark_mk",
+   "record_in": 366,
+   "record_out": 375,
+   "source_in": 369,
+   "source_out": 376,
+   "speed": 0.778,
+   "flip": "h",
+   "zoom": [
+    0.95,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "glitch",
+     0,
+     3,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 24,
+   "beat": 19.5,
+   "shot": "dark_mk",
+   "record_in": 375,
+   "record_out": 384,
+   "source_in": 376,
+   "source_out": 383,
+   "speed": 0.778,
+   "flip": "",
+   "zoom": [
+    1.0,
+    1.04
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "whip",
+     1,
+     2,
+     0.7
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 25,
+   "beat": 20.0,
+   "shot": "flare_fist",
+   "record_in": 384,
+   "record_out": 402,
+   "source_in": 388,
+   "source_out": 405,
+   "speed": 0.944,
+   "flip": "",
+   "zoom": [
+    0.95,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 10,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     4,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 26,
+   "beat": 21.0,
+   "shot": "flare_fist",
+   "record_in": 402,
+   "record_out": 421,
+   "source_in": 405,
+   "source_out": 420,
+   "speed": 0.789,
+   "flip": "h",
+   "zoom": [
+    0.95,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flip",
+     2,
+     3,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 27,
+   "beat": 22.0,
+   "shot": "lunge",
+   "record_in": 421,
+   "record_out": 439,
+   "source_in": 424,
+   "source_out": 438,
+   "speed": 0.778,
+   "flip": "",
+   "zoom": [
+    0.92,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "spin",
+     2,
+     2,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 28,
+   "beat": 23.0,
+   "shot": "run_tree",
+   "record_in": 439,
+   "record_out": 457,
+   "source_in": 442,
+   "source_out": 458,
+   "speed": 0.889,
+   "flip": "",
+   "zoom": [
+    1.0,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     3,
+     0.55
+    ]
+   ],
+   "note": "wall mural"
+  },
+  {
+   "n": 29,
+   "beat": 24.0,
+   "shot": "run_tree",
+   "record_in": 457,
+   "record_out": 476,
+   "source_in": 458,
+   "source_out": 476,
+   "speed": 0.947,
+   "flip": "h",
+   "zoom": [
+    1.0,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "whip",
+     1,
+     2,
+     0.7
+    ]
+   ],
+   "note": "wall mural"
+  },
+  {
+   "n": 30,
+   "beat": 25.0,
+   "shot": "shoulder",
+   "record_in": 476,
+   "record_out": 494,
+   "source_in": 478,
+   "source_out": 494,
+   "speed": 0.889,
+   "flip": "",
+   "zoom": [
+    0.86,
+    0.92
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     3,
+     0.55
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 31,
+   "beat": 26.0,
+   "shot": "whip_blue",
+   "record_in": 494,
+   "record_out": 503,
+   "source_in": 497,
+   "source_out": 508,
+   "speed": 1.222,
+   "flip": "h",
+   "zoom": [
+    0.95,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "glitch",
+     0,
+     3,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 32,
+   "beat": 26.5,
+   "shot": "whip_blue",
+   "record_in": 503,
+   "record_out": 513,
+   "source_in": 512,
+   "source_out": 522,
+   "speed": 1.0,
+   "flip": "",
+   "zoom": [
+    0.95,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "whip",
+     1,
+     2,
+     0.7
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 33,
+   "beat": 27.0,
+   "shot": "whip_blue",
+   "record_in": 513,
+   "record_out": 531,
+   "source_in": 522,
+   "source_out": 530,
+   "speed": 0.444,
+   "flip": "",
+   "zoom": [
+    0.95,
+    1.05
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     3,
+     0.55
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 34,
+   "beat": 28.0,
+   "shot": "leap",
+   "record_in": 531,
+   "record_out": 549,
+   "source_in": 533,
+   "source_out": 549,
+   "speed": 0.889,
+   "flip": "",
+   "zoom": [
+    0.95,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     4,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 35,
+   "beat": 29.0,
+   "shot": "leap",
+   "record_in": 549,
+   "record_out": 568,
+   "source_in": 549,
+   "source_out": 567,
+   "speed": 0.947,
+   "flip": "h",
+   "zoom": [
+    0.95,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "whip",
+     2,
+     3,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 36,
+   "beat": 30.0,
+   "shot": "front1",
+   "record_in": 568,
+   "record_out": 586,
+   "source_in": 571,
+   "source_out": 587,
+   "speed": 0.889,
+   "flip": "",
+   "zoom": [
+    1.0,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.03,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     4,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 37,
+   "beat": 31.0,
+   "shot": "front1",
+   "record_in": 586,
+   "record_out": 604,
+   "source_in": 587,
+   "source_out": 603,
+   "speed": 0.889,
+   "flip": "h",
+   "zoom": [
+    1.0,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "whip",
+     3,
+     2,
+     1.0
+    ]
+   ],
+   "note": "HUD lock-on"
+  },
+  {
+   "n": 38,
+   "beat": 32.0,
+   "shot": "helm_close",
+   "record_in": 604,
+   "record_out": 614,
+   "source_in": 607,
+   "source_out": 615,
+   "speed": 0.8,
+   "flip": "",
+   "zoom": [
+    0.88,
+    0.95
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 22,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     4,
+     1.0
+    ]
+   ],
+   "note": "eye flare on the hit"
+  },
+  {
+   "n": 39,
+   "beat": 32.5,
+   "shot": "helm_close",
+   "record_in": 614,
+   "record_out": 618,
+   "source_in": 615,
+   "source_out": 619,
+   "speed": 1.0,
+   "flip": "h",
+   "zoom": [
+    0.9,
+    0.94
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "invert",
+     0,
+     2,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 40,
+   "beat": 32.75,
+   "shot": "helm_close",
+   "record_in": 618,
+   "record_out": 623,
+   "source_in": 619,
+   "source_out": 621,
+   "speed": 0.4,
+   "flip": "hv",
+   "zoom": [
+    0.9,
+    0.96
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "glitch",
+     0,
+     3,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 41,
+   "beat": 33.0,
+   "shot": "bleed",
+   "record_in": 623,
+   "record_out": 641,
+   "source_in": 626,
+   "source_out": 644,
+   "speed": 1.0,
+   "flip": "",
+   "zoom": [
+    0.95,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     3,
+     0.55
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 42,
+   "beat": 34.0,
+   "shot": "bleed",
+   "record_in": 641,
+   "record_out": 660,
+   "source_in": 644,
+   "source_out": 660,
+   "speed": 0.842,
+   "flip": "h",
+   "zoom": [
+    0.95,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "whip",
+     2,
+     3,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 43,
+   "beat": 35.0,
+   "shot": "hulk",
+   "record_in": 660,
+   "record_out": 678,
+   "source_in": 664,
+   "source_out": 681,
+   "speed": 0.944,
+   "flip": "",
+   "zoom": [
+    0.9,
+    0.96
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     3,
+     0.55
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 44,
+   "beat": 36.0,
+   "shot": "hulk",
+   "record_in": 678,
+   "record_out": 696,
+   "source_in": 681,
+   "source_out": 694,
+   "speed": 0.722,
+   "flip": "h",
+   "zoom": [
+    0.9,
+    0.96
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "spin",
+     2,
+     2,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 45,
+   "beat": 37.0,
+   "shot": "blue_suit",
+   "record_in": 696,
+   "record_out": 715,
+   "source_in": 699,
+   "source_out": 716,
+   "speed": 0.895,
+   "flip": "",
+   "zoom": [
+    0.95,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     4,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 46,
+   "beat": 38.0,
+   "shot": "blue_suit",
+   "record_in": 715,
+   "record_out": 733,
+   "source_in": 716,
+   "source_out": 732,
+   "speed": 0.889,
+   "flip": "h",
+   "zoom": [
+    0.95,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "whip",
+     1,
+     2,
+     0.7
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 47,
+   "beat": 39.0,
+   "shot": "front2",
+   "record_in": 733,
+   "record_out": 751,
+   "source_in": 736,
+   "source_out": 752,
+   "speed": 0.889,
+   "flip": "",
+   "zoom": [
+    1.0,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.03,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     4,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 48,
+   "beat": 40.0,
+   "shot": "front2",
+   "record_in": 751,
+   "record_out": 770,
+   "source_in": 752,
+   "source_out": 769,
+   "speed": 0.895,
+   "flip": "h",
+   "zoom": [
+    1.0,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flip",
+     2,
+     3,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 49,
+   "beat": 41.0,
+   "shot": "bark_b",
+   "record_in": 770,
+   "record_out": 788,
+   "source_in": 773,
+   "source_out": 789,
+   "speed": 0.889,
+   "flip": "",
+   "zoom": [
+    0.88,
+    0.93
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     3,
+     0.55
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 50,
+   "beat": 42.0,
+   "shot": "bark_b",
+   "record_in": 788,
+   "record_out": 807,
+   "source_in": 789,
+   "source_out": 806,
+   "speed": 0.895,
+   "flip": "h",
+   "zoom": [
+    0.88,
+    0.93
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "glitch",
+     0,
+     3,
+     1.0
+    ]
+   ],
+   "note": "eye slit flare"
+  },
+  {
+   "n": 51,
+   "beat": 43.0,
+   "shot": "bark_b",
+   "record_in": 807,
+   "record_out": 825,
+   "source_in": 806,
+   "source_out": 822,
+   "speed": 0.889,
+   "flip": "",
+   "zoom": [
+    0.9,
+    0.96
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "whip",
+     1,
+     2,
+     0.7
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 52,
+   "beat": 44.0,
+   "shot": "bark_b",
+   "record_in": 825,
+   "record_out": 834,
+   "source_in": 822,
+   "source_out": 829,
+   "speed": 0.778,
+   "flip": "h",
+   "zoom": [
+    0.95,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     3,
+     0.55
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 53,
+   "beat": 44.5,
+   "shot": "bark_b",
+   "record_in": 834,
+   "record_out": 843,
+   "source_in": 829,
+   "source_out": 836,
+   "speed": 0.778,
+   "flip": "",
+   "zoom": [
+    0.95,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "invert",
+     0,
+     2,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 54,
+   "beat": 45.0,
+   "shot": "face",
+   "record_in": 843,
+   "record_out": 862,
+   "source_in": 840,
+   "source_out": 856,
+   "speed": 0.842,
+   "flip": "",
+   "zoom": [
+    0.82,
+    0.88
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "dip",
+     0,
+     5,
+     0.6
+    ]
+   ],
+   "note": "eye catchlight"
+  },
+  {
+   "n": 55,
+   "beat": 46.0,
+   "shot": "face",
+   "record_in": 862,
+   "record_out": 880,
+   "source_in": 858,
+   "source_out": 873,
+   "speed": 0.833,
+   "flip": "h",
+   "zoom": [
+    0.82,
+    0.88
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "whip",
+     1,
+     2,
+     0.7
+    ]
+   ],
+   "note": "eye catchlight"
+  },
+  {
+   "n": 56,
+   "beat": 47.0,
+   "shot": "face",
+   "record_in": 880,
+   "record_out": 898,
+   "source_in": 874,
+   "source_out": 896,
+   "speed": 1.222,
+   "flip": "",
+   "zoom": [
+    0.84,
+    0.95
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "whip",
+     3,
+     3,
+     1.0
+    ]
+   ],
+   "note": "eye catchlight"
+  },
+  {
+   "n": 57,
+   "beat": 48.0,
+   "shot": "chest_hero",
+   "record_in": 898,
+   "record_out": 917,
+   "source_in": 902,
+   "source_out": 918,
+   "speed": 0.842,
+   "flip": "",
+   "zoom": [
+    0.95,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 20,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     4,
+     1.0
+    ]
+   ],
+   "note": "reactor projection"
+  },
+  {
+   "n": 58,
+   "beat": 49.0,
+   "shot": "chest_hero",
+   "record_in": 917,
+   "record_out": 935,
+   "source_in": 918,
+   "source_out": 934,
+   "speed": 0.889,
+   "flip": "h",
+   "zoom": [
+    0.92,
+    0.97
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "whip",
+     1,
+     2,
+     0.7
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 59,
+   "beat": 50.0,
+   "shot": "chest_hero",
+   "record_in": 935,
+   "record_out": 954,
+   "source_in": 934,
+   "source_out": 951,
+   "speed": 0.895,
+   "flip": "",
+   "zoom": [
+    0.88,
+    0.93
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     3,
+     0.55
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 60,
+   "beat": 51.0,
+   "shot": "front2",
+   "record_in": 954,
+   "record_out": 963,
+   "source_in": 756,
+   "source_out": 765,
+   "speed": -1.0,
+   "flip": "h",
+   "zoom": [
+    1.0,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "glitch",
+     0,
+     3,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 61,
+   "beat": 51.5,
+   "shot": "front1",
+   "record_in": 963,
+   "record_out": 972,
+   "source_in": 585,
+   "source_out": 594,
+   "speed": 1.0,
+   "flip": "",
+   "zoom": [
+    1.0,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     3,
+     0.55
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 62,
+   "beat": 52.0,
+   "shot": "chest_med",
+   "record_in": 972,
+   "record_out": 990,
+   "source_in": 993,
+   "source_out": 1009,
+   "speed": 0.889,
+   "flip": "",
+   "zoom": [
+    0.95,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     4,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 63,
+   "beat": 53.0,
+   "shot": "chest_med",
+   "record_in": 990,
+   "record_out": 1009,
+   "source_in": 1009,
+   "source_out": 1024,
+   "speed": 0.789,
+   "flip": "h",
+   "zoom": [
+    0.95,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flip",
+     2,
+     3,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 64,
+   "beat": 54.0,
+   "shot": "chest_med",
+   "record_in": 1009,
+   "record_out": 1027,
+   "source_in": 1024,
+   "source_out": 1043,
+   "speed": 1.056,
+   "flip": "",
+   "zoom": [
+    0.92,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "whip",
+     1,
+     2,
+     0.7
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 65,
+   "beat": 55.0,
+   "shot": "arms_out",
+   "record_in": 1027,
+   "record_out": 1045,
+   "source_in": 1048,
+   "source_out": 1064,
+   "speed": 0.889,
+   "flip": "",
+   "zoom": [
+    1.0,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 16,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     4,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 66,
+   "beat": 56.0,
+   "shot": "arms_out",
+   "record_in": 1045,
+   "record_out": 1064,
+   "source_in": 1064,
+   "source_out": 1080,
+   "speed": 0.842,
+   "flip": "h",
+   "zoom": [
+    1.0,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "glitch",
+     0,
+     3,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 67,
+   "beat": 57.0,
+   "shot": "forest",
+   "record_in": 1064,
+   "record_out": 1082,
+   "source_in": 1122,
+   "source_out": 1138,
+   "speed": 0.889,
+   "flip": "",
+   "zoom": [
+    0.95,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     3,
+     0.55
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 68,
+   "beat": 58.0,
+   "shot": "night",
+   "record_in": 1082,
+   "record_out": 1101,
+   "source_in": 1085,
+   "source_out": 1105,
+   "speed": 1.053,
+   "flip": "",
+   "zoom": [
+    1.0,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "whip",
+     2,
+     3,
+     1.0
+    ]
+   ],
+   "note": "meteor signal beam"
+  },
+  {
+   "n": 69,
+   "beat": 59.0,
+   "shot": "arm_flash",
+   "record_in": 1101,
+   "record_out": 1110,
+   "source_in": 1109,
+   "source_out": 1116,
+   "speed": 0.778,
+   "flip": "",
+   "zoom": [
+    0.9,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     4,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 70,
+   "beat": 59.5,
+   "shot": "boost",
+   "record_in": 1110,
+   "record_out": 1119,
+   "source_in": 1195,
+   "source_out": 1203,
+   "speed": 0.889,
+   "flip": "h",
+   "zoom": [
+    0.95,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "invert",
+     0,
+     2,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 71,
+   "beat": 60.0,
+   "shot": "forest",
+   "record_in": 1119,
+   "record_out": 1137,
+   "source_in": 1131,
+   "source_out": 1146,
+   "speed": 0.833,
+   "flip": "",
+   "zoom": [
+    0.95,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 14,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     4,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 72,
+   "beat": 61.0,
+   "shot": "forest",
+   "record_in": 1137,
+   "record_out": 1156,
+   "source_in": 1146,
+   "source_out": 1162,
+   "speed": 0.842,
+   "flip": "h",
+   "zoom": [
+    0.95,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "whip",
+     1,
+     2,
+     0.7
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 73,
+   "beat": 62.0,
+   "shot": "front2",
+   "record_in": 1156,
+   "record_out": 1174,
+   "source_in": 738,
+   "source_out": 754,
+   "speed": 0.889,
+   "flip": "",
+   "zoom": [
+    1.0,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     3,
+     0.55
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 74,
+   "beat": 63.0,
+   "shot": "forest",
+   "record_in": 1174,
+   "record_out": 1183,
+   "source_in": 1164,
+   "source_out": 1172,
+   "speed": 0.889,
+   "flip": "h",
+   "zoom": [
+    0.95,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "glitch",
+     0,
+     3,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 75,
+   "beat": 63.5,
+   "shot": "forest",
+   "record_in": 1183,
+   "record_out": 1192,
+   "source_in": 1173,
+   "source_out": 1190,
+   "speed": 1.889,
+   "flip": "",
+   "zoom": [
+    0.95,
+    1.03
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "strobe",
+     0,
+     6,
+     0.5
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 76,
+   "beat": 64.0,
+   "shot": "boost",
+   "record_in": 1192,
+   "record_out": 1211,
+   "source_in": 1196,
+   "source_out": 1211,
+   "speed": 0.789,
+   "flip": "",
+   "zoom": [
+    1.0,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "flash",
+     0,
+     4,
+     1.0
+    ],
+    [
+     "spin",
+     2,
+     2,
+     1.0
+    ]
+   ],
+   "note": ""
+  },
+  {
+   "n": 77,
+   "beat": 65.0,
+   "shot": "fly",
+   "record_in": 1211,
+   "record_out": 1229,
+   "source_in": 1215,
+   "source_out": 1230,
+   "speed": 0.833,
+   "flip": "",
+   "zoom": [
+    1.0,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [
+    [
+     "whip",
+     2,
+     3,
+     1.0
+    ]
+   ],
+   "note": "sky-writing"
+  },
+  {
+   "n": 78,
+   "beat": 66.0,
+   "shot": "fly",
+   "record_in": 1229,
+   "record_out": 1246,
+   "source_in": 1230,
+   "source_out": 1245,
+   "speed": 0.882,
+   "flip": "",
+   "zoom": [
+    1.0,
+    1.0
+   ],
+   "roll": [
+    0.0,
+    0.0
+   ],
+   "shake_px": 0.0,
+   "punch": 0.0,
+   "exposure": 1.0,
+   "transitions": [],
+   "note": "end card"
+  }
+ ]
+}
