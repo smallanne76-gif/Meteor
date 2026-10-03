@@ -94,7 +94,7 @@ export class LightRig {
     let lvl = this.flashOn ? 1 : 0;
     this.flashLevel = damp(this.flashLevel, lvl, this.flashOn ? 30 : 18, dt);
     let f = 1;
-    if (this.flashFlicker > 0) { this.flashFlicker -= dt; f = (Math.sin(performance.now() * 0.09) > 0.2 ? 1 : 0.12) * (Math.random() > 0.3 ? 1 : 0.4); }
+    if (this.flashFlicker > 0) { this.flashFlicker -= dt; f = settings.get('reduceFlash') ? 0.7 + 0.2 * Math.sin(performance.now() * 0.004) : (Math.sin(performance.now() * 0.09) > 0.2 ? 1 : 0.12) * (Math.random() > 0.3 ? 1 : 0.4); }
     const I = this.flashLevel * f;
     const dir = new THREE.Vector3(0, 0, -1).applyQuaternion(flashQuat);
     const origin = camera.position.clone().add(handOffset.clone().applyQuaternion(camera.quaternion));
@@ -132,7 +132,7 @@ export class LightRig {
       if (h.level < 0.003 && !h.on) { h.eff = 0; if (h.slot) { h.slot.userData.slot = null; h.slot = null; } continue; }
       let fl = 1;
       if (h.flicker) { const t = time * (h.flicker.speed || 8); fl = 1 - (h.flicker.amp || 0.2) * (0.5 + 0.5 * Math.sin(t + Math.sin(t * 2.3) * 2) * Math.sin(t * 0.37 + 1.3)); }
-      if (h.surge) { h.surge = Math.max(0, h.surge - dt); fl *= (Math.sin(time * 70) > 0 ? 1 : 0.1); }
+      if (h.surge) { h.surge = Math.max(0, h.surge - dt); fl *= settings.get('reduceFlash') ? 0.6 : (Math.sin(time * 70) > 0 ? 1 : 0.1); }
       h.eff = h.base * h.level * fl;
       h.intensity = h.eff;
       const d2 = cp.distanceToSquared(h.pos);

@@ -1,6 +1,7 @@
 // Formant voice synthesis: hummed melodies (Jo's tune), muffled speech murmur (memories), and the Searcher's call.
 // There is no voice acting in this game; voices are shapes and rhythms. Words are carried by captions.
 import { rr } from './synth.js';
+import { settings } from '../core/settings.js';
 const R = Math.random;
 
 const FORMANTS = {
@@ -54,6 +55,7 @@ export class Voice {
 
   /** speech-like murmur: syllables with vowel formants, prosody from punctuation. Not intelligible on purpose. */
   murmur(dest, { t, text, gender = 'm', f0 = null, gain = 0.1, rate = 1, muffle = true }) {
+    if (settings.get('voiceMurmur') === false) return; // accessibility: captions only, no synthesised speech under them
     const ctx = this.ctx, kit = this.kit;
     const base = f0 ?? (gender === 'f' ? 205 : 118);
     const out = ctx.createGain(); out.gain.value = 1;

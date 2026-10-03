@@ -441,7 +441,7 @@ export class Gfx {
       u.uLift.value.set(...g.lift); u.uGain.value.set(...g.gain); u.uShadowTint.value.set(...g.shadow); u.uHighTint.value.set(...g.high);
       u.uVignette.value = g.vignette; u.uGrain.value = p.grain ? fx.grain : 0.012; u.uChroma.value = p.chroma ? 1 : 0;
       u.uFade.value = fx.fade; u.uFadeColor.value.set(fx.fadeColor.r, fx.fadeColor.g, fx.fadeColor.b);
-      u.uMemory.value = fx.memory; u.uEyes.value = fx.eyes; u.uCold.value = fx.cold; u.uFlash.value = fx.flash; u.uPulse.value = fx.pulse; u.uDread.value = fx.dread; u.uBlink.value = fx.blink;
+      u.uMemory.value = fx.memory; u.uEyes.value = fx.eyes; u.uCold.value = fx.cold; u.uFlash.value = fx.flash * (settings.get('reduceFlash') ? 0.3 : 1); u.uPulse.value = fx.pulse; u.uDread.value = fx.dread; u.uBlink.value = fx.blink;
       u.uDof.value = dofOn * fx.dof; u.uFocus.value = fx.focus; u.uAperture.value = 5.0;
       u.uMotion.value.copy(this.motion);
       u.uBrightness.value = settings.get('brightness');

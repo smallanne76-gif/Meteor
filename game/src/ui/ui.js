@@ -174,7 +174,6 @@ export class UI {
       toggle('Subtitle background', 'subtitleBackground'); toggle('Speaker names', 'speakerNames');
       toggle('Camera shake', 'cameraShake'); toggle('Head bob', 'headBob');
       toggle('Reduce flashing & sudden effects', 'reduceFlash', 'Softens strobing lights, white flashes and screen jolts.');
-      toggle('Hold breath is a toggle', 'holdBreathToggle');
     }
   }
 

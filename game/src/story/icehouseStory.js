@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { assembleTapes } from '../ui/tapeAssemble.js';
 import { askCode } from '../ui/lockUI.js';
 import { clamp, damp } from '../core/util.js';
+import { settings } from '../core/settings.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 
@@ -139,7 +140,8 @@ export class IceHousePhase {
   async lightsDie() {
     const g = this.g, c = this.c, P = g.player, S = c.searcher; if (this.state === 'chase') return; this.state = 'dark';
     // one long flicker, a clunk from somewhere deep in the building, then nothing
-    for (let k = 0; k < 5; k++) { c.lamps.forEach((l) => l.set(k % 2 === 1)); for (const l of g.lights.logical) if (l.tag !== 'tunnel') l.surge = 0.2; await g.wait(0.09 + Math.random() * 0.12); }
+    const calm = settings.get('reduceFlash'); // photosensitive mode: two slow dips instead of a 5-8 Hz stutter
+    for (let k = 0; k < (calm ? 2 : 5); k++) { c.lamps.forEach((l) => l.set(k % 2 === 1)); for (const l of g.lights.logical) if (l.tag !== 'tunnel') l.surge = calm ? 0.5 : 0.2; await g.wait(calm ? 0.8 : 0.09 + Math.random() * 0.12); }
     c.lamps.forEach((l) => l.set(false)); for (const l of g.lights.logical) if (!['tunnel', 'searcher'].includes(l.tag)) l.on = false; if (c.shaftLight) c.shaftLight.on = false;
     g.audio.sfx('switch', { vol: 1 }); g.audio.at(V(-3, 1, 0), 'thud', { vol: 0.8, f: 55 }); g.audio.music.sting('low', 0.9); g.audio.music.setDread(0.4);
     g.toggleFlashlight(true);

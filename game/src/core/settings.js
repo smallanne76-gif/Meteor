@@ -45,11 +45,10 @@ const DEFAULTS = {
   speakerNames: true,
   volMaster: 0.9, volMusic: 0.75, volSfx: 0.9, volAmbience: 0.9, volVoice: 1.0,
   voiceMurmur: true,
-  vsync: true,
   showFps: false,
   contentWarningSeen: false,
   crouchToggle: true,
-  holdBreathToggle: false,
+  reduceFlash: false,     // photosensitivity: no strobing lights / white flashes
 };
 
 class Settings extends Emitter {

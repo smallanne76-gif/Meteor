@@ -47,7 +47,7 @@ export async function kitchenMemory(ph) {
   const off = g.on('update', upd); ph.memoryCleanup.push(off);
   const voice = (text, dur = null) => { const src = g.audio.out('voice', joEar(), { reverb: 0.4, ref: 1.5 }); const t = g.audio.ctx.currentTime + 0.03; g.audio.voice.murmur(src.input, { t, text, gender: 'm', gain: 0.17, rate: 0.95 }); src.dispose(6); };
   const maraVoice = (text) => { const src = g.audio.out('voice', null, { reverb: 0.2 }); const t = g.audio.ctx.currentTime + 0.03; g.audio.voice.murmur(src.input, { t, text, gender: 'f', gain: 0.1, rate: 0.95 }); src.dispose(6); };
-  const joSays = async (text, o = {}) => { if (g.settings?.voiceMurmur !== false) voice(text); await g.ui.say(text, { speaker: 'JO', style: 'memory', crit: true, ...o }); };
+  const joSays = async (text, o = {}) => { voice(text); await g.ui.say(text, { speaker: 'JO', style: 'memory', crit: true, ...o }); };
   const maraSays = async (text, o = {}) => { maraVoice(text); await g.ui.say(text, { speaker: 'MARA', style: 'memory', crit: true, ...o }); };
   g.audio.sfx('ceramic', { pos: V(4, 0.9, -5), vol: 0.5 });
   await g.wait(1.8);
