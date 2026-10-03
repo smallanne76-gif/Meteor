@@ -73,6 +73,7 @@ export class Game extends Emitter {
       // force shadow/material refresh
       this.scene.traverse((o) => { if (o.material) { const ms = Array.isArray(o.material) ? o.material : [o.material]; ms.forEach((m) => { m.needsUpdate = true; }); } });
     }
+    if (k === 'fullscreen') { if (settings.get('fullscreen')) document.documentElement.requestFullscreen?.().catch(() => {}); else if (document.fullscreenElement) document.exitFullscreen?.(); }
     if (k === 'fov' || k === '*') { this.camera.fov = settings.get('fov'); this.camera.updateProjectionMatrix(); }
     this.audio && this.audio.applyVolumes();
   }

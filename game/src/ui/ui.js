@@ -154,6 +154,7 @@ export class UI {
       slider('Resolution scale', 'resolutionScale', 0.5, 1.5, 0.05, (v) => `${Math.round(v * 100)}%`);
       slider('Field of view', 'fov', 55, 100, 1, (v) => `${v}°`);
       slider('Brightness', 'brightness', 0.6, 1.6, 0.02, (v) => v.toFixed(2), 'Raise it if the dark is too dark. The game is meant to be dim, not black.');
+      toggle('Fullscreen', 'fullscreen', 'Also switches right now. F11 works too.');
       toggle('Motion blur', 'motionBlur', 'Only applied on ULTRA / CINEMATIC.');
       toggle('Show FPS', 'showFps');
     } else if (t === 'Audio') {

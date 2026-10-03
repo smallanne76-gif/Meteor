@@ -49,6 +49,7 @@ const DEFAULTS = {
   contentWarningSeen: false,
   crouchToggle: true,
   holdBreathToggle: false, // accessibility: Space latches 'be still' instead of being held
+  fullscreen: true,       // go full screen when a game is started (browsers need the click that starts it)
   reduceFlash: false,     // photosensitivity: no strobing lights / white flashes
 };
 

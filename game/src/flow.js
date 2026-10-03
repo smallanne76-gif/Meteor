@@ -62,6 +62,7 @@ export class Flow {
   async onTitle(a) {
     const g = this.g, ui = g.ui; if (this.busy) return;
     g.audio.resume && g.audio.resume();
+    if ((a === 'new' || a === 'continue') && settings.get('fullscreen') && !document.fullscreenElement) document.documentElement.requestFullscreen?.().catch(() => { /* refused: stay windowed */ });
     if (a === 'settings') return ui.showSettings(true, 'title');
     if (a === 'credits') { ui.hideLayer('title'); g.audio.music.credits && g.audio.music.credits(); await ui.playCredits(); g.audio.music.stopAll && g.audio.music.stopAll(3); g.audio.music.titleBox && g.audio.music.titleBox(); ui.showLayer('title'); return; }
     if (a === 'continue' && !Save.has()) return;
