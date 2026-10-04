@@ -32,7 +32,7 @@ app.whenReady().then(() => {
   win.setMenuBarVisibility(false);
   const q = [];
   if (compat) q.push('compat=1');
-  if (software) q.push('preset=LOW');
+  if (software) q.push('preset=LOW', 'noprobe');   // CPU rendering is the reference: no need to test it
   win.loadURL('app://game/index.html?' + q.join('&'));
   // F11 toggles full screen; Alt+F4 / closing the window quits
   win.webContents.on('before-input-event', (e, i) => { if (i.type === 'keyDown' && i.key === 'F11') { win.setFullScreen(!win.isFullScreen()); e.preventDefault(); } });

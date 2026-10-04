@@ -110,14 +110,14 @@ export const SKIES = {
     top: '#050b1c', horizon: '#1b2e45', bottom: '#0b141d', stars: 1.0, aurora: 0.0, cloud: 0.18, cloudCol: '#2b3a52', haze: 0.8,
     sunDir: [0, -1, 0], sunCol: '#000000', moonDir: [-0.35, 0.58, -0.73], moonCol: '#cfe0ff', moonSize: 0.0005,
     fogColor: '#13202e', fogDensity: 0.010, fogBase: 0, fogFalloff: 0.06, scatterCol: '#2a4260', scatterPow: 5,
-    lightColor: '#a9c4f0', lightIntensity: 1.25, hemiSky: '#38557d', hemiGround: '#15202a', hemiIntensity: 0.55, envIntensity: 0.55,
+    lightColor: '#a9c4f0', lightIntensity: 1.25, hemiSky: '#38557d', hemiGround: '#15202a', hemiIntensity: 0.68, envIntensity: 0.55,
   },
   auroraNight: {
     top: '#030a1a', horizon: '#102740', bottom: '#09121b', stars: 1.0, aurora: 1.0, cloud: 0.05, cloudCol: '#223048', haze: 0.7,
     sunDir: [0, -1, 0], sunCol: '#000000', moonDir: [0.5, 0.45, -0.7], moonCol: '#c0d4f4', moonSize: 0.0005,
     auroraA: '#27ff9a', auroraB: '#9b4dff',
     fogColor: '#0f1c2b', fogDensity: 0.006, fogBase: 0, fogFalloff: 0.05, scatterCol: '#1f4a50', scatterPow: 4,
-    lightColor: '#a9c4f0', lightIntensity: 1.15, hemiSky: '#2f5278', hemiGround: '#14202a', hemiIntensity: 0.55, envIntensity: 0.6,
+    lightColor: '#a9c4f0', lightIntensity: 1.15, hemiSky: '#2f5278', hemiGround: '#14202a', hemiIntensity: 0.68, envIntensity: 0.6,
   },
   dusk: {
     top: '#1b2850', horizon: '#c0735a', bottom: '#2a2428', stars: 0.2, aurora: 0.0, cloud: 0.5, cloudCol: '#9a6a68', haze: 1.0,

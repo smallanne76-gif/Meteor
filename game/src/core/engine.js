@@ -5,6 +5,7 @@ import { settings } from './settings.js';
 import { Gfx } from '../gfx/renderer.js';
 import { Sky, SKIES } from '../gfx/sky.js';
 import { LightRig } from '../gfx/lights.js';
+import { probeShadows } from '../gfx/shadowProbe.js';
 import { initMaterials, preloadTextures, refreshTextureQuality } from '../gfx/materials.js';
 import { Input } from './input.js';
 import { Collision } from '../world/collision.js';
@@ -26,6 +27,11 @@ export class Game extends Emitter {
     this.root = new THREE.Group(); this.root.name = 'levelRoot'; this.scene.add(this.root);
     this.sky = new Sky(); this.scene.add(this.sky.mesh);
     this.lights = new LightRig(this.scene); this.lights.game = this;
+    // does this GPU draw shadows correctly? (see gfx/shadowProbe.js) ?shadowprobe=fail simulates a GPU where they don't
+    const q = location.search;
+    this.shadowProbe = /[?&]shadowprobe=fail/.test(q) ? { dir: false, spot: false, point: false, simulated: true } : (/[?&](noprobe|test=)/.test(q) ? { dir: true, spot: true, point: true, skipped: true } : probeShadows(this.gfx.renderer, { msaa: settings.preset.msaa }));
+    if (!(this.shadowProbe.dir && this.shadowProbe.spot && this.shadowProbe.point)) console.warn('Shadows disabled for light types this GPU renders incorrectly:', JSON.stringify(this.shadowProbe));
+    this.lights.setShadowSupport(this.shadowProbe);
     this.collision = new Collision();
     this.input = new Input(canvas);
     this.timers = new Timers();
@@ -70,7 +76,7 @@ export class Game extends Emitter {
     this.gfx.resize();
   }
   onSettings(k) {
-    if (k === 'preset' || k === 'resolutionScale' || k === '*') {
+    if (k === 'preset' || k === 'resolutionScale' || k === 'shadows' || k === '*') {
       this.gfx.applySettings(); this.lights.rebuild(); if (this.chapter) this.lights.settle(this.camera, this.time); refreshTextureQuality(); this.emit('quality');
       // force shadow/material refresh
       this.scene.traverse((o) => { if (o.material) { const ms = Array.isArray(o.material) ? o.material : [o.material]; ms.forEach((m) => { m.needsUpdate = true; }); } });

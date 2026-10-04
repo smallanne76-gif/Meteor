@@ -28,19 +28,24 @@ export class LightRig {
     this.flashOn = false; this.flashLevel = 0; this.flashFlicker = 0; this.flashBattery = 1;
 
     this.sunTexel = new THREE.Vector3();
+    this.support = { dir: true, spot: true, point: true };   // filled in by the start-up shadow self-test (gfx/shadowProbe.js)
     this.rebuild();
   }
+  setShadowSupport(s) { this.support = { dir: s.dir !== false, spot: s.spot !== false, point: s.point !== false }; this.rebuild(); }
 
   rebuild() {
     const p = settings.preset;
     for (const arr of Object.values(this.pool)) for (const l of arr) { this.root.remove(l); if (l.target) this.root.remove(l.target); if (l.shadow && l.shadow.map) { l.shadow.map.dispose(); l.shadow.map = null; } }
     this.pool = { points: [], shadowPoints: [], spots: [], shadowSpots: [] };
-    const sm = p.shadowMap;
-    const np = p.maxPointLights, nsp = p.shadows ? (sm >= 2048 ? 2 : 1) : 0;
+    const sm = p.shadowMap, S = this.support;
+    const sh = p.shadows && settings.get('shadows') !== false;
+    const wantSP = sm >= 2048 ? 2 : 1, nsp = sh && S.point ? wantSP : 0;
+    const np = p.maxPointLights + (wantSP - nsp);                         // lights that lose their shadow still light the room
     for (let i = 0; i < np; i++) this._mk('points', new THREE.PointLight(0xffffff, 0, 10, 2));
-    for (let i = 0; i < nsp; i++) { const l = new THREE.PointLight(0xffffff, 0, 10, 2); l.castShadow = true; l.shadow.mapSize.set(sm >= 2048 ? 1536 : 1024, sm >= 2048 ? 1536 : 1024); l.shadow.bias = -0.004; l.shadow.normalBias = 0.06; l.shadow.radius = 2; l.shadow.camera.near = 0.15; this._mk('shadowPoints', l); }
-    for (let i = 0; i < 2; i++) this._mk('spots', new THREE.SpotLight(0xffffff, 0, 10, 0.6, 0.6, 2));
-    const nss = p.shadows ? 2 : 0;
+    // point shadows are a 4x2 atlas: 1024 -> a 4096x2048 texture, so keep them modest
+    for (let i = 0; i < nsp; i++) { const l = new THREE.PointLight(0xffffff, 0, 10, 2); l.castShadow = true; l.shadow.mapSize.set(sm >= 2048 ? 1024 : 512, sm >= 2048 ? 1024 : 512); l.shadow.bias = -0.004; l.shadow.normalBias = 0.06; l.shadow.radius = 2; l.shadow.camera.near = 0.15; this._mk('shadowPoints', l); }
+    const nss = sh && S.spot ? 2 : 0;
+    for (let i = 0; i < 2 + (2 - nss); i++) this._mk('spots', new THREE.SpotLight(0xffffff, 0, 10, 0.6, 0.6, 2));
     for (let i = 0; i < nss; i++) { const l = new THREE.SpotLight(0xffffff, 0, 10, 0.6, 0.6, 2); l.castShadow = true; l.shadow.mapSize.set(sm >= 2048 ? 1024 : 512, sm >= 2048 ? 1024 : 512); l.shadow.bias = -0.0004; l.shadow.normalBias = 0.02; this._mk('shadowSpots', l); }
     // sun
     this.sun.shadow.mapSize.set(sm, sm);
@@ -51,8 +56,8 @@ export class LightRig {
     const R = 38; Object.assign(this.sun.shadow.camera, { left: -R, right: R, top: R, bottom: -R }); this.sun.shadow.camera.updateProjectionMatrix();
     this.sun.shadow.bias = -0.0006; this.sun.shadow.normalBias = 0.05;
     this.sun.shadow.radius = 2.5;
-    this.sun.castShadow = p.shadows;
-    this.flash.castShadow = p.shadows; this.flash.shadow.mapSize.set(Math.min(sm, 1024), Math.min(sm, 1024));
+    this.sun.castShadow = sh && S.dir;
+    this.flash.castShadow = sh && S.spot; this.flash.shadow.mapSize.set(Math.min(sm, 1024), Math.min(sm, 1024));
     for (const l of this.logical) l.slot = null;
   }
   /** after a live rebuild (e.g. preset change while paused, when update() is not running): assign the new pool at full level straight away */
@@ -105,9 +110,9 @@ export class LightRig {
     const dir = new THREE.Vector3(0, 0, -1).applyQuaternion(flashQuat);
     const origin = camera.position.clone().add(handOffset.clone().applyQuaternion(camera.quaternion));
     this.flash.position.copy(origin); this.flash.target.position.copy(origin).add(dir);
-    this.flash.intensity = I * 42; this.flash.visible = true;
+    this.flash.intensity = I * 56; this.flash.visible = true;
     this.flashFill.position.copy(origin); this.flashFill.target.position.copy(origin).add(dir);
-    this.flashFill.intensity = I * 5;
+    this.flashFill.intensity = I * 8;
     this.flash.shadow.autoUpdate = I > 0.02;
     this.flashDir = dir; this.flashOrigin = origin;
   }
@@ -143,7 +148,8 @@ export class LightRig {
       h.eff = h.base * h.level * fl;
       h.intensity = h.eff;
       const d2 = cp.distanceToSquared(h.pos);
-      h.score = (h.eff * (0.3 + 0.59 * h.color.g + 0.11 * h.color.b)) / (d2 + 6 + (h.distance < 5 ? 0 : 0));
+      // rank on the steady brightness (not the flicker), so lamps don't trade light slots every frame
+      h.score = (h.base * h.level * (0.3 + 0.59 * h.color.g + 0.11 * h.color.b)) / (d2 + 6);
       if (h.distance > 0 && Math.sqrt(d2) > h.distance * 2.4 + 8) h.score *= 0.01;
       act.push(h);
     }
@@ -152,7 +158,10 @@ export class LightRig {
     const claimed = new Set();
     const assign = (kind, filt) => {
       const arr = P[kind]; if (!arr.length) return;
-      const chosen = act.filter((h) => !claimed.has(h) && filt(h)).slice(0, arr.length);
+      // hysteresis: a light that already holds a slot of this kind keeps it unless another is clearly more important
+      const chosen = act.filter((h) => !claimed.has(h) && filt(h))
+        .map((h) => [h, h.score * (h.slot && arr.includes(h.slot) ? 1.6 : 1)]).sort((a, b) => b[1] - a[1])
+        .slice(0, arr.length).map((x) => x[0]);
       const chosenSet = new Set(chosen);
       for (const l of arr) { const h = l.userData.slot; if (h && !chosenSet.has(h)) { if (h.slot === l) h.slot = null; l.userData.slot = null; } }
       for (const h of chosen) {
