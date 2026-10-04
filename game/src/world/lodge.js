@@ -175,31 +175,32 @@ export function buildLodge(game, parent, opts = {}) {
   // Jo | Mara partition x=1.5 z -5.5..-0.5
   W.jm = B.wall(1.5, L.z0, 1.5, -0.5, { h: uH, y0: yU, thick: T.i, mats: [M.wallpaper, M.paintGreen, M.reveal] });
   // stairwell shaft walls x=1.4 (Dad's | shaft) and x=3.2 (shaft | bath) z 1.0..5.5, full height from floor below
-  W.sh1 = B.wall(1.4, 1.0, 1.4, L.z1, { h: wallH + uH, thick: T.i, mats: [M.wallpaper, M.wallpaper, M.reveal] });
-  W.sh2 = B.wall(3.2, 1.0, 3.2, L.z1, { h: wallH + uH, thick: T.i, mats: [M.wallpaper, M.plasterG, M.reveal] });
+  W.sh1 = B.wall(1.4, 1.0, 1.4, L.z1, { h: wallH + uH, thick: T.i, holes: [{ u: 3.85, w: 1.2, y: 0, h: 2.2 }], mats: [M.wallpaper, M.wallpaper, M.reveal] });
+  W.sh2 = B.wall(3.2, 1.0, 3.2, L.z1, { h: wallH + uH, thick: T.i, holes: [{ u: 3.3, w: 0.95, y: 0, h: 2.2 }], mats: [M.wallpaper, M.plasterG, M.reveal] });
   // upper ceilings
   const uc = (r, mat) => B.ceiling(r.x0, r.z0, r.x1, r.z1, yU + uH, mat, 1.4);
   for (const k of ['jo', 'mara', 'corridor', 'dad']) uc(ROOMS[k], M.plaster); uc({ x0: 3.2, x1: 7.5, z0: 1.0, z1: 5.5 }, M.plaster);
   uc({ x0: 1.4, x1: 3.2, z0: 1.0, z1: 5.5 }, M.plaster);
 
-  // stairs (visual) — rising north from z=5.2 (y=0) to z=1.0 (y=2.85)
-  const nSteps = 16, run = 4.2, rise = L.UY; const stepW = 1.5, stepX = 2.3;
+  // stairs — rising north from z=4.2 (y=0) to z=1.0 (y=2.85); a landing at the foot opens to the hall
+  const SZ0 = 4.2, nSteps = 14, run = SZ0 - 1.0, rise = L.UY; const stepW = 1.5, stepX = 2.3;
   for (let i = 0; i < nSteps; i++) {
-    const zc = 5.2 - (i + 0.5) * (run / nSteps), top = (i + 1) * (rise / nSteps);
+    const zc = SZ0 - (i + 0.5) * (run / nSteps), top = (i + 1) * (rise / nSteps);
     B.box(stepW, 0.05, run / nSteps + 0.03, M.floorDark, { pos: [stepX, top - 0.025, zc], tile: 0.9, cast: true });
     B.box(stepW, rise / nSteps, 0.03, M.floorDark, { pos: [stepX, top - rise / nSteps / 2, zc + run / nSteps / 2], tile: 0.9, cast: false });
   }
   // stringers + underside
   for (const sx of [stepX - stepW / 2 - 0.03, stepX + stepW / 2 + 0.03]) {
     const len = Math.hypot(run, rise);
-    B.box(0.06, 0.28, len, M.floorStudy, { pos: [sx, rise / 2 - 0.1, 3.1], rot: [Math.atan2(rise, run), 0, 0], tile: 0.9 });
+    B.box(0.06, 0.28, len, M.floorStudy, { pos: [sx, rise / 2 - 0.1, (SZ0 + 1.0) / 2], rot: [Math.atan2(rise, run), 0, 0], tile: 0.9 });
   }
-  col.addRamp(stepX, 3.1, run, stepW, 0, rise, -Math.PI / 2, { surf: 'wood' });
+  col.addRamp(stepX, (SZ0 + 1.0) / 2, run, stepW, 0, rise, -Math.PI / 2, { surf: 'wood' });
+  col.addFloor(stepX, (SZ0 + L.z1) / 2, stepW + 0.3, L.z1 - SZ0, 0, { surf: 'wood' });   // the landing
   // solid underside blocker so you can't walk under the stairs from the side
-  col.addBox(stepX, 3.9, stepW + 0.2, 3.2, 0, 1.2, 0, { tag: 'stairUnder' });
+  col.addBox(stepX, 1.95, stepW + 0.2, 1.9, 0, 0.9, 0, { tag: 'stairUnder' });   // only where the steps are above head-bump height
   // banister on the open side (west)
-  for (let i = 0; i <= nSteps; i += 2) { const zc = 5.2 - i * (run / nSteps); const top = i * (rise / nSteps); B.box(0.045, 0.9, 0.045, M.floorStudy, { pos: [stepX - stepW / 2 - 0.02, top + 0.45, zc], tile: 0.5 }); }
-  B.box(0.06, 0.06, Math.hypot(run, rise), M.floorStudy, { pos: [stepX - stepW / 2 - 0.02, rise / 2 + 0.92, 3.1], rot: [Math.atan2(rise, run), 0, 0], tile: 0.5 });
+  for (let i = 0; i <= nSteps; i += 2) { const zc = SZ0 - i * (run / nSteps); const top = i * (rise / nSteps); B.box(0.045, 0.9, 0.045, M.floorStudy, { pos: [stepX - stepW / 2 - 0.02, top + 0.45, zc], tile: 0.5 }); }
+  B.box(0.06, 0.06, Math.hypot(run, rise), M.floorStudy, { pos: [stepX - stepW / 2 - 0.02, rise / 2 + 0.92, (SZ0 + 1.0) / 2], rot: [Math.atan2(rise, run), 0, 0], tile: 0.5 });
   // upper landing rail along the stairwell (west edge at x=1.4 is a wall already), protect the north edge of the opening: none (stairs arrive there)
   // fix: invisible collision to stop falling into the stairwell hole from the corridor sides
   col.addBox(1.45, 3.0, 0.1, 4.0, yU - 0.2, yU + 1.2, 0, { tag: 'rail', rayBlock: false });
