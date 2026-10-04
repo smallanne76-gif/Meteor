@@ -18,10 +18,12 @@ export class SearchPhase {
     g.audio.amb.set('winterNight', { fade: 3 }); g.audio.music.setDread(0.12);
     this.lampT = w.lampPosts.slice(0, 6).map((lp) => T.nearest(lp.pos.x, lp.pos.z).t);
     w.extraLit = (x, y, z) => (w.boathouse.lantern && w.boathouse.lantern.lit && w.boathouse.inside(x, z));
-    S.opts.noHunt = false; S.opts.prints = true; S.walkSpeed = 1.15; S.huntSpeed = 1.85; S.onCaught = () => this.caught();
+    S.opts.noHunt = false; S.opts.prints = true; S.walkSpeed = 1.1; S.huntSpeed = 1.6; S.onCaught = () => this.caught();
     this.hookUp();
     for (let i = 0; i < w.lampPosts.length; i++) if (g.flags['lamp' + i]) w.lampPosts[i].set(true);
     this.hi = g.flags.lampHi ?? -1;
+    // lamps she lit on her way round the house (before this chapter began) count too
+    for (let i = 0; i < 6; i++) if (w.lampPosts[i] && w.lampPosts[i].lit && !g.flags['lamp' + i]) { g.flags['lamp' + i] = true; this.hi = Math.max(this.hi, i); g.flags.lampHi = this.hi; const lp = w.lampPosts[i]; this.lastSafe = { x: lp.pos.x, z: lp.pos.z + 1.6 }; }
     if (opts.skipTo) { this.skipTo(opts.skipTo); }
     if (opts.resumeAt) { const lp = this.w.lampPosts[Math.max(0, this.hi)]; this.lastSafe = this.hi >= 0 ? { x: lp.pos.x, z: lp.pos.z + 1.6 } : null; if (this.hi >= 1) this.startPatrol(); g.ui.objective(g.flags.boatKey ? 'Follow the trail to the boathouse.' : 'Follow the trail to the boathouse.', true); if (g.flags.boathouseDone) { /* back from below? */ } }
     if (!opts.resumeAt && !opts.skipTo) {
@@ -135,10 +137,15 @@ export class SearchPhase {
     const w = this.w, g = this.g, S = w.searcher; if (this.disposed || this.hi < 1) return;
     S.sPath = null; S.sDone = null;
     const hi = Math.min(this.hi, 4); const t0 = this.lampT[hi] + 11, t1 = this.lampT[hi + 1] + 4;
-    const fwd = this.trailPts(t0, t1, 5); const path = fwd.concat(fwd.slice(0, -1).reverse());
+    // it walks the treeline beside the trail, not the trail itself: you can slip past if you're careful.
+    // mercy: every catch on this stretch pushes it further into the trees; after three it only watches.
+    const dz = (this.segDeaths && this.segDeaths[hi]) || 0;
+    const off = 8 + dz * 7, side = hi % 2 ? 1 : -1, T = this.w.terrain.trail;
+    const fwd = []; for (let t = t0; t <= t1; t += 5) { const p = T.at(t); fwd.push([p.x - p.dirz * off * side, p.z + p.dirx * off * side]); }
+    const path = fwd.concat(fwd.slice(0, -1).reverse());
     const start = fwd[Math.floor(fwd.length * 0.7)];
     if (S.state === 'absent' || this.dist(S, t0) > 80) { S.setPos(start[0], 0, start[1], 0); }
-    S.setLantern(true); S.opts.noHunt = false; S.patrol(path, { loop: true, speedMul: 1 + hi * 0.06 });
+    S.setLantern(true); S.opts.noHunt = dz >= 3; S.patrol(path, { loop: true, speedMul: 1 + hi * 0.04 });
     S.callT = 4;
   }
   dist(S, t) { const p = this.w.terrain.trail.at(t); return Math.hypot(S.pos.x - p.x, S.pos.z - p.z); }
@@ -170,6 +177,7 @@ export class SearchPhase {
   // ---- caught: back to the last light --------------------------------------------------------------------------------------
   async caught() {
     const w = this.w, g = this.g, P = g.player, S = w.searcher; if (this.fired.catching) return; this.fired.catching = true; this.deaths++;
+    this.segDeaths = this.segDeaths || {}; const seg = Math.max(0, Math.min(this.hi, 4)); this.segDeaths[seg] = (this.segDeaths[seg] || 0) + 1;
     g.mode = 'locked'; g.audio.setDuck({ amb: 0.3 }); g.audio.sfx('static', { dur: 1.0, vol: 0.5 });
     await g.wait(0.5); await g.fadeTo(1, 0.7); S.vanish(); this.dash = false;
     const at = this.lastSafe || { x: 9.5, z: -3.5 };
@@ -179,8 +187,11 @@ export class SearchPhase {
     g.mode = 'free'; this.fired.catching = false;
     const line = this.deaths === 1 ? 'It stopped at the light. Why did it stop at the light?' : (this.deaths === 2 ? 'Stay in the light. Move when it’s turned away.' : 'Slow. Quiet. Crouch.');
     await w.think(line);
-    if (this.hi >= 1 && !this.dash) this.startPatrol();
-    if (this.hi >= 5 && !w.boathouse.lantern.lit) this.finalDash();
+    // a few seconds' grace before it is out there again
+    await g.wait(6);
+    if (this.disposed) return;
+    if (this.hi >= 1 && !this.dash && this.hi < 5) this.startPatrol();
+    if (this.hi >= 5 && !w.boathouse.lantern.lit) { this.fired.dash = false; this.finalDash(); }
   }
 
   skipTo(step) {

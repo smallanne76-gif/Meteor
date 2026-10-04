@@ -134,7 +134,6 @@ export function buildLodge(game, parent, opts = {}) {
   W.h1 = B.wall(L.x0, 0.5, L.x1, 0.5, { h: wallH, thick: T.i, holes: [
     { u: 2.2, w: 0.95, y: 0, h: doorH },                // study <-> living (x=-5.3)
     { u: 6.9, w: 2.0, y: 0, h: 2.4 },                   // living <-> hall (cased, x=-0.6)
-    { u: 10.2, w: 0.95, y: 0, h: doorH },               // kitchen <-> hall (x=2.7)
     { u: 13.0, w: 0.95, y: 0, h: doorH },               // kitchen <-> mudroom (x=5.5)
   ], mats: [M.wallpaper, M.plaster, M.reveal] });
   // V1 x=-3.0 (study | hall) z 0.5..5.5 (travel north->south: first = west face = study)
@@ -270,11 +269,10 @@ export function buildLodge(game, parent, opts = {}) {
   const frontMat = pbr('wood_paint', { key: 'frontdoor', tint: 0x6a7e6a });
   out.doors.front = D('front', W.south, 7.2, { w: 1.05, h: 2.15, hinge: 'L', mat: frontMat, invert: true });
   out.doors.back = D('back', W.east, 3.0, { w: 0.95, h: 2.1, hinge: 'R', mat: frontMat, locked: true, key: 'backKey', lockLabel: 'Locked', lockMsg: 'The back door is locked. The key isn\'t where it should be.' });
-  out.doors.study = D('study', W.h1, 2.2, { hinge: 'L', locked: true, key: 'studyKey', lockLabel: 'Locked', lockMsg: 'Dad\'s study is locked. He always kept the key somewhere stupidly obvious.' });
-  out.doors.kitchenHall = D('kitchenHall', W.h1, 10.2, { hinge: 'R' });
+  out.doors.study = D('study', W.h1, 2.2, { hinge: 'L', invert: true, locked: true, key: 'studyKey', lockLabel: 'Locked', lockMsg: 'Dad\'s study is locked. He always kept the key somewhere stupidly obvious.' });
   out.doors.kitchenMud = D('kitchenMud', W.h1, 13.0, { hinge: 'L' });
-  out.doors.studyHall = D('studyHall', W.v1, 2.5, { hinge: 'L' });
-  out.doors.hallMud = D('hallMud', W.v2, 3.8, { hinge: 'R' });
+  out.doors.studyHall = D('studyHall', W.v1, 2.5, { hinge: 'L', locked: true, key: 'studyKey', lockLabel: 'Locked', lockMsg: 'Dad\'s study is locked. He always kept the key somewhere stupidly obvious.' });
+  out.doors.hallMud = D('hallMud', W.v2, 3.8, { hinge: 'R', invert: true });   // swings into the mudroom, clear of the foot of the stairs
   out.doors.joDoor = D('jo', W.cN, 2.2, { hinge: 'L', locked: true, key: 'joKey', lockLabel: 'Locked', lockMsg: 'Jo\'s door. Locked. He never locked it. Not once.' });
   out.doors.maraDoor = D('mara', W.cN, 8.2, { hinge: 'R' });
   out.doors.dadDoor = D('dad', W.cS1, 1.6, { hinge: 'L', locked: true, key: 'dadKey', lockLabel: 'Locked', lockMsg: 'Dad\'s room. I haven\'t been in there since the funeral.' });

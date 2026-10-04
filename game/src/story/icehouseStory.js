@@ -215,6 +215,8 @@ export class IceHousePhase {
 
   dispose() {}
   update(dt) {
+    { const P0 = this.g.player, c0 = this.c;   // the fallen beam in the tunnel: say how to get under it
+      if (!this.beamHint && c0.beamZ !== undefined && Math.abs(P0.pos.x + 12) < 1.6 && Math.abs(P0.pos.z - c0.beamZ) < 3.2 && !P0.crouching) { this.beamHint = true; this.g.ui.hint('crouch', 'Crouch to get under the beam', 6); } }
     const g = this.g, c = this.c;
     if (this.state === 'chase') this.updateChase(dt);
     // when the cellar is first entered

@@ -2,7 +2,7 @@
 import * as THREE from 'three';
 
 let uid = 1;
-const _v = new THREE.Vector3(), _d = new THREE.Vector3(), _o = new THREE.Vector3();
+const _v = new THREE.Vector3(), _d = new THREE.Vector3(), _o = new THREE.Vector3(), _off = new THREE.Vector3();
 
 export class Interact {
   constructor(game) {
@@ -20,7 +20,7 @@ export class Interact {
   byId(id) { return this.list.find((i) => i.id === id); }
 
   center(h, out) {
-    if (h.object) { h.object.getWorldPosition(out); if (h.offset) out.add(_v.set(...h.offset)); }
+    if (h.object) { h.object.getWorldPosition(out); if (h.offset) out.add(_off.set(...h.offset)); }   // own temp: `out` is often _v
     else out.copy(h.pos);
     return out;
   }
@@ -44,7 +44,8 @@ export class Interact {
       const score = ang / limit + dist * 0.12 - h.priority;
       if (score < bestScore) {
         // line of sight (static blockers)
-        if (!g.collision.los(_o, _v, (it) => !it.noInteractBlock)) continue;
+        // objects that sit on or in furniture (a jar on a counter, the piano's keys) must not be hidden by that furniture
+        if (!g.collision.los(_o, _v, (it) => !it.noInteractBlock && !g.collision.contains(it, _v, 0.12))) continue;
         bestScore = score; best = h;
       }
     }

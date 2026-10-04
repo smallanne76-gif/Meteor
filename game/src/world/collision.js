@@ -172,6 +172,13 @@ export class Collision {
     return tmin;
   }
   /** is there a clear line between a and b (Vector3s)? */
+  /** is point p (x, y, z) inside blocker it, grown by margin? */
+  contains(it, p, margin = 0) {
+    if (p.y < it.y0 - margin || p.y > it.y1 + margin) return false;
+    if (it.type === 'cyl') return Math.hypot(p.x - it.x, p.z - it.z) <= it.r + margin;
+    const dx = p.x - it.x, dz = p.z - it.z; const lx = dx * it.c - dz * it.s, lz = dx * it.s + dz * it.c;
+    return Math.abs(lx) <= it.hx + margin && Math.abs(lz) <= it.hz + margin;
+  }
   los(a, b, filter) {
     const d = new THREE.Vector3().subVectors(b, a); const dist = d.length(); if (dist < 1e-3) return true; d.divideScalar(dist);
     const h = this.raycast(a, d, dist - 0.05, filter); return !h;

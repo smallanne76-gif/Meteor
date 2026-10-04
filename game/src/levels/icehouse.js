@@ -206,10 +206,25 @@ export class IceHouse extends Chapter {
     for (let i = 0; i < pts.length - 1; i++) {
       const [ax, az] = pts[i], [bx, bz] = pts[i + 1]; const dx = bx - ax, dz = bz - az, len = Math.hypot(dx, dz); const ux = dx / len, uz = dz / len; const nx = -uz, nz = ux;
       const cx = (ax + bx) / 2, cz = (az + bz) / 2; const along = Math.abs(dx) > Math.abs(dz);
+      // side walls run from end to end, stopping short at a corner (the corner gets its own outer walls below), and
+      // reaching past the open ends of the tunnel so the mouths are sealed at the sides
+      const t0 = i > 0 ? -w / 2 : w / 2, t1 = i < pts.length - 2 ? -w / 2 : w / 2;     // + = extend past the end, - = stop short
+      const sxA = ax - ux * t0, szA = az - uz * t0, sxB = bx + ux * t1, szB = bz + uz * t1;
+      const wcx = (sxA + sxB) / 2, wcz = (szA + szB) / 2, wlen = Math.hypot(sxB - sxA, szB - szA);
       if (along) { B.slab(Math.min(ax, bx) - w / 2, cz - w / 2, Math.max(ax, bx) + w / 2, cz + w / 2, 0, M.concrete, { t: 0.2, tile: 1.4, walk: true }); B.ceiling(Math.min(ax, bx) - w / 2, cz - w / 2, Math.max(ax, bx) + w / 2, cz + w / 2, h, M.brickDark, 1.2);
-        for (const s of [-1, 1]) B.box(Math.abs(dx) + w, h, 0.3, M.brick, { pos: [cx, h / 2, cz + s * (w / 2 + 0.15)], tile: 1.1, collide: true }); }
+        for (const s of [-1, 1]) B.box(wlen, h, 0.3, M.brick, { pos: [wcx, h / 2, cz + s * (w / 2 + 0.15)], tile: 1.1, collide: true }); }
       else { B.slab(cx - w / 2, Math.min(az, bz) - w / 2, cx + w / 2, Math.max(az, bz) + w / 2, 0, M.concrete, { t: 0.2, tile: 1.4, walk: true }); B.ceiling(cx - w / 2, Math.min(az, bz) - w / 2, cx + w / 2, Math.max(az, bz) + w / 2, h, M.brickDark, 1.2);
-        for (const s of [-1, 1]) B.box(0.3, h, Math.abs(dz) + w, M.brick, { pos: [cx + s * (w / 2 + 0.15), h / 2, cz], tile: 1.1, collide: true }); }
+        for (const s of [-1, 1]) B.box(0.3, h, wlen, M.brick, { pos: [cx + s * (w / 2 + 0.15), h / 2, wcz], tile: 1.1, collide: true }); }
+    }
+    // corners: close the two sides of the corner square that no leg uses (ahead of the incoming leg, behind the outgoing one)
+    for (let j = 1; j < pts.length - 1; j++) {
+      const [px, pz] = pts[j]; const dir = (a, b) => { const l = Math.hypot(b[0] - a[0], b[1] - a[1]); return [(b[0] - a[0]) / l, (b[1] - a[1]) / l]; };
+      const u1 = dir(pts[j - 1], pts[j]), u2 = dir(pts[j], pts[j + 1]);
+      for (const [ux, uz] of [u1, [-u2[0], -u2[1]]]) {
+        const wx = px + ux * (w / 2 + 0.15), wz = pz + uz * (w / 2 + 0.15);
+        if (Math.abs(ux) > 0.5) B.box(0.3, h, w + 0.6, M.brick, { pos: [wx, h / 2, wz], tile: 1.1, collide: true });
+        else B.box(w + 0.6, h, 0.3, M.brick, { pos: [wx, h / 2, wz], tile: 1.1, collide: true });
+      }
     }
     // the tunnel meets the cellar's west wall at (4,-20): wall hole is there; the first wall segment of the tunnel is open at that end
     // dim emergency bulbs, every twelve metres, the colour of old blood
@@ -217,7 +232,7 @@ export class IceHouse extends Chapter {
     for (let i = 0; i < pts.length - 1; i++) { const [ax, az] = pts[i], [bx, bz] = pts[i + 1]; const len = Math.hypot(bx - ax, bz - az); for (let s = 5; s < len; s += 12) { const t = s / len; const px = ax + (bx - ax) * t, pz = az + (bz - az) * t; const lt = game.lights.add({ pos: [px, h - 0.2, pz], color: 0xff5a2a, intensity: 3.2, distance: 6, tag: 'tunnel', decay: 1.8, flicker: { amp: 0.12, speed: 3 } }); this.tunLights.push(lt);
         const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.05, 8, 6), new THREE.MeshBasicMaterial({ color: 0xff7a40 })); bulb.position.set(px, h - 0.2, pz); game.root.add(bulb); } }
     // obstacles: a fallen beam to crouch under, a barred door to open, crates
-    const bm = B.box(w - 0.1, 0.22, 0.28, M.wood, { pos: [-12, 1.18, -8], tile: 0.6, collide: false }); this.beamZ = -8; game.collision.addBox(-12, -8, w - 0.1, 0.3, 0.95, 1.5, 0);
+    const bm = B.box(w - 0.1, 0.22, 0.28, M.wood, { pos: [-12, 1.38, -8], tile: 0.6, collide: false }); this.beamZ = -8; game.collision.addBox(-12, -8, w - 0.1, 0.3, 1.27, 1.6, 0);   // crouching (1.2 m) fits under, standing doesn't
     this.barDoor = new Door(game, { name: 'bar', x: -12, z: 3.6, yaw: 0, y0: 0, w: 1.4, h: 2.1, hinge: 'L', locked: false, creaky: true, mat: M.wood });
     this.barDoor.it.label = () => (this.barDoor.isOpen ? 'Close' : 'Lift the bar'); this.barDoor.it.maxDist = 2.0;
     crate(B, -4, 7.2, { y: 0, s: 0.5, yaw: 0.2 }); crate(B, -3.4, 8.7, { y: 0, s: 0.45, yaw: -0.3 });

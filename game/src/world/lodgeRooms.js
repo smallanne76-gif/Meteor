@@ -77,7 +77,7 @@ export function dressGround(game, B, lodge, hooks) {
     // sofa faces the fire (west); Dad's armchair at an angle; coffee table
     sofa(B, -3.6, -2.6, Math.PI / 2, { w: 2.1, mat: PM().fabricRed });
     armchair(B, -4.6, -4.4, Math.PI / 2 + 0.5, { mat: PM().leather });
-    armchair(B, -4.9, -0.6, Math.PI / 2 - 0.55, { mat: PM().fabricGreen });
+    armchair(B, -4.75, -1.3, Math.PI / 2 - 0.55, { mat: PM().fabricGreen });   // clear of the study door
     table(B, -5.4, -2.6, { w: 1.1, d: 0.6, h: 0.42, mat: M.woodDark, yaw: Math.PI / 2 });
     rug(B, -5.2, -2.6, 3.4, 2.6, { mat: PM().fabricRed, tile: 0.9, yaw: Math.PI / 2 });
     // coffee table items: two mugs, a book, Jo's glasses? a board game half-played

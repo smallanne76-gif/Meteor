@@ -68,8 +68,11 @@ export class LodgePhase {
     // study phone & radio handled when the study opens
     this.phoneIt = g.interact.add({ object: G.objs.phone.group, radius: 0.3, maxDist: 2.2, label: () => (this.ringing ? 'Answer' : 'The phone'), icon: 'hand', onUse: () => this.answerPhone() });
     // study door gets unlocked by flag studyKey inside Door; add a hook for the first entry
+    // the study has two doors (living room, hall): one key opens both, and either one starts the scene
     L.doors.study.def.onOpen = () => this.onStudyOpened();
-    L.doors.study.def.onUnlock = () => { g.ui.objective('Dad’s study.'); };
+    L.doors.studyHall.def.onOpen = () => this.onStudyOpened();
+    L.doors.study.def.onUnlock = () => { if (L.doors.studyHall.locked) L.doors.studyHall.unlock(); g.ui.objective('Dad’s study.'); };
+    L.doors.studyHall.def.onUnlock = () => { if (L.doors.study.locked) L.doors.study.unlock(); };
     L.doors.jo.def.onOpen = () => this.onJoOpened();
     L.doors.back.def.onUnlock = () => { g.ui.objective('Follow the trail to the boathouse.'); };
     L.doors.back.def.onOpen = () => this.leaveHouse();
@@ -286,7 +289,7 @@ export class LodgePhase {
   /** coming back from a save: the house as she left it */
   restore() {
     const g = this.g, w = this.w, L = w.lodge, F = g.flags, G = w.ground;
-    if (F.joKey) L.doors.jo.unlock(); if (F.studyKey) L.doors.study.unlock(); if (F.backKey) L.doors.back.unlock();
+    if (F.joKey) L.doors.jo.unlock(); if (F.studyKey) { L.doors.study.unlock(); L.doors.studyHall.unlock(); } if (F.backKey) L.doors.back.unlock();
     if (F.memory1Done) this.memory1Done = true; if (F.sawScore) this.fired.score = true; if (F.intrusionSurvived) this.fired.intrusionStarted = true; if (F.phoneAnswered) this.fired.study = true;
     L.doors.front.toggle(false); for (const l of [G.lamps.hall, G.lamps.livingFloor]) l && l.set(true);
     g.ui.objective(F.backKey ? 'The back door. Then the trail to the boathouse.' : (F.tinOpen ? 'The back door.' : (F.studyKey ? 'Dad’s study.' : (F.intrusionSurvived ? 'Play Jo’s tune on the piano.' : (F.joKey ? 'Jo’s room.' : (this.memory1Done ? 'Look in the cookie jar.' : 'Find Jo.'))))), true);
@@ -297,7 +300,7 @@ export class LodgePhase {
     const steps = ['memory', 'piano', 'tin'];
     const idx = steps.indexOf(step);
     if (idx >= 0) { this.memory1Done = true; g.flags.joKey = true; w.lodge.doors.jo.unlock(); }
-    if (idx >= 1) { g.flags.studyKey = true; w.lodge.doors.study.unlock(); }
+    if (idx >= 1) { g.flags.studyKey = true; w.lodge.doors.study.unlock(); w.lodge.doors.studyHall.unlock(); }
     if (idx >= 2) { g.flags.backKey = true; g.flags.boatKey = true; w.lodge.doors.back.unlock(); }
   }
 
@@ -312,5 +315,14 @@ export class LodgePhase {
     if (this.retryWatch && !this.fired.intrusionStarted && P.pos.y > 2 && roomAt(P.pos.x, P.pos.y, P.pos.z) === 'jo' && !g.flags.intrusionSurvived) { this.retryWatch = false; g.wait(5).then(() => this.startIntrusion()); }
     // the phone keeps ringing until answered; rings die if she leaves the house
     // wardrobe door left ajar after leaving
+    // however she got into the study, the scene in it starts
+    if (!this.fired.study && P.pos.y < 1.5 && roomAt(P.pos.x, P.pos.y, P.pos.z) === 'study') this.onStudyOpened();
+    // any way out of the house works once she has the keys (the front door and round the side, too)
+    const outside = P.pos.y < 1.5 && (P.pos.x < -7.9 || P.pos.x > 7.9 || P.pos.z < -5.9 || P.pos.z > 5.9);
+    if (outside && g.flags.backKey && !this.fired.leave && g.mode === 'free') this.leaveHouse();
+    // too early: the yard edge gets a reason instead of a silent wall
+    if (outside && !g.flags.backKey && (Math.abs(P.pos.x) > 18.5 || P.pos.z < -12.5 || P.pos.z > 32) && g.mode === 'free') {
+      if (!this._edgeT || g.time - this._edgeT > 20) { this._edgeT = g.time; w.think(g.flags.studyKey ? 'Not yet. Dad’s tin. The keys will be in it.' : 'Not yet. Jo’s here somewhere. The house first.'); }
+    }
   }
 }

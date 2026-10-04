@@ -52,6 +52,6 @@ float lkf(vec2 p){ float a = 0.5, s = 0.0; for (int i = 0; i < 4; i++) { s += a 
     this.patches.push({ x, z, r, group: g });
   }
   /** 0 = solid ice, 1 = in the middle of a thin patch */
-  thinAt(x, z) { let m = 0; for (const p of this.patches || []) { const d = Math.hypot(x - p.x, z - p.z); m = Math.max(m, clamp(1 - (d - p.r * 0.55) / (p.r * 0.45))); } return m; }
+  thinAt(x, z) { let m = 0; for (const p of this.patches || []) { if (p.mercy) continue; const d = Math.hypot(x - p.x, z - p.z); m = Math.max(m, clamp(1 - (d - p.r * 0.55) / (p.r * 0.45))); } return m; }
   update(dt) { this.time += dt; this.waterMat.normalMap.offset.set(this.time * 0.01, this.time * 0.006); }
 }

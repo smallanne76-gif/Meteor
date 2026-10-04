@@ -87,12 +87,15 @@ export class LakePhase {
 
   async breakThrough() {
     const w = this.w, g = this.g, P = g.player; if (this.fired.fell) return; this.fired.fell = true; this.deaths++;
+    // mercy: a patch that has taken her twice holds the third time (the crossing must never become a wall)
+    { let best = null, bd = 1e9; for (const p of w.lake.patches || []) { const d = Math.hypot(P.pos.x - p.x, P.pos.z - p.z) - p.r; if (d < bd) { bd = d; best = p; } } if (best) { best.falls = (best.falls || 0) + 1; if (best.falls >= 2) best.mercy = true; } }
     g.mode = 'locked'; g.audio.at(P.pos.clone(), 'ice_crack', { vol: 1.2 }); P.addShake(0.8); g.audio.music.sting('fall', 1);
     await g.wait(0.45); g.audio.sfx('splash', { vol: 1, big: true }); g.tweenFx('cold', 1, 0.5); await g.fadeTo(1, 0.6, 0x02080e);
     g.audio.setDuck({ amb: 0.15 }); g.audio.muffleTarget = 500; await g.wait(1.6);
     P.teleport(this.lastSafe.x, P.pos.y, this.lastSafe.z, P.yaw); P.pitch = 0; this.risk = 0; g.tweenFx('cold', 0, 3); g.audio.setDuck({ amb: 1 }); g.audio.muffleTarget = 22000; g.gfx.fx.dread = 0;
     await g.fadeTo(0, 2.2); g.mode = 'free'; this.fired.fell = false;
     await w.think(this.deaths === 1 ? 'Ice talks before it breaks. I have to listen.' : 'Slow. Low tones. Go where it’s low.');
+    if (this.deaths === 2) g.ui.hint('still', 'Stand still: the ice answers. Deep notes are safe, high whines are thin. Stay off the dark patches.', 10);
   }
 
   // ---- the island -------------------------------------------------------------------------------------------------------
