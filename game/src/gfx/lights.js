@@ -17,6 +17,8 @@ export class LightRig {
     this.hemi = new THREE.HemisphereLight(0x8899bb, 0x222222, 0.5); scene.add(this.hemi);
     this.sun = new THREE.DirectionalLight(0xffffff, 1);
     this.sun.castShadow = true; scene.add(this.sun); scene.add(this.sun.target);
+    // a shadow-free share of the same moon/sun: if a GPU gets shadow lookups wrong, the world is still lit
+    this.sunFill = new THREE.DirectionalLight(0xffffff, 0); this.sunFill.castShadow = false; scene.add(this.sunFill); scene.add(this.sunFill.target);
     this.sunHandle = { on: true };
 
     // flashlight
@@ -124,12 +126,15 @@ export class LightRig {
     if (this.sky && this.skyDef) {
       const L = this.sky.lightDir(new THREE.Vector3());
       const kSun = this.sunOn === false ? 0 : 1;
-      this.sun.color.copy(this.sunColor); this.sun.intensity = this.sunIntensity * kSun * (this.sunMul ?? 1);
+      const sunI = this.sunIntensity * kSun * (this.sunMul ?? 1);
+      this.sun.color.copy(this.sunColor); this.sun.intensity = sunI * 0.6;
+      this.sunFill.color.copy(this.sunColor); this.sunFill.intensity = sunI * 0.4;
       // snap shadow camera to texel grid to avoid shimmer
       const R = 38, texel = (2 * R) / this.sun.shadow.mapSize.x;
       this.sunTexel.set(Math.round(cp.x / texel) * texel, Math.round(cp.y / texel) * texel, Math.round(cp.z / texel) * texel);
       this.sun.target.position.copy(this.sunTexel);
       this.sun.position.copy(this.sunTexel).addScaledVector(L, 120);
+      this.sunFill.target.position.copy(this.sunTexel); this.sunFill.position.copy(this.sunTexel).addScaledVector(L, 120);
       this.hemi.intensity = this.hemiBase * (this.hemiMul ?? 1);
     }
 
